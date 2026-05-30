@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>ROOFFORMAT — Команда</title>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0A0A0A;--bg2:#141414;--bg3:#1A1A1A;--bg4:#202020;
+  --border:#222;--border2:#2A2A2A;
+  --text:#E8E0D0;--muted:#555;--muted2:#888;
+  --gold:#C8A96E;--green:#7EB8A4;--red:#E07E7E;--blue:#7EA8C8;--purple:#A07EB8;
+  --safe-top:env(safe-area-inset-top,0px);
+  --safe-bottom:env(safe-area-inset-bottom,0px);
+  --mono:'Space Mono',monospace;
+  --serif:'Crimson Pro',Georgia,serif;
+}
+body{background:var(--bg);color:var(--text);font-family:var(--serif);min-height:100vh;max-width:430px;margin:0 auto;display:flex;flex-direction:column;padding-top:var(--safe-top)}
+button{cursor:pointer;-webkit-tap-highlight-color:transparent}
+
+/* HEADER */
+.header{padding:18px 20px 12px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-end}
+.hbrand{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--gold);margin-bottom:3px}
+.htitle{font-size:22px;font-weight:300;letter-spacing:-.02em}
+.hcount{font-family:var(--mono);font-size:10px;color:var(--muted)}
+
+/* NAV */
+.nav{display:flex;border-bottom:1px solid var(--border)}
+.nav-btn{flex:1;padding:11px 8px;background:none;border:none;color:var(--muted);font-size:10px;letter-spacing:.07em;font-family:var(--mono);border-bottom:2px solid transparent;transition:all .2s}
+.nav-btn.active{color:var(--gold);border-bottom-color:var(--gold)}
+
+/* VIEWS */
+.view{display:none;flex:1;flex-direction:column;overflow:hidden}
+.view.active{display:flex}
+
+/* MASTER LIST */
+.master-list{flex:1;overflow-y:auto;padding:12px 16px 80px}
+.empty{text-align:center;color:#2A2A2A;padding:60px 0;font-size:15px;font-style:italic}
+
+/* MASTER CARD */
+.master-card{background:var(--bg2);border:1px solid var(--border2);border-radius:14px;margin-bottom:12px;overflow:hidden;animation:fadeIn .25s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+
+.card-header{padding:16px;display:flex;gap:14px;align-items:flex-start}
+.card-avatar{width:52px;height:52px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:300;color:var(--bg);font-family:var(--serif)}
+.card-info{flex:1;min-width:0}
+.card-name{font-size:18px;font-weight:400;line-height:1.2;margin-bottom:3px}
+.card-role{font-family:var(--mono);font-size:10px;color:var(--gold);letter-spacing:.08em;margin-bottom:6px}
+.card-exp{font-family:var(--mono);font-size:10px;color:var(--muted)}
+.card-actions{display:flex;gap:6px;flex-shrink:0}
+.icon-btn{background:none;border:none;color:var(--muted);font-size:16px;padding:4px;transition:color .15s}
+.icon-btn:hover{color:var(--text)}
+.icon-btn.del:hover{color:var(--red)}
+
+.card-body{padding:0 16px 16px}
+
+.card-desc{font-size:14px;line-height:1.6;color:var(--muted2);margin-bottom:12px;font-style:italic}
+
+.section-label{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:.12em;margin-bottom:7px}
+
+/* SKILLS */
+.skills-wrap{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.skill-chip{font-size:10px;font-family:var(--mono);padding:4px 10px;border-radius:12px;border:1px solid var(--border2);color:var(--muted2)}
+.skill-chip.high{border-color:var(--gold);color:var(--gold)}
+.skill-chip.mid{border-color:var(--green);color:var(--green)}
+.skill-chip.learn{border-color:var(--blue);color:var(--blue)}
+
+/* GOAL */
+.goal-block{background:var(--bg3);border-radius:8px;padding:10px 12px;margin-bottom:12px;border-left:3px solid var(--gold)}
+.goal-text{font-size:13px;line-height:1.5;color:var(--text)}
+
+/* AMBITION */
+.ambition-block{background:var(--bg3);border-radius:8px;padding:10px 12px;margin-bottom:12px;border-left:3px solid var(--purple)}
+.ambition-text{font-size:13px;line-height:1.5;color:var(--text)}
+
+/* STATS ROW */
+.stats-row{display:flex;gap:8px;margin-bottom:0}
+.stat-box{flex:1;background:var(--bg3);border-radius:8px;padding:8px 10px;text-align:center}
+.stat-num{font-family:var(--mono);font-size:16px;color:var(--gold);display:block;margin-bottom:2px}
+.stat-label{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:.05em}
+
+/* CONTACT */
+.contact-row{display:flex;gap:8px;margin-top:12px}
+.contact-btn{flex:1;padding:8px;border-radius:8px;background:var(--bg3);border:1px solid var(--border2);color:var(--muted2);font-size:10px;font-family:var(--mono);text-align:center;text-decoration:none;display:block}
+.contact-btn.primary{background:var(--gold);color:var(--bg);border-color:var(--gold)}
+
+/* EXPAND TOGGLE */
+.expand-btn{width:100%;padding:10px 16px;background:none;border:none;border-top:1px solid var(--border);color:var(--muted);font-size:10px;font-family:var(--mono);letter-spacing:.06em;text-align:center;transition:color .15s}
+.expand-btn:hover{color:var(--text)}
+.card-detail{display:none;padding:0 16px 16px}
+.card-detail.open{display:block}
+
+/* ADD FORM */
+.add-form{padding:20px;display:flex;flex-direction:column;gap:16px;overflow-y:auto;padding-bottom:calc(20px + var(--safe-bottom))}
+.flabel{font-family:var(--mono);font-size:10px;color:var(--gold);letter-spacing:.12em;display:block;margin-bottom:7px}
+input[type=text],input[type=tel],input[type=number],textarea,select{width:100%;background:var(--bg2);border:1px solid var(--border2);border-radius:10px;color:var(--text);padding:11px 13px;font-size:15px;font-family:var(--serif);outline:none;transition:border-color .2s;-webkit-appearance:none}
+input:focus,textarea:focus,select:focus{border-color:var(--gold)}
+textarea{resize:none}
+select{background-image:none}
+
+.skill-builder{display:flex;flex-direction:column;gap:8px}
+.skill-row{display:flex;gap:6px;align-items:center}
+.skill-row input{flex:1}
+.skill-level-sel{width:100px;flex-shrink:0;font-size:12px;padding:8px 10px}
+.skill-del-btn{background:none;border:none;color:var(--muted);font-size:18px;padding:0 4px;flex-shrink:0}
+.add-skill-btn{background:var(--bg3);border:1px dashed var(--border2);border-radius:8px;color:var(--muted);padding:9px;font-size:12px;font-family:var(--mono);width:100%}
+
+.btn-submit{background:var(--gold);border:none;border-radius:12px;padding:14px;color:var(--bg);font-size:13px;font-weight:700;font-family:var(--mono);letter-spacing:.06em;transition:opacity .15s}
+.btn-submit:active{opacity:.8}
+
+/* STATUS BADGE */
+.status-badge{font-size:9px;font-family:var(--mono);padding:3px 8px;border-radius:10px;display:inline-block}
+
+/* BACK NAV */
+.back-row{padding:12px 16px 0;display:flex;align-items:center;gap:8px}
+.back-btn{background:none;border:none;color:var(--gold);font-family:var(--mono);font-size:11px;padding:0}
+
+.nav-safe{height:var(--safe-bottom);background:var(--bg)}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:100;display:none;align-items:flex-end}
+.modal-overlay.open{display:flex}
+.modal{background:var(--bg2);border-radius:20px 20px 0 0;padding:20px;width:100%;max-height:90vh;overflow-y:auto;padding-bottom:calc(20px + var(--safe-bottom))}
+.modal-title{font-family:var(--mono);font-size:11px;color:var(--gold);letter-spacing:.1em;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center}
+.modal-close{background:none;border:none;color:var(--muted);font-size:22px;padding:0}
+
+/* COLORS */
+.color-gold{background:var(--gold)}
+.color-green{background:var(--green)}
+.color-blue{background:var(--blue)}
+.color-purple{background:var(--purple)}
+.color-red{background:var(--red)}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="hbrand">ROOFFORMAT</div>
+    <div class="htitle">Команда</div>
+  </div>
+  <div class="hcount" id="masterCount">0 мастеров</div>
+</div>
+
+<nav class="nav">
+  <button class="nav-btn active" data-view="list" onclick="switchView('list')">МАСТЕРА</button>
+  <button class="nav-btn" data-view="add" onclick="switchView('add')">+ ДОБАВИТЬ</button>
+</nav>
+
+<!-- LIST -->
+<div class="view active" id="view-list">
+  <div class="master-list" id="masterList"></div>
+</div>
+
+<!-- ADD / EDIT -->
+<div class="view" id="view-add">
+  <div class="add-form">
+    <input type="hidden" id="editId">
+
+    <div>
+      <label class="flabel">ИМЯ И ФАМИЛИЯ *</label>
+      <input type="text" id="fName" placeholder="Иван Петров">
+    </div>
+
+    <div>
+      <label class="flabel">РОЛЬ / СПЕЦИАЛИЗАЦИЯ *</label>
+      <input type="text" id="fRole" placeholder="Кровельщик, фальцевые системы">
+    </div>
+
+    <div>
+      <label class="flabel">ОПЫТ В ПРОФЕССИИ</label>
+      <input type="text" id="fExp" placeholder="5 лет, Севастополь → Краснодар">
+    </div>
+
+    <div>
+      <label class="flabel">ОПИСАНИЕ</label>
+      <textarea id="fDesc" rows="3" placeholder="Краткое описание — кто этот человек, его характер и подход к работе..."></textarea>
+    </div>
+
+    <div>
+      <label class="flabel">ЦЕЛЬ ВЗАИМОДЕЙСТВИЯ С ROOFFORMAT</label>
+      <textarea id="fGoal" rows="2" placeholder="Зачем пришёл в команду, что хочет получить..."></textarea>
+    </div>
+
+    <div>
+      <label class="flabel">АМБИЦИИ И РАЗВИТИЕ</label>
+      <textarea id="fAmbition" rows="2" placeholder="Куда хочет вырасти через 1–3 года..."></textarea>
+    </div>
+
+    <div>
+      <label class="flabel">НАВЫКИ</label>
+      <div class="skill-builder" id="skillBuilder"></div>
+      <button class="add-skill-btn" onclick="addSkillRow()">+ добавить навык</button>
+    </div>
+
+    <div style="display:flex;gap:12px">
+      <div style="flex:1">
+        <label class="flabel">ТЕЛЕФОН</label>
+        <input type="tel" id="fPhone" placeholder="+7 999 000 00 00">
+      </div>
+      <div style="flex:1">
+        <label class="flabel">ОБЪЕКТОВ СДЕЛАНО</label>
+        <input type="number" id="fObjects" placeholder="0" min="0">
+      </div>
+    </div>
+
+    <div>
+      <label class="flabel">СТАТУС</label>
+      <select id="fStatus">
+        <option value="active">В команде</option>
+        <option value="trial">На испытании</option>
+        <option value="candidate">Кандидат</option>
+        <option value="alumni">Ветеран</option>
+      </select>
+    </div>
+
+    <div>
+      <label class="flabel">ЦВЕТ КАРТОЧКИ</label>
+      <div style="display:flex;gap:10px;margin-top:4px">
+        <button class="color-swatch color-gold" data-color="gold" onclick="selectColor('gold')" style="width:36px;height:36px;border-radius:50%;border:3px solid transparent;transition:all .15s"></button>
+        <button class="color-swatch color-green" data-color="green" onclick="selectColor('green')" style="width:36px;height:36px;border-radius:50%;border:3px solid transparent;transition:all .15s"></button>
+        <button class="color-swatch color-blue" data-color="blue" onclick="selectColor('blue')" style="width:36px;height:36px;border-radius:50%;border:3px solid transparent;transition:all .15s"></button>
+        <button class="color-swatch color-purple" data-color="purple" onclick="selectColor('purple')" style="width:36px;height:36px;border-radius:50%;border:3px solid transparent;transition:all .15s"></button>
+        <button class="color-swatch color-red" data-color="red" onclick="selectColor('red')" style="width:36px;height:36px;border-radius:50%;border:3px solid transparent;transition:all .15s"></button>
+      </div>
+    </div>
+
+    <button class="btn-submit" id="submitBtn" onclick="submitMaster()">ДОБАВИТЬ МАСТЕРА</button>
+  </div>
+</div>
+
+<div class="nav-safe"></div>
+
+<script>
+const STORAGE_KEY = 'rf_masters_v1';
+const COLORS = {
+  gold: '#C8A96E', green: '#7EB8A4', blue: '#7EA8C8',
+  purple: '#A07EB8', red: '#E07E7E'
+};
+const STATUS_MAP = {
+  active: {label:'В команде', color:'#7EB8A4'},
+  trial: {label:'Испытание', color:'#C8A96E'},
+  candidate: {label:'Кандидат', color:'#7EA8C8'},
+  alumni: {label:'Ветеран', color:'#A07EB8'}
+};
+const SKILL_LEVELS = {
+  high: 'Эксперт', mid: 'Уверенно', learn: 'Развивает'
+};
+
+let masters = [];
+let selectedColor = 'gold';
+let editSkills = [];
+let expandedCards = new Set();
+
+function load() {
+  try { masters = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch { masters = []; }
+}
+function save() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(masters));
+}
+
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function initials(name) {
+  return (name||'?').split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
+}
+
+function renderAll() {
+  document.getElementById('masterCount').textContent = masters.length + ' мастеров';
+  renderList();
+}
+
+function renderList() {
+  if (!masters.length) {
+    document.getElementById('masterList').innerHTML = '<div class="empty">Команда пока пуста — добавь первого мастера</div>';
+    return;
+  }
+  document.getElementById('masterList').innerHTML = masters.map(m => masterCardHTML(m)).join('');
+}
+
+function masterCardHTML(m) {
+  const color = COLORS[m.color] || COLORS.gold;
+  const status = STATUS_MAP[m.status] || STATUS_MAP.active;
+  const isExpanded = expandedCards.has(m.id);
+
+  const skillsHTML = (m.skills||[]).map(s =>
+    `<span class="skill-chip ${s.level}">${esc(s.name)}</span>`
+  ).join('');
+
+  const statsHTML = `
+    <div class="stats-row">
+      <div class="stat-box">
+        <span class="stat-num">${m.objects||0}</span>
+        <span class="stat-label">ОБЪЕКТОВ</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-num">${(m.skills||[]).length}</span>
+        <span class="stat-label">НАВЫКОВ</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-num" style="color:${status.color}">${status.label.split(' ')[0]}</span>
+        <span class="stat-label">СТАТУС</span>
+      </div>
+    </div>`;
+
+  const detailHTML = `
+    <div class="card-detail${isExpanded?' open':''}" id="detail-${m.id}">
+      ${m.goal ? `<div style="margin-bottom:12px">
+        <div class="section-label">ЦЕЛЬ В ROOFFORMAT</div>
+        <div class="goal-block"><div class="goal-text">${esc(m.goal)}</div></div>
+      </div>` : ''}
+      ${m.ambition ? `<div style="margin-bottom:12px">
+        <div class="section-label">АМБИЦИИ</div>
+        <div class="ambition-block"><div class="ambition-text">${esc(m.ambition)}</div></div>
+      </div>` : ''}
+      ${m.phone ? `<div class="contact-row">
+        <a class="contact-btn primary" href="tel:${esc(m.phone)}">📞 Позвонить</a>
+        <a class="contact-btn" href="https://wa.me/${m.phone.replace(/\D/g,'')}">WhatsApp</a>
+      </div>` : ''}
+    </div>`;
+
+  return `
+    <div class="master-card" id="card-${m.id}">
+      <div class="card-header">
+        <div class="card-avatar ${`color-${m.color}`}" style="background:${color}">${initials(m.name)}</div>
+        <div class="card-info">
+          <div class="card-name">${esc(m.name)}</div>
+          <div class="card-role">${esc(m.role)}</div>
+          ${m.exp ? `<div class="card-exp">${esc(m.exp)}</div>` : ''}
+        </div>
+        <div class="card-actions">
+          <button class="icon-btn" onclick="editMaster(${m.id})" title="Редактировать">✎</button>
+          <button class="icon-btn del" onclick="deleteMaster(${m.id})" title="Удалить">×</button>
+        </div>
+      </div>
+      <div class="card-body">
+        ${m.desc ? `<div class="card-desc">${esc(m.desc)}</div>` : ''}
+        ${(m.skills||[]).length ? `<div style="margin-bottom:12px">
+          <div class="section-label">НАВЫКИ</div>
+          <div class="skills-wrap">${skillsHTML}</div>
+        </div>` : ''}
+        ${statsHTML}
+        ${detailHTML}
+      </div>
+      <button class="expand-btn" onclick="toggleExpand(${m.id})">
+        ${isExpanded ? '▲ СВЕРНУТЬ' : '▼ ПОДРОБНЕЕ'}
+      </button>
+    </div>`;
+}
+
+function toggleExpand(id) {
+  if (expandedCards.has(id)) expandedCards.delete(id);
+  else expandedCards.add(id);
+  renderList();
+}
+
+function deleteMaster(id) {
+  if (!confirm('Удалить мастера?')) return;
+  masters = masters.filter(m => m.id !== id);
+  save(); renderAll();
+}
+
+function editMaster(id) {
+  const m = masters.find(x => x.id === id);
+  if (!m) return;
+  document.getElementById('editId').value = id;
+  document.getElementById('fName').value = m.name || '';
+  document.getElementById('fRole').value = m.role || '';
+  document.getElementById('fExp').value = m.exp || '';
+  document.getElementById('fDesc').value = m.desc || '';
+  document.getElementById('fGoal').value = m.goal || '';
+  document.getElementById('fAmbition').value = m.ambition || '';
+  document.getElementById('fPhone').value = m.phone || '';
+  document.getElementById('fObjects').value = m.objects || '';
+  document.getElementById('fStatus').value = m.status || 'active';
+  editSkills = [...(m.skills || [])];
+  selectedColor = m.color || 'gold';
+  updateColorSwatches();
+  renderSkillBuilder();
+  document.getElementById('submitBtn').textContent = 'СОХРАНИТЬ';
+  switchView('add');
+}
+
+// SKILLS
+function addSkillRow(skill) {
+  editSkills.push(skill || {name:'', level:'high'});
+  renderSkillBuilder();
+}
+
+function removeSkillRow(i) {
+  editSkills.splice(i, 1);
+  renderSkillBuilder();
+}
+
+function renderSkillBuilder() {
+  document.getElementById('skillBuilder').innerHTML = editSkills.map((s,i) => `
+    <div class="skill-row">
+      <input type="text" value="${esc(s.name)}" placeholder="Навык..." oninput="editSkills[${i}].name=this.value">
+      <select class="skill-level-sel" onchange="editSkills[${i}].level=this.value">
+        <option value="high"${s.level==='high'?' selected':''}>Эксперт</option>
+        <option value="mid"${s.level==='mid'?' selected':''}>Уверенно</option>
+        <option value="learn"${s.level==='learn'?' selected':''}>Развивает</option>
+      </select>
+      <button class="skill-del-btn" onclick="removeSkillRow(${i})">×</button>
+    </div>`).join('');
+}
+
+// COLOR
+function selectColor(c) {
+  selectedColor = c;
+  updateColorSwatches();
+}
+function updateColorSwatches() {
+  document.querySelectorAll('.color-swatch').forEach(btn => {
+    btn.style.borderColor = btn.dataset.color === selectedColor ? '#E8E0D0' : 'transparent';
+    btn.style.transform = btn.dataset.color === selectedColor ? 'scale(1.15)' : 'scale(1)';
+  });
+}
+
+// SUBMIT
+function submitMaster() {
+  const name = document.getElementById('fName').value.trim();
+  const role = document.getElementById('fRole').value.trim();
+  if (!name || !role) { alert('Заполни имя и роль'); return; }
+
+  const data = {
+    name, role,
+    exp: document.getElementById('fExp').value.trim(),
+    desc: document.getElementById('fDesc').value.trim(),
+    goal: document.getElementById('fGoal').value.trim(),
+    ambition: document.getElementById('fAmbition').value.trim(),
+    phone: document.getElementById('fPhone').value.trim(),
+    objects: parseInt(document.getElementById('fObjects').value) || 0,
+    status: document.getElementById('fStatus').value,
+    color: selectedColor,
+    skills: editSkills.filter(s => s.name.trim())
+  };
+
+  const editId = document.getElementById('editId').value;
+  if (editId) {
+    masters = masters.map(m => m.id === parseInt(editId) ? {...m, ...data} : m);
+  } else {
+    masters.unshift({...data, id: Date.now()});
+  }
+
+  save();
+  resetForm();
+  switchView('list');
+  renderAll();
+}
+
+function resetForm() {
+  ['fName','fRole','fExp','fDesc','fGoal','fAmbition','fPhone','fObjects'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('editId').value = '';
+  document.getElementById('fStatus').value = 'active';
+  editSkills = [];
+  selectedColor = 'gold';
+  renderSkillBuilder();
+  updateColorSwatches();
+  document.getElementById('submitBtn').textContent = 'ДОБАВИТЬ МАСТЕРА';
+}
+
+function switchView(name) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('view-' + name).classList.add('active');
+  document.querySelector(`[data-view="${name}"]`).classList.add('active');
+  if (name === 'add') { renderSkillBuilder(); updateColorSwatches(); }
+}
+
+// BACK LINK TO MAIN APP
+function goBack() {
+  window.location.href = 'index.html';
+}
+
+load();
+renderAll();
+updateColorSwatches();
+</script>
+</body>
+</html>

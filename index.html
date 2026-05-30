@@ -26,30 +26,25 @@
 body{background:var(--bg);color:var(--text);font-family:var(--serif);min-height:100vh;max-width:430px;margin:0 auto;display:flex;flex-direction:column;padding-top:var(--safe-top)}
 button{cursor:pointer;-webkit-tap-highlight-color:transparent}
 
-/* HEADER */
 .header{padding:18px 20px 12px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-end}
 .hbrand{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--gold);margin-bottom:3px}
 .htitle{font-size:22px;font-weight:300;letter-spacing:-.02em}
 .hstats{text-align:right;font-family:var(--mono);font-size:10px;color:var(--muted);line-height:1.9}
 .htoday{color:var(--gold)}
 
-/* NAV */
 .nav{display:flex;border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none}
 .nav::-webkit-scrollbar{display:none}
-.nav-btn{flex-shrink:0;padding:11px 14px;background:none;border:none;color:var(--muted);font-size:10px;letter-spacing:.07em;font-family:var(--mono);border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap}
+.nav-btn{flex-shrink:0;padding:11px 13px;background:none;border:none;color:var(--muted);font-size:10px;letter-spacing:.07em;font-family:var(--mono);border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap}
 .nav-btn.active{color:var(--gold);border-bottom-color:var(--gold)}
 
-/* VIEWS */
 .view{display:none;flex:1;flex-direction:column;overflow:hidden}
 .view.active{display:flex}
 
-/* FILTERS */
 .filters{display:flex;gap:7px;padding:11px 16px;overflow-x:auto;scrollbar-width:none}
 .filters::-webkit-scrollbar{display:none}
 .fbtn{white-space:nowrap;padding:5px 13px;border-radius:20px;background:var(--bg3);color:var(--muted);border:1px solid var(--border2);font-size:10px;font-family:var(--mono);transition:all .15s}
 .fbtn.active{background:var(--gold);color:var(--bg);border-color:var(--gold)}
 
-/* TASK LIST */
 .task-list{flex:1;overflow-y:auto;padding:0 16px 80px}
 .empty{text-align:center;color:#2A2A2A;padding:60px 0;font-size:15px;font-style:italic}
 
@@ -66,46 +61,14 @@ button{cursor:pointer;-webkit-tap-highlight-color:transparent}
 .task-title.done{color:#333;text-decoration:line-through}
 .task-meta{display:flex;gap:8px;margin-top:5px;flex-wrap:wrap;align-items:center}
 .tag{font-size:10px;font-family:var(--mono)}
-
 .task-del{background:none;border:none;color:#2A2A2A;font-size:18px;padding:0 4px;flex-shrink:0;transition:color .15s}
-.task-del:hover{color:var(--red)}
 
-/* EXPAND */
-.task-expand-btn{background:none;border:none;color:var(--muted);font-size:10px;font-family:var(--mono);padding:5px 0 0;letter-spacing:.05em}
-.task-details{margin-top:10px;padding:10px 12px;background:var(--bg2);border-radius:8px;display:none}
-.task-details.open{display:block}
-
-/* SUBTASKS */
-.subtask-list{margin-bottom:8px}
-.subtask-item{display:flex;gap:8px;align-items:center;padding:5px 0;border-bottom:1px solid #1A1A1A}
-.subtask-item:last-child{border-bottom:none}
-.sub-check{width:16px;height:16px;border-radius:50%;border:1.5px solid var(--border2);background:none;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s}
-.sub-check.done{background:var(--gold);border-color:var(--gold)}
-.sub-check.done::after{content:'✓';color:var(--bg);font-size:8px;font-weight:700}
-.sub-title{flex:1;font-size:13px;color:var(--muted2)}
-.sub-title.done{text-decoration:line-through;color:#333}
-.sub-del{background:none;border:none;color:#2A2A2A;font-size:14px;padding:0 3px}
-
-.add-sub-row{display:flex;gap:6px;margin-top:6px}
-.sub-input{flex:1;background:var(--bg3);border:1px solid var(--border2);border-radius:6px;color:var(--text);padding:6px 10px;font-size:13px;font-family:var(--serif);outline:none}
-.sub-add-btn{background:var(--border2);border:none;border-radius:6px;color:var(--gold);padding:6px 10px;font-size:13px}
-
-/* NOTES */
-.task-note{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;font-family:var(--serif);outline:none;resize:none;margin-top:6px}
-.task-note:focus{border-color:var(--gold)}
-
-/* TAGS */
-.tag-input-row{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap;align-items:center}
-.task-tag-chip{font-size:10px;font-family:var(--mono);color:var(--blue);border:1px solid var(--blue);border-radius:12px;padding:2px 8px;display:inline-flex;align-items:center;gap:4px}
-.task-tag-chip button{background:none;border:none;color:var(--blue);font-size:11px;padding:0}
-.tag-inp{background:var(--bg3);border:1px solid var(--border2);border-radius:6px;color:var(--text);padding:5px 9px;font-size:12px;font-family:var(--mono);outline:none;width:100px}
-
-/* ADD FORM */
 .add-form{padding:20px;display:flex;flex-direction:column;gap:18px;overflow-y:auto;padding-bottom:calc(20px + var(--safe-bottom))}
 .flabel{font-family:var(--mono);font-size:10px;color:var(--gold);letter-spacing:.12em;display:block;margin-bottom:7px}
-textarea,input[type=date],input[type=text]{width:100%;background:var(--bg2);border:1px solid var(--border2);border-radius:10px;color:var(--text);padding:11px 13px;font-size:15px;font-family:var(--serif);outline:none;transition:border-color .2s;-webkit-appearance:none}
+textarea,input[type=date],input[type=text],input[type=tel]{width:100%;background:var(--bg2);border:1px solid var(--border2);border-radius:10px;color:var(--text);padding:11px 13px;font-size:15px;font-family:var(--serif);outline:none;transition:border-color .2s;-webkit-appearance:none}
 textarea:focus,input:focus{border-color:var(--gold)}
 textarea{resize:none}
+select{width:100%;background:var(--bg2);border:1px solid var(--border2);border-radius:10px;color:var(--text);padding:11px 13px;font-size:15px;font-family:var(--serif);outline:none;-webkit-appearance:none;appearance:none}
 .chip-row{display:flex;gap:8px;flex-wrap:wrap}
 .chip{padding:7px 14px;border-radius:20px;background:var(--bg3);color:var(--muted);border:1px solid var(--border2);font-size:11px;font-family:var(--mono);transition:all .15s}
 .prio-row{display:flex;gap:8px}
@@ -113,7 +76,7 @@ textarea{resize:none}
 .btn-add{background:var(--gold);border:none;border-radius:12px;padding:14px;color:var(--bg);font-size:13px;font-weight:700;font-family:var(--mono);letter-spacing:.06em;transition:opacity .15s}
 .btn-add:active{opacity:.8}
 
-/* OBJECTS VIEW */
+/* OBJECTS */
 .obj-list{flex:1;overflow-y:auto;padding:12px 16px 80px}
 .obj-card{background:var(--bg2);border:1px solid var(--border2);border-radius:12px;padding:14px;margin-bottom:10px;animation:fadeIn .2s ease}
 .obj-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
@@ -124,11 +87,9 @@ textarea{resize:none}
 .obj-progress-bar{height:100%;border-radius:2px;background:var(--gold);transition:width .3s}
 .obj-actions{display:flex;gap:8px}
 .obj-btn{flex:1;padding:7px;border-radius:8px;background:var(--bg3);border:1px solid var(--border2);color:var(--muted2);font-size:10px;font-family:var(--mono)}
-.obj-btn.primary{background:var(--gold);color:var(--bg);border-color:var(--gold)}
-
 .add-obj-form{padding:16px;border-top:1px solid var(--border)}
 
-/* WEEK VIEW */
+/* WEEK */
 .week-header{display:flex;padding:10px 16px;gap:4px;border-bottom:1px solid var(--border)}
 .week-day{flex:1;text-align:center;font-family:var(--mono);font-size:9px;color:var(--muted);padding:5px 2px;border-radius:8px;cursor:pointer;transition:all .15s}
 .week-day.today{color:var(--gold)}
@@ -136,13 +97,50 @@ textarea{resize:none}
 .week-day .day-num{font-size:16px;font-weight:300;display:block;margin-bottom:1px}
 .week-day .day-dot{width:4px;height:4px;border-radius:50%;background:var(--gold);margin:2px auto 0;opacity:0}
 .week-day .day-dot.has{opacity:1}
-
 .time-blocks{flex:1;overflow-y:auto;padding:12px 16px 80px}
 .time-block{margin-bottom:16px}
 .block-label{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.1em;margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid var(--border)}
 .block-task{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px solid #111}
-.block-task:last-child{border-bottom:none}
 .block-empty{font-size:13px;color:#2A2A2A;font-style:italic;padding:8px 0}
+
+/* TEAM */
+.team-list{flex:1;overflow-y:auto;padding:12px 16px 80px}
+.team-search{padding:12px 16px 0;display:flex;gap:8px}
+.team-search input{flex:1;background:var(--bg2);border:1px solid var(--border2);border-radius:10px;color:var(--text);padding:9px 13px;font-size:14px;font-family:var(--serif);outline:none}
+.team-search input:focus{border-color:var(--gold)}
+
+.master-card{background:var(--bg2);border:1px solid var(--border2);border-radius:14px;padding:16px;margin-bottom:12px;animation:fadeIn .2s ease;cursor:pointer;transition:border-color .2s}
+.master-card:hover{border-color:var(--gold)}
+.master-card-header{display:flex;gap:12px;align-items:flex-start;margin-bottom:12px}
+.master-avatar{width:52px;height:52px;border-radius:50%;background:var(--bg3);border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;font-family:var(--mono);color:var(--gold)}
+.master-avatar.active-av{border-color:var(--gold)}
+.master-info{flex:1;min-width:0}
+.master-name{font-size:17px;font-weight:400;margin-bottom:3px}
+.master-role{font-size:11px;font-family:var(--mono);color:var(--gold);letter-spacing:.06em;margin-bottom:5px}
+.master-status-badge{display:inline-block;font-size:9px;font-family:var(--mono);padding:2px 8px;border-radius:10px}
+
+.master-bio{font-size:13px;color:var(--muted2);line-height:1.6;margin-bottom:12px;font-style:italic}
+
+.master-skills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.skill-tag{font-size:10px;font-family:var(--mono);color:var(--green);border:1px solid #1E3A30;border-radius:10px;padding:3px 9px;background:#0E1F1A}
+
+.master-section{margin-bottom:10px}
+.master-section-label{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:.12em;margin-bottom:5px}
+.master-section-text{font-size:13px;color:var(--text);line-height:1.5}
+
+.master-goal{background:var(--bg3);border-left:3px solid var(--gold);padding:10px 12px;border-radius:0 8px 8px 0;font-size:13px;font-style:italic;color:var(--text);line-height:1.5;margin-bottom:12px}
+
+.master-stats{display:flex;gap:8px;margin-bottom:12px}
+.master-stat{flex:1;background:var(--bg3);border-radius:8px;padding:8px;text-align:center}
+.master-stat-val{font-family:var(--mono);font-size:16px;color:var(--gold);display:block}
+.master-stat-label{font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:2px;display:block}
+
+.master-actions{display:flex;gap:8px}
+.master-btn{flex:1;padding:9px;border-radius:9px;background:var(--bg3);border:1px solid var(--border2);color:var(--muted2);font-size:10px;font-family:var(--mono);transition:all .15s}
+.master-btn.primary{background:var(--gold);color:var(--bg);border-color:var(--gold)}
+.master-btn:active{opacity:.8}
+
+.add-master-btn{position:fixed;bottom:calc(20px + var(--safe-bottom));right:20px;width:52px;height:52px;border-radius:50%;background:var(--gold);border:none;color:var(--bg);font-size:24px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(200,169,110,.4);z-index:50}
 
 /* AI CHAT */
 .chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
@@ -155,23 +153,36 @@ textarea{resize:none}
 .chat-input:focus{border-color:var(--gold)}
 .chat-send{background:var(--gold);border:none;border-radius:10px;padding:10px 16px;color:var(--bg);font-size:16px}
 
-/* OFFLINE */
 .offline-banner{background:#2A1A0A;border-bottom:1px solid #4A3010;padding:7px 16px;font-size:10px;font-family:var(--mono);color:var(--gold);text-align:center;display:none}
 .offline-banner.show{display:block}
-
 .nav-safe{height:var(--safe-bottom);background:var(--bg)}
 
 /* MODAL */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;display:none;align-items:flex-end}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:100;display:none;align-items:flex-end}
 .modal-overlay.open{display:flex}
-.modal{background:var(--bg2);border-radius:20px 20px 0 0;padding:20px;width:100%;max-height:85vh;overflow-y:auto;padding-bottom:calc(20px + var(--safe-bottom))}
+.modal{background:var(--bg2);border-radius:20px 20px 0 0;padding:20px;width:100%;max-height:92vh;overflow-y:auto;padding-bottom:calc(20px + var(--safe-bottom))}
 .modal-title{font-family:var(--mono);font-size:11px;color:var(--gold);letter-spacing:.1em;margin-bottom:16px}
-.modal-close{float:right;background:none;border:none;color:var(--muted);font-size:20px}
+.modal-close{float:right;background:none;border:none;color:var(--muted);font-size:22px;margin-top:-4px}
+
+.sub-input{flex:1;background:var(--bg3);border:1px solid var(--border2);border-radius:6px;color:var(--text);padding:6px 10px;font-size:13px;font-family:var(--serif);outline:none}
+.sub-add-btn{background:var(--border2);border:none;border-radius:6px;color:var(--gold);padding:6px 10px;font-size:13px}
+.add-sub-row{display:flex;gap:6px;margin-top:6px}
+.subtask-list{margin-bottom:8px}
+.subtask-item{display:flex;gap:8px;align-items:center;padding:5px 0;border-bottom:1px solid #1A1A1A}
+.sub-check{width:16px;height:16px;border-radius:50%;border:1.5px solid var(--border2);background:none;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.sub-check.done{background:var(--gold);border-color:var(--gold)}
+.sub-check.done::after{content:'✓';color:var(--bg);font-size:8px;font-weight:700}
+.sub-title{flex:1;font-size:13px;color:var(--muted2)}
+.sub-title.done{text-decoration:line-through;color:#333}
+.sub-del{background:none;border:none;color:#2A2A2A;font-size:14px;padding:0 3px}
+.task-note{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;font-family:var(--serif);outline:none;resize:none;margin-top:6px}
+.task-tag-chip{font-size:10px;font-family:var(--mono);color:var(--blue);border:1px solid var(--blue);border-radius:12px;padding:2px 8px;display:inline-flex;align-items:center;gap:4px}
+.task-tag-chip button{background:none;border:none;color:var(--blue);font-size:11px;padding:0}
+.tag-inp{background:var(--bg3);border:1px solid var(--border2);border-radius:6px;color:var(--text);padding:5px 9px;font-size:12px;font-family:var(--mono);outline:none;width:100px}
 </style>
 </head>
 <body>
-
-<div class="offline-banner" id="offlineBanner">⚡ Офлайн — задачи сохраняются локально</div>
+<div class="offline-banner" id="offlineBanner">⚡ Офлайн — данные сохранены</div>
 
 <div class="header">
   <div>
@@ -188,7 +199,9 @@ textarea{resize:none}
   <button class="nav-btn active" data-view="tasks" onclick="switchView('tasks')">ЗАДАЧИ</button>
   <button class="nav-btn" data-view="week" onclick="switchView('week')">НЕДЕЛЯ</button>
   <button class="nav-btn" data-view="objects" onclick="switchView('objects')">ОБЪЕКТЫ</button>
-  <button class="nav-btn" data-view="add" onclick="switchView('add')">+ ДОБАВИТЬ</button>
+  <button class="nav-btn" onclick="window.location.href='masters.html'">КОМАНДА</button>
+  <button class="nav-btn" data-view="team" onclick="switchView('team')">КОМАНДА</button>
+  <button class="nav-btn" data-view="add" onclick="switchView('add')">+ ЗАДАЧА</button>
   <button class="nav-btn" data-view="ai" onclick="switchView('ai')">ИИ</button>
 </nav>
 
@@ -210,12 +223,22 @@ textarea{resize:none}
   <div class="add-obj-form">
     <div style="display:flex;gap:8px">
       <input type="text" id="newObjName" placeholder="Название объекта..." style="flex:1;font-size:14px;padding:10px 13px">
-      <button class="btn-add" style="padding:10px 16px;border-radius:10px" onclick="addObject()">+</button>
+      <button class="btn-add" style="padding:10px 16px;border-radius:10px;flex-shrink:0" onclick="addObject()">+</button>
     </div>
   </div>
 </div>
 
-<!-- ADD -->
+<!-- TEAM -->
+<div class="view" id="view-team">
+  <div class="team-search">
+    <input type="text" id="teamSearch" placeholder="Поиск по имени или навыку..." oninput="renderTeam()">
+  </div>
+  <div style="display:flex;gap:7px;padding:10px 16px;overflow-x:auto;scrollbar-width:none" id="teamFilters"></div>
+  <div class="team-list" id="teamList"></div>
+  <button class="add-master-btn" onclick="openMasterForm()">+</button>
+</div>
+
+<!-- ADD TASK -->
 <div class="view" id="view-add">
   <div class="add-form">
     <div>
@@ -223,16 +246,8 @@ textarea{resize:none}
       <textarea id="newTitle" rows="3" placeholder="Что нужно сделать?"></textarea>
     </div>
     <div>
-      <label class="flabel">ЗАМЕТКА (необязательно)</label>
+      <label class="flabel">ЗАМЕТКА</label>
       <textarea id="newNote" rows="2" placeholder="Дополнительная информация..."></textarea>
-    </div>
-    <div>
-      <label class="flabel">ТЕГИ</label>
-      <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap" id="newTagsDisplay"></div>
-      <div style="display:flex;gap:6px;margin-top:6px">
-        <input type="text" id="newTagInput" placeholder="Добавить тег..." style="font-size:13px;padding:7px 11px;width:140px">
-        <button class="sub-add-btn" onclick="addNewTag()">+ тег</button>
-      </div>
     </div>
     <div>
       <label class="flabel">ПРОЕКТ</label>
@@ -257,7 +272,7 @@ textarea{resize:none}
 <!-- AI -->
 <div class="view" id="view-ai">
   <div class="chat-messages" id="chatMessages">
-    <div class="msg ai">Привет, Даниил. Пиши задачи или вопросы — добавлю в список или помогу разобраться с приоритетами.</div>
+    <div class="msg ai">Привет, Даниил. Пиши задачи или вопросы — помогу с планированием и приоритетами.</div>
   </div>
   <div class="chat-input-row">
     <input class="chat-input" id="chatInput" type="text" placeholder="Напиши задачу или вопрос..." onkeydown="if(event.key==='Enter')sendChat()">
@@ -267,20 +282,43 @@ textarea{resize:none}
 
 <div class="nav-safe"></div>
 
-<!-- TASK DETAIL MODAL -->
-<div class="modal-overlay" id="taskModal" onclick="if(event.target===this)closeModal()">
+<!-- TASK MODAL -->
+<div class="modal-overlay" id="taskModal" onclick="if(event.target===this)closeModal('taskModal')">
   <div class="modal">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
       <div class="modal-title">ЗАДАЧА</div>
-      <button class="modal-close" onclick="closeModal()">×</button>
+      <button class="modal-close" onclick="closeModal('taskModal')">×</button>
     </div>
     <div id="modalContent"></div>
   </div>
 </div>
 
+<!-- MASTER FORM MODAL -->
+<div class="modal-overlay" id="masterModal" onclick="if(event.target===this)closeModal('masterModal')">
+  <div class="modal">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <div class="modal-title" id="masterModalTitle">НОВЫЙ МАСТЕР</div>
+      <button class="modal-close" onclick="closeModal('masterModal')">×</button>
+    </div>
+    <div id="masterFormContent"></div>
+  </div>
+</div>
+
+<!-- MASTER VIEW MODAL -->
+<div class="modal-overlay" id="masterViewModal" onclick="if(event.target===this)closeModal('masterViewModal')">
+  <div class="modal">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <div class="modal-title">МАСТЕР</div>
+      <button class="modal-close" onclick="closeModal('masterViewModal')">×</button>
+    </div>
+    <div id="masterViewContent"></div>
+  </div>
+</div>
+
 <script>
-const STORAGE_KEY='rf_tasks_v3';
+const TASKS_KEY='rf_tasks_v3';
 const OBJ_KEY='rf_objects_v1';
+const TEAM_KEY='rf_team_v1';
 
 const PROJECTS=[
   {id:'roofformat',label:'ROOFFORMAT',color:'#C8A96E'},
@@ -305,37 +343,56 @@ const OBJ_STATUSES=[
   {id:'done',label:'Сдан',color:'#7EB8A4'},
   {id:'paused',label:'Пауза',color:'#555'},
 ];
+const MASTER_STATUSES=[
+  {id:'active',label:'В команде',color:'#7EB8A4'},
+  {id:'project',label:'На объекте',color:'#C8A96E'},
+  {id:'free',label:'Свободен',color:'#7EA8C8'},
+  {id:'inactive',label:'Не активен',color:'#555'},
+];
+const MASTER_ROLES=[
+  'Кровельщик','Старший мастер','Бригадир','Проектировщик',
+  'Монтажник фальца','Специалист по черепице','Плотник','Производство','Менеджер'
+];
+const SKILL_OPTIONS=[
+  'Фальцевая кровля','Натуральная черепица','Мягкая кровля','Плоская кровля',
+  'SIP-технологии','3D-визуализация','Проектирование','Плотницкие работы',
+  'Металлообработка','Узлы и примыкания','Водосток','Утепление',
+  'Работа с чертежами','Префаб','Производство элементов'
+];
 
-let tasks=[], objects=[], currentFilter='all', selectedWeekDay=null;
-let newProject='roofformat', newPriority='medium', newBlock='any', newTags=[];
-let editingTaskId=null;
+const GOAL_PRESETS=[
+  'Стать мастером фальцевой кровли',
+  'Развить навыки проектирования',
+  'Вырасти до бригадира',
+  'Освоить 3D-визуализацию',
+  'Построить карьеру в ROOFFORMAT',
+  'Развить производственное направление',
+  'Стать специалистом по сложным объектам',
+];
 
-// Storage
+let tasks=[], objects=[], team=[];
+let currentFilter='all', selectedWeekDay=null;
+let newProject='roofformat', newPriority='medium', newBlock='any';
+let editingMasterId=null, teamFilterStatus='all';
+
 function loadData(){
-  try{tasks=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]')}catch{tasks=[]}
+  try{tasks=JSON.parse(localStorage.getItem(TASKS_KEY)||'[]')}catch{tasks=[]}
   try{objects=JSON.parse(localStorage.getItem(OBJ_KEY)||'[]')}catch{objects=[]}
+  try{team=JSON.parse(localStorage.getItem(TEAM_KEY)||'[]')}catch{team=[]}
 }
 function saveData(){
-  localStorage.setItem(STORAGE_KEY,JSON.stringify(tasks));
+  localStorage.setItem(TASKS_KEY,JSON.stringify(tasks));
   localStorage.setItem(OBJ_KEY,JSON.stringify(objects));
+  localStorage.setItem(TEAM_KEY,JSON.stringify(team));
 }
 
-// Helpers
-function fmtDate(s){
-  if(!s)return'';
-  const d=new Date(s+'T00:00:00');
-  return d.toLocaleDateString('ru-RU',{day:'numeric',month:'short'});
-}
-function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function fmtDate(s){if(!s)return'';const d=new Date(s+'T00:00:00');return d.toLocaleDateString('ru-RU',{day:'numeric',month:'short'})}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function today(){return new Date().toISOString().split('T')[0]}
-function getWeekDays(){
-  const d=new Date(); d.setHours(0,0,0,0);
-  const mon=new Date(d); mon.setDate(d.getDate()-((d.getDay()+6)%7));
-  return Array.from({length:7},(_,i)=>{const x=new Date(mon);x.setDate(mon.getDate()+i);return x});
-}
+function getWeekDays(){const d=new Date();d.setHours(0,0,0,0);const mon=new Date(d);mon.setDate(d.getDate()-((d.getDay()+6)%7));return Array.from({length:7},(_,i)=>{const x=new Date(mon);x.setDate(mon.getDate()+i);return x})}
 const DAY_NAMES=['ПН','ВТ','СР','ЧТ','ПТ','СБ','ВС'];
 
-// Stats
+// STATS
 function renderStats(){
   const t=today();
   const todayN=tasks.filter(x=>x.date===t&&!x.done).length;
@@ -344,327 +401,293 @@ function renderStats(){
   document.getElementById('statActive').textContent=active+' активных';
 }
 
-// TASKS VIEW
+// TASKS
 function renderFilters(){
   const all=[{id:'all',label:'Все'},{id:'done',label:'Готово'},...PROJECTS.map(p=>({id:p.id,label:p.label}))];
-  document.getElementById('filters').innerHTML=all.map(f=>
-    `<button class="fbtn${currentFilter===f.id?' active':''}" onclick="setFilter('${f.id}')">${f.label}</button>`
-  ).join('');
+  document.getElementById('filters').innerHTML=all.map(f=>`<button class="fbtn${currentFilter===f.id?' active':''}" onclick="setFilter('${f.id}')">${f.label}</button>`).join('');
 }
-
 function renderTasks(){
   const filtered=tasks.filter(t=>{
     if(currentFilter==='all')return!t.done;
     if(currentFilter==='done')return t.done;
     return t.project===currentFilter&&!t.done;
   });
-  if(!filtered.length){
-    document.getElementById('taskList').innerHTML=`<div class="empty">${currentFilter==='done'?'Ещё ничего не выполнено':'Задач нет — добавь первую'}</div>`;
-    return;
-  }
-  document.getElementById('taskList').innerHTML=filtered.map(t=>taskHTML(t)).join('');
-}
-
-function taskHTML(t){
-  const proj=PROJECTS.find(p=>p.id===t.project);
-  const prio=PRIORITIES.find(p=>p.id===t.priority);
-  const subDone=(t.subtasks||[]).filter(s=>s.done).length;
-  const subTotal=(t.subtasks||[]).length;
-  const subStr=subTotal>0?`<span class="tag" style="color:var(--muted)">${subDone}/${subTotal} подзадач</span>`:'';
-  const tagsStr=(t.tags||[]).map(tag=>`<span class="tag" style="color:var(--blue);border:1px solid #1E3A4A;border-radius:10px;padding:1px 7px">#${esc(tag)}</span>`).join('');
-  const dateStr=t.date?`<span class="tag" style="color:var(--muted)">${fmtDate(t.date)}</span>`:'';
-  const blockStr=t.block&&t.block!=='any'?`<span class="tag" style="color:var(--muted)">${BLOCKS.find(b=>b.id===t.block)?.label||''}</span>`:'';
-  const notePreview=t.note?`<div style="font-size:12px;color:var(--muted);margin-top:4px;font-style:italic">${esc(t.note.substring(0,60))}${t.note.length>60?'…':''}</div>`:'';
-
-  return`<div class="task-item" id="task-${t.id}">
-    <div class="task-row">
-      <button class="check${t.done?' done':''}" onclick="toggleDone(${t.id})"></button>
-      <div class="task-body" onclick="openTask(${t.id})" style="cursor:pointer">
-        <div class="task-title${t.done?' done':''}">${esc(t.title)}</div>
-        ${notePreview}
-        <div class="task-meta">
-          ${proj?`<span class="tag" style="color:${proj.color}">${proj.label}</span>`:''}
-          ${prio?`<span class="tag" style="color:${prio.color}">${prio.label}</span>`:''}
-          ${dateStr}${blockStr}${subStr}${tagsStr}
+  if(!filtered.length){document.getElementById('taskList').innerHTML=`<div class="empty">${currentFilter==='done'?'Ещё ничего не выполнено':'Задач нет — добавь первую'}</div>`;return}
+  document.getElementById('taskList').innerHTML=filtered.map(t=>{
+    const proj=PROJECTS.find(p=>p.id===t.project);
+    const prio=PRIORITIES.find(p=>p.id===t.priority);
+    const subDone=(t.subtasks||[]).filter(s=>s.done).length;
+    const subTotal=(t.subtasks||[]).length;
+    const noteP=t.note?`<div style="font-size:12px;color:var(--muted);margin-top:4px;font-style:italic">${esc(t.note.substring(0,60))}${t.note.length>60?'…':''}</div>`:'';
+    return`<div class="task-item">
+      <div class="task-row">
+        <button class="check${t.done?' done':''}" onclick="toggleDone(${t.id})"></button>
+        <div class="task-body" onclick="openTask(${t.id})" style="cursor:pointer">
+          <div class="task-title${t.done?' done':''}">${esc(t.title)}</div>
+          ${noteP}
+          <div class="task-meta">
+            ${proj?`<span class="tag" style="color:${proj.color}">${proj.label}</span>`:''}
+            ${prio?`<span class="tag" style="color:${prio.color}">${prio.label}</span>`:''}
+            ${t.date?`<span class="tag" style="color:var(--muted)">${fmtDate(t.date)}</span>`:''}
+            ${subTotal?`<span class="tag" style="color:var(--muted)">${subDone}/${subTotal}</span>`:''}
+          </div>
         </div>
+        <button class="task-del" onclick="deleteTask(${t.id})">×</button>
       </div>
-      <button class="task-del" onclick="deleteTask(${t.id})">×</button>
-    </div>
-  </div>`;
+    </div>`;
+  }).join('');
 }
 
-// TASK MODAL
 function openTask(id){
-  const t=tasks.find(x=>x.id===id);
-  if(!t)return;
-  editingTaskId=id;
-  const proj=PROJECTS.find(p=>p.id===t.project);
-  const prio=PRIORITIES.find(p=>p.id===t.priority);
-
+  const t=tasks.find(x=>x.id===id);if(!t)return;
   document.getElementById('modalContent').innerHTML=`
-    <div style="font-size:18px;font-weight:400;margin-bottom:12px">${esc(t.title)}</div>
-    <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
-      ${proj?`<span class="tag" style="color:${proj.color};border:1px solid ${proj.color};border-radius:12px;padding:3px 10px">${proj.label}</span>`:''}
-      ${prio?`<span class="tag" style="color:${prio.color};border:1px solid ${prio.color};border-radius:12px;padding:3px 10px">${prio.label}</span>`:''}
-      ${t.date?`<span class="tag" style="color:var(--muted);border:1px solid var(--border2);border-radius:12px;padding:3px 10px">${fmtDate(t.date)}</span>`:''}
-    </div>
-
+    <div style="font-size:18px;margin-bottom:12px">${esc(t.title)}</div>
     <div class="flabel">ЗАМЕТКА</div>
-    <textarea class="task-note" rows="3" id="modalNote" onchange="saveTaskNote(${id})">${esc(t.note||'')}</textarea>
-
-    <div class="flabel" style="margin-top:14px">ТЕГИ</div>
-    <div id="modalTags" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px">${(t.tags||[]).map((tag,i)=>`<span class="task-tag-chip">#${esc(tag)}<button onclick="removeTag(${id},${i})">×</button></span>`).join('')}</div>
-    <div style="display:flex;gap:6px">
-      <input class="tag-inp" id="modalTagInput" placeholder="#тег" onkeydown="if(event.key==='Enter')addModalTag(${id})">
-      <button class="sub-add-btn" onclick="addModalTag(${id})">+ тег</button>
-    </div>
-
+    <textarea class="task-note" rows="3" id="modalNote" onchange="saveNote(${id})">${esc(t.note||'')}</textarea>
     <div class="flabel" style="margin-top:14px">ПОДЗАДАЧИ</div>
-    <div class="subtask-list" id="subtaskList">${renderSubtasks(t)}</div>
+    <div class="subtask-list" id="subtaskList">${renderSubs(t)}</div>
     <div class="add-sub-row">
-      <input class="sub-input" id="subInput" placeholder="Новая подзадача..." onkeydown="if(event.key==='Enter')addSubtask(${id})">
-      <button class="sub-add-btn" onclick="addSubtask(${id})">+</button>
-    </div>
-  `;
+      <input class="sub-input" id="subInput" placeholder="Новая подзадача..." onkeydown="if(event.key==='Enter')addSub(${id})">
+      <button class="sub-add-btn" onclick="addSub(${id})">+</button>
+    </div>`;
   document.getElementById('taskModal').classList.add('open');
 }
+function renderSubs(t){return(t.subtasks||[]).map((s,i)=>`<div class="subtask-item"><button class="sub-check${s.done?' done':''}" onclick="toggleSub(${t.id},${i})"></button><span class="sub-title${s.done?' done':''}">${esc(s.title)}</span><button class="sub-del" onclick="deleteSub(${t.id},${i})">×</button></div>`).join('')||'<div style="font-size:12px;color:#333;font-style:italic;padding:4px 0">Нет подзадач</div>'}
+function saveNote(id){tasks=tasks.map(t=>t.id===id?{...t,note:document.getElementById('modalNote').value}:t);saveData();renderTasks()}
+function addSub(id){const inp=document.getElementById('subInput');const title=inp.value.trim();if(!title)return;tasks=tasks.map(t=>t.id!==id?t:{...t,subtasks:[...(t.subtasks||[]),{title,done:false}]});inp.value='';saveData();const t=tasks.find(x=>x.id===id);document.getElementById('subtaskList').innerHTML=renderSubs(t);renderTasks()}
+function toggleSub(tid,i){tasks=tasks.map(t=>{if(t.id!==tid)return t;const s=[...(t.subtasks||[])];s[i]={...s[i],done:!s[i].done};return{...t,subtasks:s}});saveData();const t=tasks.find(x=>x.id===tid);document.getElementById('subtaskList').innerHTML=renderSubs(t);renderTasks()}
+function deleteSub(tid,i){tasks=tasks.map(t=>{if(t.id!==tid)return t;const s=[...(t.subtasks||[])];s.splice(i,1);return{...t,subtasks:s}});saveData();const t=tasks.find(x=>x.id===tid);document.getElementById('subtaskList').innerHTML=renderSubs(t);renderTasks()}
 
-function renderSubtasks(t){
-  return(t.subtasks||[]).map((s,i)=>`
-    <div class="subtask-item">
-      <button class="sub-check${s.done?' done':''}" onclick="toggleSub(${t.id},${i})"></button>
-      <span class="sub-title${s.done?' done':''}">${esc(s.title)}</span>
-      <button class="sub-del" onclick="deleteSub(${t.id},${i})">×</button>
-    </div>`).join('')||'<div style="font-size:12px;color:#333;font-style:italic;padding:4px 0">Подзадач нет</div>';
-}
+function toggleDone(id){tasks=tasks.map(t=>t.id===id?{...t,done:!t.done}:t);saveData();renderAll()}
+function deleteTask(id){tasks=tasks.filter(t=>t.id!==id);saveData();renderAll()}
+function setFilter(f){currentFilter=f;renderFilters();renderTasks()}
 
-function closeModal(){document.getElementById('taskModal').classList.remove('open');editingTaskId=null}
-
-function saveTaskNote(id){
-  tasks=tasks.map(t=>t.id===id?{...t,note:document.getElementById('modalNote').value}:t);
-  saveData();renderTasks();
-}
-
-function addSubtask(id){
-  const inp=document.getElementById('subInput');
-  const title=inp.value.trim();if(!title)return;
-  tasks=tasks.map(t=>{
-    if(t.id!==id)return t;
-    return{...t,subtasks:[...(t.subtasks||[]),{title,done:false}]};
-  });
-  inp.value='';saveData();
-  const t=tasks.find(x=>x.id===id);
-  document.getElementById('subtaskList').innerHTML=renderSubtasks(t);
-  renderTasks();
-}
-
-function toggleSub(taskId,subIdx){
-  tasks=tasks.map(t=>{
-    if(t.id!==taskId)return t;
-    const subs=[...(t.subtasks||[])];
-    subs[subIdx]={...subs[subIdx],done:!subs[subIdx].done};
-    return{...t,subtasks:subs};
-  });
-  saveData();
-  const t=tasks.find(x=>x.id===taskId);
-  document.getElementById('subtaskList').innerHTML=renderSubtasks(t);
-  renderTasks();
-}
-
-function deleteSub(taskId,subIdx){
-  tasks=tasks.map(t=>{
-    if(t.id!==taskId)return t;
-    const subs=[...(t.subtasks||[])];subs.splice(subIdx,1);
-    return{...t,subtasks:subs};
-  });
-  saveData();
-  const t=tasks.find(x=>x.id===taskId);
-  document.getElementById('subtaskList').innerHTML=renderSubtasks(t);
-  renderTasks();
-}
-
-function addModalTag(id){
-  const inp=document.getElementById('modalTagInput');
-  const tag=inp.value.trim().replace(/^#/,'');if(!tag)return;
-  tasks=tasks.map(t=>t.id===id?{...t,tags:[...(t.tags||[]),tag]}:t);
-  inp.value='';saveData();
-  const t=tasks.find(x=>x.id===id);
-  document.getElementById('modalTags').innerHTML=(t.tags||[]).map((tg,i)=>`<span class="task-tag-chip">#${esc(tg)}<button onclick="removeTag(${id},${i})">×</button></span>`).join('');
-  renderTasks();
-}
-
-function removeTag(id,idx){
-  tasks=tasks.map(t=>{
-    if(t.id!==id)return t;
-    const tags=[...(t.tags||[])];tags.splice(idx,1);return{...t,tags};
-  });
-  saveData();
-  const t=tasks.find(x=>x.id===id);
-  document.getElementById('modalTags').innerHTML=(t.tags||[]).map((tg,i)=>`<span class="task-tag-chip">#${esc(tg)}<button onclick="removeTag(${id},${i})">×</button></span>`).join('');
-  renderTasks();
-}
-
-// WEEK VIEW
+// WEEK
 function renderWeek(){
-  const days=getWeekDays();
-  const sel=selectedWeekDay||today();
+  const days=getWeekDays();const sel=selectedWeekDay||today();
   document.getElementById('weekHeader').innerHTML=days.map((d,i)=>{
     const ds=d.toISOString().split('T')[0];
-    const hasTasks=tasks.some(t=>t.date===ds&&!t.done);
-    const isToday=ds===today();
-    const isSel=ds===sel;
-    return`<div class="week-day${isToday?' today':''}${isSel?' selected':''}" onclick="selectDay('${ds}')">
-      <span style="font-size:9px">${DAY_NAMES[i]}</span>
-      <span class="day-num">${d.getDate()}</span>
-      <div class="day-dot${hasTasks?' has':''}"></div>
-    </div>`;
+    const has=tasks.some(t=>t.date===ds&&!t.done);
+    return`<div class="week-day${ds===today()?' today':''}${ds===sel?' selected':''}" onclick="selectDay('${ds}')"><span style="font-size:9px">${DAY_NAMES[i]}</span><span class="day-num">${d.getDate()}</span><div class="day-dot${has?' has':''}"></div></div>`;
   }).join('');
-  renderTimeBlocks(sel);
-}
-
-function selectDay(ds){selectedWeekDay=ds;renderWeek()}
-
-function renderTimeBlocks(ds){
-  const dayTasks=tasks.filter(t=>t.date===ds&&!t.done);
+  const dayT=tasks.filter(t=>t.date===sel&&!t.done);
   const noDate=tasks.filter(t=>!t.date&&!t.done);
-  const blocks=[
-    {id:'morning',label:'☀️ УТРО'},
-    {id:'day',label:'🌤 ДЕНЬ'},
-    {id:'evening',label:'🌙 ВЕЧЕР'},
-    {id:'any',label:'📌 ОСТАЛЬНЫЕ'},
-  ];
-  document.getElementById('timeBlocks').innerHTML=blocks.map(b=>{
-    const bTasks=b.id==='any'
-      ?[...dayTasks.filter(t=>!t.block||t.block==='any'),...(ds===today()?noDate:[])]
-      :dayTasks.filter(t=>t.block===b.id);
-    return`<div class="time-block">
-      <div class="block-label">${b.label}</div>
-      ${bTasks.length?bTasks.map(t=>`
-        <div class="block-task">
-          <button class="check${t.done?' done':''}" onclick="toggleDone(${t.id});renderWeek()" style="width:18px;height:18px;flex-shrink:0;margin-top:2px"></button>
-          <div style="flex:1;min-width:0;cursor:pointer" onclick="openTask(${t.id})">
-            <div style="font-size:14px">${esc(t.title)}</div>
-            ${(t.subtasks||[]).length?`<div style="font-size:11px;color:var(--muted);font-family:var(--mono)">${t.subtasks.filter(s=>s.done).length}/${t.subtasks.length} подзадач</div>`:''}
-          </div>
-        </div>`).join(''):`<div class="block-empty">Нет задач</div>`}
-    </div>`;
+  document.getElementById('timeBlocks').innerHTML=['morning','day','evening','any'].map(bid=>{
+    const bl=BLOCKS.find(b=>b.id===bid);
+    const bt=bid==='any'?[...dayT.filter(t=>!t.block||t.block==='any'),...(sel===today()?noDate:[])] :dayT.filter(t=>t.block===bid);
+    return`<div class="time-block"><div class="block-label">${bl.label}</div>${bt.length?bt.map(t=>`<div class="block-task"><button class="check${t.done?' done':''}" onclick="toggleDone(${t.id});renderWeek()" style="width:18px;height:18px;flex-shrink:0;margin-top:2px"></button><div style="flex:1;font-size:14px;cursor:pointer" onclick="openTask(${t.id})">${esc(t.title)}</div></div>`).join(''):`<div class="block-empty">Нет задач</div>`}</div>`;
   }).join('');
 }
+function selectDay(ds){selectedWeekDay=ds;renderWeek()}
 
 // OBJECTS
 function renderObjects(){
-  if(!objects.length){
-    document.getElementById('objList').innerHTML='<div class="empty">Объектов нет — добавь первый</div>';
-    return;
-  }
+  if(!objects.length){document.getElementById('objList').innerHTML='<div class="empty">Объектов нет</div>';return}
   document.getElementById('objList').innerHTML=objects.map(o=>{
-    const status=OBJ_STATUSES.find(s=>s.id===o.status)||OBJ_STATUSES[0];
-    const objTasks=tasks.filter(t=>t.project==='roofformat'&&t.objId===o.id);
-    const done=objTasks.filter(t=>t.done).length;
-    const total=objTasks.length;
+    const st=OBJ_STATUSES.find(s=>s.id===o.status)||OBJ_STATUSES[0];
+    const ot=tasks.filter(t=>t.objId===o.id);
+    const done=ot.filter(t=>t.done).length;const total=ot.length;
     const pct=total?Math.round(done/total*100):0;
     return`<div class="obj-card">
-      <div class="obj-header">
-        <div class="obj-name">${esc(o.name)}</div>
-        <span class="obj-status" style="background:${status.color}22;color:${status.color}">${status.label}</span>
-      </div>
-      ${o.address?`<div class="obj-meta">📍 ${esc(o.address)}</div>`:''}
-      ${total?`<div style="font-size:11px;color:var(--muted);font-family:var(--mono);margin-bottom:6px">${done}/${total} задач</div>
-      <div class="obj-progress"><div class="obj-progress-bar" style="width:${pct}%"></div></div>`:''}
+      <div class="obj-header"><div class="obj-name">${esc(o.name)}</div><span class="obj-status" style="background:${st.color}22;color:${st.color}">${st.label}</span></div>
+      ${total?`<div style="font-size:11px;color:var(--muted);font-family:var(--mono);margin-bottom:6px">${done}/${total} задач</div><div class="obj-progress"><div class="obj-progress-bar" style="width:${pct}%"></div></div>`:''}
       <div class="obj-actions">
-        <select class="obj-btn" onchange="changeObjStatus(${o.id},this.value)" style="font-family:var(--mono);font-size:10px;background:var(--bg3)">
-          ${OBJ_STATUSES.map(s=>`<option value="${s.id}"${o.status===s.id?' selected':''}>${s.label}</option>`).join('')}
-        </select>
+        <select class="obj-btn" onchange="changeObjStatus(${o.id},this.value)" style="font-family:var(--mono);font-size:10px;background:var(--bg3)">${OBJ_STATUSES.map(s=>`<option value="${s.id}"${o.status===s.id?' selected':''}>${s.label}</option>`).join('')}</select>
         <button class="obj-btn" onclick="addObjTask(${o.id})">+ задача</button>
         <button class="obj-btn" onclick="deleteObj(${o.id})" style="color:var(--red);flex:0;padding:7px 10px">×</button>
       </div>
     </div>`;
   }).join('');
 }
+function addObject(){const inp=document.getElementById('newObjName');const name=inp.value.trim();if(!name)return;objects.push({id:Date.now(),name,status:'active'});inp.value='';saveData();renderObjects()}
+function changeObjStatus(id,s){objects=objects.map(o=>o.id===id?{...o,status:s}:o);saveData();renderObjects()}
+function deleteObj(id){if(!confirm('Удалить объект?'))return;objects=objects.filter(o=>o.id!==id);saveData();renderObjects()}
+function addObjTask(objId){const obj=objects.find(o=>o.id===objId);if(!obj)return;const title=prompt(`Задача для «${obj.name}»:`);if(!title||!title.trim())return;tasks.unshift({id:Date.now(),title:title.trim(),project:'roofformat',priority:'medium',block:'any',date:'',note:'',tags:[],subtasks:[],done:false,objId});saveData();renderObjects();renderTasks()}
 
-function addObject(){
-  const inp=document.getElementById('newObjName');
-  const name=inp.value.trim();if(!name)return;
-  objects.push({id:Date.now(),name,address:'',status:'active'});
-  inp.value='';saveData();renderObjects();
-}
-
-function changeObjStatus(id,status){
-  objects=objects.map(o=>o.id===id?{...o,status}:o);
-  saveData();renderObjects();
-}
-
-function deleteObj(id){
-  if(!confirm('Удалить объект?'))return;
-  objects=objects.filter(o=>o.id!==id);
-  saveData();renderObjects();
-}
-
-function addObjTask(objId){
-  const obj=objects.find(o=>o.id===objId);if(!obj)return;
-  const title=prompt(`Задача для объекта «${obj.name}»:`);
-  if(!title||!title.trim())return;
-  tasks.unshift({id:Date.now(),title:title.trim(),project:'roofformat',priority:'medium',block:'any',date:'',note:'',tags:[],subtasks:[],done:false,objId});
-  saveData();renderObjects();renderTasks();
-}
-
-// ADD FORM
-function renderProjectChips(){
-  document.getElementById('projectChips').innerHTML=PROJECTS.map(p=>
-    `<button class="chip" style="${newProject===p.id?`background:${p.color};color:#0A0A0A;border-color:${p.color}`:''}" onclick="selectProject('${p.id}')">${p.label}</button>`
+// ═══════════════════════════════
+// TEAM
+// ═══════════════════════════════
+function renderTeamFilters(){
+  const statuses=[{id:'all',label:'Все'},...MASTER_STATUSES];
+  document.getElementById('teamFilters').innerHTML=statuses.map(s=>
+    `<button class="fbtn${teamFilterStatus===s.id?' active':''}" onclick="setTeamFilter('${s.id}')">${s.label}</button>`
   ).join('');
 }
-function renderPrioChips(){
-  document.getElementById('prioChips').innerHTML=PRIORITIES.map(p=>
-    `<button class="prio-chip" style="${newPriority===p.id?`background:${p.color};color:#0A0A0A;border-color:${p.color}`:''}" onclick="selectPrio('${p.id}')">${p.label}</button>`
-  ).join('');
-}
-function renderBlockChips(){
-  document.getElementById('blockChips').innerHTML=BLOCKS.map(b=>
-    `<button class="chip" style="${newBlock===b.id?'background:var(--gold);color:#0A0A0A;border-color:var(--gold)':''}" onclick="selectBlock('${b.id}')">${b.label}</button>`
-  ).join('');
-}
-function renderNewTags(){
-  document.getElementById('newTagsDisplay').innerHTML=newTags.map((t,i)=>
-    `<span class="task-tag-chip">#${esc(t)}<button onclick="removeNewTag(${i})">×</button></span>`
-  ).join('');
+function setTeamFilter(s){teamFilterStatus=s;renderTeam()}
+
+function renderTeam(){
+  renderTeamFilters();
+  const q=(document.getElementById('teamSearch')?.value||'').toLowerCase();
+  let filtered=team.filter(m=>{
+    if(teamFilterStatus!=='all'&&m.status!==teamFilterStatus)return false;
+    if(q){return m.name.toLowerCase().includes(q)||(m.skills||[]).some(s=>s.toLowerCase().includes(q))||(m.role||'').toLowerCase().includes(q)}
+    return true;
+  });
+  if(!filtered.length){
+    document.getElementById('teamList').innerHTML='<div class="empty">Мастеров нет — добавь первого</div>';
+    return;
+  }
+  document.getElementById('teamList').innerHTML=filtered.map(m=>masterCardHTML(m)).join('');
 }
 
+function masterCardHTML(m){
+  const st=MASTER_STATUSES.find(s=>s.id===m.status)||MASTER_STATUSES[0];
+  const initials=(m.name||'?').split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
+  const skills=(m.skills||[]).slice(0,4).map(s=>`<span class="skill-tag">${esc(s)}</span>`).join('');
+  const moreSkills=(m.skills||[]).length>4?`<span class="skill-tag" style="color:var(--muted)">+${(m.skills||[]).length-4}</span>`:'';
+  const exp=m.experience?`<span style="font-family:var(--mono);font-size:10px;color:var(--muted)">${esc(m.experience)} лет опыта</span>`:'';
+  return`<div class="master-card" onclick="viewMaster(${m.id})">
+    <div class="master-card-header">
+      <div class="master-avatar${m.status==='active'?' active-av':''}">${initials}</div>
+      <div class="master-info">
+        <div class="master-name">${esc(m.name)}</div>
+        <div class="master-role">${esc(m.role||'Мастер')}</div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="master-status-badge" style="background:${st.color}22;color:${st.color}">${st.label}</span>
+          ${exp}
+        </div>
+      </div>
+    </div>
+    ${m.bio?`<div class="master-bio">${esc(m.bio.substring(0,120))}${m.bio.length>120?'…':''}</div>`:''}
+    ${skills||moreSkills?`<div class="master-skills">${skills}${moreSkills}</div>`:''}
+    ${m.goal?`<div class="master-goal">«${esc(m.goal.substring(0,100))}${m.goal.length>100?'…':''}»</div>`:''}
+    <div class="master-actions" onclick="event.stopPropagation()">
+      <button class="master-btn" onclick="editMaster(${m.id})">Редактировать</button>
+      ${m.phone?`<button class="master-btn primary" onclick="window.location='tel:${esc(m.phone)}'">Позвонить</button>`:''}
+    </div>
+  </div>`;
+}
+
+function viewMaster(id){
+  const m=team.find(x=>x.id===id);if(!m)return;
+  const st=MASTER_STATUSES.find(s=>s.id===m.status)||MASTER_STATUSES[0];
+  const initials=(m.name||'?').split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
+  const objCount=objects.filter(o=>o.masterId===id).length;
+  const taskCount=tasks.filter(t=>t.masterId===id&&!t.done).length;
+  document.getElementById('masterViewContent').innerHTML=`
+    <div style="display:flex;gap:14px;align-items:center;margin-bottom:20px">
+      <div class="master-avatar active-av" style="width:64px;height:64px;font-size:24px">${initials}</div>
+      <div>
+        <div style="font-size:20px;margin-bottom:4px">${esc(m.name)}</div>
+        <div style="font-family:var(--mono);font-size:11px;color:var(--gold);margin-bottom:6px">${esc(m.role||'Мастер')}</div>
+        <span class="master-status-badge" style="background:${st.color}22;color:${st.color}">${st.label}</span>
+      </div>
+    </div>
+    ${m.bio?`<div class="master-section"><div class="master-section-label">О МАСТЕРЕ</div><div class="master-section-text">${esc(m.bio)}</div></div>`:''}
+    ${(m.skills||[]).length?`<div class="master-section"><div class="master-section-label">НАВЫКИ</div><div class="master-skills" style="margin-top:6px">${m.skills.map(s=>`<span class="skill-tag">${esc(s)}</span>`).join('')}</div></div>`:''}
+    ${m.experience?`<div class="master-section"><div class="master-section-label">ОПЫТ</div><div class="master-section-text">${esc(m.experience)} лет в профессии</div></div>`:''}
+    ${m.ambitions?`<div class="master-section"><div class="master-section-label">АМБИЦИИ</div><div class="master-section-text">${esc(m.ambitions)}</div></div>`:''}
+    ${m.goal?`<div class="master-section"><div class="master-section-label">ЦЕЛЬ В ROOFFORMAT</div><div class="master-goal">${esc(m.goal)}</div></div>`:''}
+    ${m.interaction?`<div class="master-section"><div class="master-section-label">ЦЕЛЬ ВЗАИМОДЕЙСТВИЯ</div><div class="master-section-text">${esc(m.interaction)}</div></div>`:''}
+    <div class="master-stats" style="margin-top:16px">
+      <div class="master-stat"><span class="master-stat-val">${m.experience||'—'}</span><span class="master-stat-label">лет опыта</span></div>
+      <div class="master-stat"><span class="master-stat-val">${m.objects||0}</span><span class="master-stat-label">объектов</span></div>
+      <div class="master-stat"><span class="master-stat-val">${(m.skills||[]).length}</span><span class="master-stat-label">навыков</span></div>
+    </div>
+    <div class="master-actions" style="margin-top:4px">
+      <button class="master-btn" onclick="closeModal('masterViewModal');editMaster(${m.id})">Редактировать</button>
+      ${m.phone?`<button class="master-btn primary" onclick="window.location='tel:${esc(m.phone)}'">Позвонить</button>`:''}
+    </div>`;
+  document.getElementById('masterViewModal').classList.add('open');
+}
+
+function openMasterForm(master){
+  editingMasterId=master?master.id:null;
+  document.getElementById('masterModalTitle').textContent=master?'РЕДАКТИРОВАТЬ':'НОВЫЙ МАСТЕР';
+  const m=master||{name:'',role:'Кровельщик',status:'active',bio:'',skills:[],experience:'',ambitions:'',goal:'',interaction:'',phone:'',objects:0};
+  document.getElementById('masterFormContent').innerHTML=`
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div><label class="flabel">ИМЯ И ФАМИЛИЯ</label><input type="text" id="mName" value="${esc(m.name)}" placeholder="Иван Петров"></div>
+      <div><label class="flabel">РОЛЬ</label>
+        <div class="chip-row" id="roleChips">${MASTER_ROLES.map(r=>`<button class="chip" style="${(m.role||'Кровельщик')===r?'background:var(--gold);color:#0A0A0A;border-color:var(--gold)':''}" onclick="selectRole('${r}',this)">${r}</button>`).join('')}</div>
+      </div>
+      <div><label class="flabel">СТАТУС</label>
+        <div class="chip-row">${MASTER_STATUSES.map(s=>`<button class="chip" id="mst_${s.id}" style="${m.status===s.id?`background:${s.color};color:#0A0A0A;border-color:${s.color}`:''}" onclick="selectMasterStatus('${s.id}')">${s.label}</button>`).join('')}</div>
+      </div>
+      <div><label class="flabel">ТЕЛЕФОН</label><input type="tel" id="mPhone" value="${esc(m.phone||'')}" placeholder="+7 900 000 00 00"></div>
+      <div><label class="flabel">ОПЫТ (лет)</label><input type="text" id="mExp" value="${esc(m.experience||'')}" placeholder="5"></div>
+      <div><label class="flabel">КОЛИЧЕСТВО ОБЪЕКТОВ</label><input type="text" id="mObjs" value="${esc(m.objects||'')}" placeholder="42"></div>
+      <div><label class="flabel">О МАСТЕРЕ</label><textarea id="mBio" rows="3" placeholder="Краткое описание — кто он, как работает, что отличает...">${esc(m.bio||'')}</textarea></div>
+      <div><label class="flabel">НАВЫКИ</label>
+        <div class="chip-row" id="skillChips" style="margin-bottom:8px">${SKILL_OPTIONS.map(s=>`<button class="chip" style="${(m.skills||[]).includes(s)?'background:var(--green);color:#0A0A0A;border-color:var(--green)':''}" onclick="toggleSkill('${s}',this)">${s}</button>`).join('')}</div>
+      </div>
+      <div><label class="flabel">АМБИЦИИ</label><textarea id="mAmb" rows="2" placeholder="Что хочет достичь в профессии...">${esc(m.ambitions||'')}</textarea></div>
+      <div><label class="flabel">ЦЕЛЬ В ROOFFORMAT</label>
+        <div class="chip-row" style="margin-bottom:8px">${GOAL_PRESETS.map(g=>`<button class="chip" style="font-size:10px" onclick="setGoalPreset('${g}')">${g}</button>`).join('')}</div>
+        <textarea id="mGoal" rows="2" placeholder="Чего хочет достичь работая в ROOFFORMAT...">${esc(m.goal||'')}</textarea>
+      </div>
+      <div><label class="flabel">ЦЕЛЬ ВЗАИМОДЕЙСТВИЯ</label><textarea id="mInter" rows="2" placeholder="Зачем сотрудничество — рост, деньги, опыт, развитие...">${esc(m.interaction||'')}</textarea></div>
+      <button class="btn-add" onclick="saveMaster()" style="margin-top:4px">${master?'СОХРАНИТЬ':'ДОБАВИТЬ МАСТЕРА'}</button>
+      ${master?`<button onclick="deleteMaster(${master.id})" style="background:none;border:1px solid var(--red);color:var(--red);border-radius:10px;padding:12px;font-family:var(--mono);font-size:12px">УДАЛИТЬ</button>`:''}
+    </div>`;
+  // store selected role/status/skills
+  window._mRole=m.role||'Кровельщик';
+  window._mStatus=m.status||'active';
+  window._mSkills=[...(m.skills||[])];
+  document.getElementById('masterModal').classList.add('open');
+}
+
+function selectRole(role,btn){
+  window._mRole=role;
+  document.querySelectorAll('#roleChips .chip').forEach(b=>{b.style.background='';b.style.color='';b.style.borderColor=''});
+  btn.style.background='var(--gold)';btn.style.color='#0A0A0A';btn.style.borderColor='var(--gold)';
+}
+function selectMasterStatus(id){
+  window._mStatus=id;
+  MASTER_STATUSES.forEach(s=>{
+    const b=document.getElementById('mst_'+s.id);if(!b)return;
+    if(s.id===id){b.style.background=s.color;b.style.color='#0A0A0A';b.style.borderColor=s.color}
+    else{b.style.background='';b.style.color='';b.style.borderColor=''}
+  });
+}
+function toggleSkill(skill,btn){
+  const idx=window._mSkills.indexOf(skill);
+  if(idx>=0){window._mSkills.splice(idx,1);btn.style.background='';btn.style.color='';btn.style.borderColor=''}
+  else{window._mSkills.push(skill);btn.style.background='var(--green)';btn.style.color='#0A0A0A';btn.style.borderColor='var(--green)'}
+}
+function setGoalPreset(g){document.getElementById('mGoal').value=g}
+
+function saveMaster(){
+  const name=document.getElementById('mName').value.trim();
+  if(!name){document.getElementById('mName').focus();return}
+  const master={
+    id:editingMasterId||Date.now(),
+    name,
+    role:window._mRole||'Кровельщик',
+    status:window._mStatus||'active',
+    phone:document.getElementById('mPhone').value.trim(),
+    experience:document.getElementById('mExp').value.trim(),
+    objects:document.getElementById('mObjs').value.trim(),
+    bio:document.getElementById('mBio').value.trim(),
+    skills:[...(window._mSkills||[])],
+    ambitions:document.getElementById('mAmb').value.trim(),
+    goal:document.getElementById('mGoal').value.trim(),
+    interaction:document.getElementById('mInter').value.trim(),
+  };
+  if(editingMasterId){team=team.map(m=>m.id===editingMasterId?master:m)}
+  else{team.unshift(master)}
+  saveData();closeModal('masterModal');renderTeam();
+}
+function editMaster(id){const m=team.find(x=>x.id===id);if(m)openMasterForm(m)}
+function deleteMaster(id){if(!confirm('Удалить мастера?'))return;team=team.filter(m=>m.id!==id);saveData();closeModal('masterModal');renderTeam()}
+
+// ADD TASK FORM
+function renderProjectChips(){document.getElementById('projectChips').innerHTML=PROJECTS.map(p=>`<button class="chip" style="${newProject===p.id?`background:${p.color};color:#0A0A0A;border-color:${p.color}`:''}" onclick="selectProject('${p.id}')">${p.label}</button>`).join('')}
+function renderPrioChips(){document.getElementById('prioChips').innerHTML=PRIORITIES.map(p=>`<button class="prio-chip" style="${newPriority===p.id?`background:${p.color};color:#0A0A0A;border-color:${p.color}`:''}" onclick="selectPrio('${p.id}')">${p.label}</button>`).join('')}
+function renderBlockChips(){document.getElementById('blockChips').innerHTML=BLOCKS.map(b=>`<button class="chip" style="${newBlock===b.id?'background:var(--gold);color:#0A0A0A;border-color:var(--gold)':''}" onclick="selectBlock('${b.id}')">${b.label}</button>`).join('')}
 function selectProject(id){newProject=id;renderProjectChips()}
 function selectPrio(id){newPriority=id;renderPrioChips()}
 function selectBlock(id){newBlock=id;renderBlockChips()}
-function addNewTag(){
-  const inp=document.getElementById('newTagInput');
-  const tag=inp.value.trim().replace(/^#/,'');
-  if(tag&&!newTags.includes(tag)){newTags.push(tag)}
-  inp.value='';renderNewTags();
-}
-function removeNewTag(i){newTags.splice(i,1);renderNewTags()}
 
 function submitTask(){
-  const title=document.getElementById('newTitle').value.trim();
-  if(!title){document.getElementById('newTitle').focus();return}
+  const title=document.getElementById('newTitle').value.trim();if(!title){document.getElementById('newTitle').focus();return}
   const note=document.getElementById('newNote').value.trim();
   const date=document.getElementById('newDate').value;
-  tasks.unshift({id:Date.now(),title,note,tags:[...newTags],project:newProject,priority:newPriority,block:newBlock,date,subtasks:[],done:false});
+  tasks.unshift({id:Date.now(),title,note,project:newProject,priority:newPriority,block:newBlock,date,subtasks:[],done:false});
   saveData();
-  document.getElementById('newTitle').value='';
-  document.getElementById('newNote').value='';
-  document.getElementById('newDate').value='';
-  newTags=[];renderNewTags();
+  document.getElementById('newTitle').value='';document.getElementById('newNote').value='';document.getElementById('newDate').value='';
   switchView('tasks');renderAll();
 }
-
-// ACTIONS
-function toggleDone(id){
-  tasks=tasks.map(t=>t.id===id?{...t,done:!t.done}:t);
-  saveData();renderAll();
-}
-function deleteTask(id){
-  tasks=tasks.filter(t=>t.id!==id);
-  saveData();renderAll();
-}
-function setFilter(f){currentFilter=f;renderFilters();renderTasks()}
 
 // VIEWS
 function switchView(name){
@@ -674,56 +697,31 @@ function switchView(name){
   document.querySelector(`[data-view="${name}"]`).classList.add('active');
   if(name==='week')renderWeek();
   if(name==='objects')renderObjects();
-  if(name==='add'){renderProjectChips();renderPrioChips();renderBlockChips();renderNewTags()}
+  if(name==='team'){renderTeamFilters();renderTeam()}
+  if(name==='add'){renderProjectChips();renderPrioChips();renderBlockChips()}
 }
-
+function closeModal(id){document.getElementById(id).classList.remove('open')}
 function renderAll(){renderStats();renderFilters();renderTasks()}
 
 // AI
 async function sendChat(){
-  const input=document.getElementById('chatInput');
-  const text=input.value.trim();if(!text)return;
-  input.value='';
-  appendMsg('user',text);
-  const typing=appendMsg('typing','думаю...');
-  const taskSummary=tasks.length?tasks.slice(0,20).map(t=>`• [${t.project}] ${t.title} (${t.priority}${t.done?', выполнено':''})`).join('\n'):'Задач нет.';
+  const input=document.getElementById('chatInput');const text=input.value.trim();if(!text)return;
+  input.value='';appendMsg('user',text);const typing=appendMsg('typing','думаю...');
+  const ts=tasks.slice(0,15).map(t=>`• ${t.title} (${t.priority}${t.done?', ✓':''})`).join('\n');
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',max_tokens:800,
-        system:`Ты ИИ-ассистент Даниила Титова, основателя ROOFFORMAT. Помогаешь с задачами. Говори коротко. Если нужно добавить задачу — ответь ТОЛЬКО JSON: {"action":"add","title":"...","project":"roofformat|personal|stroika|content","priority":"high|medium|low","block":"morning|day|evening|any","date":"YYYY-MM-DD или пусто","note":"...","tags":[]}. Иначе — текст. Задачи:\n${taskSummary}`,
-        messages:[{role:'user',content:text}]
-      })
-    });
-    const data=await res.json();
-    const reply=(data.content||[]).map(b=>b.text||'').join('');
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,system:`Ты ИИ-ассистент Даниила Титова, основателя ROOFFORMAT. Кровельная компания с философией продуманных решений. Помогаешь с задачами. Говори коротко. Если нужно добавить задачу — ТОЛЬКО JSON: {"action":"add","title":"...","project":"roofformat|personal|stroika|content","priority":"high|medium|low","block":"morning|day|evening|any","date":"YYYY-MM-DD или пусто"}. Иначе текст. Задачи:\n${ts}`,messages:[{role:'user',content:text}]})});
+    const data=await res.json();const reply=(data.content||[]).map(b=>b.text||'').join('');
     typing.remove();
-    try{
-      const json=JSON.parse(reply);
-      if(json.action==='add'){
-        tasks.unshift({id:Date.now(),title:json.title,project:json.project||'roofformat',priority:json.priority||'medium',block:json.block||'any',date:json.date||'',note:json.note||'',tags:json.tags||[],subtasks:[],done:false});
-        saveData();renderAll();
-        appendMsg('ai',`✓ Добавил: «${json.title}»`);
-      }
-    }catch{appendMsg('ai',reply)}
-  }catch{typing.remove();appendMsg('ai','Нет соединения. Добавь задачу вручную.')}
+    try{const j=JSON.parse(reply);if(j.action==='add'){tasks.unshift({id:Date.now(),title:j.title,project:j.project||'roofformat',priority:j.priority||'medium',block:j.block||'any',date:j.date||'',note:'',subtasks:[],done:false});saveData();renderAll();appendMsg('ai',`✓ Добавил: «${j.title}»`)}}
+    catch{appendMsg('ai',reply)}
+  }catch{typing.remove();appendMsg('ai','Нет соединения.')}
 }
-
-function appendMsg(type,text){
-  const div=document.createElement('div');
-  div.className='msg '+type;div.textContent=text;
-  const c=document.getElementById('chatMessages');
-  c.appendChild(div);c.scrollTop=c.scrollHeight;
-  return div;
-}
+function appendMsg(type,text){const div=document.createElement('div');div.className='msg '+type;div.textContent=text;const c=document.getElementById('chatMessages');c.appendChild(div);c.scrollTop=c.scrollHeight;return div}
 
 // OFFLINE
 window.addEventListener('online',()=>document.getElementById('offlineBanner').classList.remove('show'));
 window.addEventListener('offline',()=>document.getElementById('offlineBanner').classList.add('show'));
 if(!navigator.onLine)document.getElementById('offlineBanner').classList.add('show');
-
 if('serviceWorker' in navigator)navigator.serviceWorker.register('/sw.js').catch(()=>{});
 
 loadData();renderAll();
