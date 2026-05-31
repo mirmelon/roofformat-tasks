@@ -67,6 +67,7 @@ input,textarea,select{-webkit-appearance:none}
 .nav-btn{flex-shrink:0;padding:10px 12px;background:none;border:none;color:var(--muted);font-size:10px;letter-spacing:.06em;font-family:var(--mono);border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap}
 .nav-btn.active{color:var(--gold);border-bottom-color:var(--gold)}
 .nav-btn.hidden{display:none}
+.hidden{display:none!important}
 
 /* VIEWS */
 .view{display:none;flex:1;flex-direction:column;overflow:hidden}
@@ -238,6 +239,7 @@ textarea{resize:none}
   <button class="nav-btn" data-view="objects" onclick="switchView('objects')">ОБЪЕКТЫ</button>
   <button class="nav-btn" data-view="team" onclick="switchView('team')">КОМАНДА</button>
   <button class="nav-btn" data-view="counterparties" onclick="switchView('counterparties')">КОНТРАГЕНТЫ</button>
+  <button class="nav-btn" data-view="invoices" onclick="switchView('invoices')">СЧЕТА</button>
   <button class="nav-btn" data-view="goals" onclick="switchView('goals')">ЦЕЛИ</button>
   <button class="nav-btn founder-only" data-view="admin" onclick="switchView('admin')">ДОСТУП</button>
   <button class="nav-btn" data-view="profile" onclick="switchView('profile')">ПРОФИЛЬ</button>
@@ -294,7 +296,7 @@ textarea{resize:none}
 <div class="view" id="view-objects">
   <div style="display:flex;gap:8px;padding:10px 16px 0">
     <div class="filters" style="flex:1;padding:0" id="objFilters"></div>
-    <button onclick="openAddObject()" class="founder-only director-only" style="background:var(--gold);border:none;border-radius:8px;color:var(--bg);padding:7px 12px;font-family:var(--mono);font-size:11px;flex-shrink:0">+ ОБЪЕКТ</button>
+    <button onclick="openAddObject()" class="object-write" style="background:var(--gold);border:none;border-radius:8px;color:var(--bg);padding:7px 12px;font-family:var(--mono);font-size:11px;flex-shrink:0">+ ОБЪЕКТ</button>
   </div>
   <div class="scrollable" id="objList"></div>
 </div>
@@ -303,7 +305,7 @@ textarea{resize:none}
 <div class="view" id="view-team">
   <div style="padding:10px 16px 0;display:flex;gap:8px">
     <input type="text" id="teamSearch" placeholder="Поиск мастера..." style="flex:1;font-size:14px;padding:9px 12px" oninput="renderTeam()">
-    <button onclick="openMasterForm(null)" class="founder-only director-only" style="background:var(--gold);border:none;border-radius:8px;color:var(--bg);padding:9px 12px;font-family:var(--mono);font-size:11px;flex-shrink:0">+</button>
+    <button onclick="openMasterForm(null)" class="team-write" style="background:var(--gold);border:none;border-radius:8px;color:var(--bg);padding:9px 12px;font-family:var(--mono);font-size:11px;flex-shrink:0">+</button>
   </div>
   <div style="display:flex;gap:7px;padding:8px 16px 0;overflow-x:auto;scrollbar-width:none" id="teamFilters"></div>
   <div class="scrollable" id="teamList"></div>
@@ -313,10 +315,21 @@ textarea{resize:none}
 <div class="view" id="view-counterparties">
   <div style="display:flex;gap:8px;padding:10px 16px 0">
     <input type="text" id="cpSearch" placeholder="Поиск контрагента..." style="flex:1;font-size:14px;padding:9px 12px" oninput="renderCounterparties()">
-    <button onclick="openCPForm(null)" class="founder-only director-only" style="background:var(--gold);border:none;border-radius:8px;color:var(--bg);padding:9px 12px;font-family:var(--mono);font-size:11px;flex-shrink:0">+</button>
+    <button onclick="openCPForm(null)" class="cp-write" style="background:var(--gold);border:none;border-radius:8px;color:var(--bg);padding:9px 12px;font-family:var(--mono);font-size:11px;flex-shrink:0">+</button>
   </div>
   <div style="display:flex;gap:7px;padding:8px 16px 0;overflow-x:auto;scrollbar-width:none" id="cpFilters"></div>
   <div class="scrollable" id="cpList"></div>
+</div>
+
+
+
+<!-- INVOICES VIEW -->
+<div class="view" id="view-invoices">
+  <div style="display:flex;gap:8px;padding:10px 16px 0">
+    <div class="filters" style="flex:1;padding:0" id="invoiceFilters"></div>
+    <button onclick="openInvoiceForm(null)" class="invoice-write" style="background:var(--gold);border:none;border-radius:8px;color:var(--bg);padding:9px 12px;font-family:var(--mono);font-size:11px;flex-shrink:0">+ СЧЁТ</button>
+  </div>
+  <div class="scrollable" id="invoiceList"></div>
 </div>
 
 <!-- GOALS VIEW -->
@@ -373,6 +386,8 @@ textarea{resize:none}
     <div style="display:flex;flex-direction:column;gap:14px">
       <div><label class="flabel">НАЗВАНИЕ *</label><input type="text" id="objName" placeholder="Название объекта"></div>
       <div><label class="flabel">АДРЕС</label><input type="text" id="objAddress" placeholder="Адрес объекта"></div>
+      <div><label class="flabel">ТИП ОБЪЕКТА</label><div class="chip-row" id="objTypeChips"></div></div>
+      <div><label class="flabel">АРХИТЕКТОР / БЮРО</label><input type="text" id="objArchitect" placeholder="Архитектор, бюро или дизайнер"></div>
       <div><label class="flabel">КЛИЕНТ</label><input type="text" id="objClient" placeholder="Имя заказчика"></div>
       <div><label class="flabel">ТЕЛЕФОН КЛИЕНТА</label><input type="tel" id="objClientPhone" placeholder="+7 999 000 00 00"></div>
       <div><label class="flabel">СУММА ДОГОВОРА</label><input type="text" id="objBudget" placeholder="₽"></div>
@@ -385,6 +400,7 @@ textarea{resize:none}
       <div><label class="flabel">МАСТЕРА НА ОБЪЕКТЕ</label>
         <div id="objMastersList" style="display:flex;flex-direction:column;gap:8px;margin-top:4px"></div>
       </div>
+      <div><label class="flabel">ПАПКА ФОТО / GOOGLE DRIVE</label><input type="text" id="objDriveLink" placeholder="Ссылка на папку объекта"></div>
       <div><label class="flabel">ЗАМЕТКИ</label><textarea id="objNote" rows="2" placeholder="Заметки..."></textarea></div>
       <button class="btn-primary" onclick="submitObject()">СОХРАНИТЬ</button>
       <button class="btn-danger" id="deleteObjBtn" style="display:none" onclick="deleteCurrentObj()">УДАЛИТЬ ОБЪЕКТ</button>
@@ -464,6 +480,31 @@ textarea{resize:none}
   </div>
 </div>
 
+
+
+<!-- INVOICE FORM -->
+<div class="modal-overlay" id="invoiceModal" onclick="if(event.target===this)closeModal('invoiceModal')">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="invoiceModalTitle">СЧЁТ</div>
+      <button class="modal-close" onclick="closeModal('invoiceModal')">×</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div><label class="flabel">НОМЕР СЧЁТА</label><input type="text" id="invNumber" placeholder="Например, РФ-001"></div>
+      <div><label class="flabel">ОБЪЕКТ</label><select id="invObject"><option value="">Без объекта</option></select></div>
+      <div><label class="flabel">ПОЛУЧАТЕЛЬ / КЛИЕНТ</label><input type="text" id="invClient" placeholder="Клиент или компания"></div>
+      <div><label class="flabel">СУММА</label><input type="text" id="invAmount" placeholder="Например, 250000"></div>
+      <div><label class="flabel">ДАТА СЧЁТА</label><input type="date" id="invDate"></div>
+      <div><label class="flabel">СРОК ОПЛАТЫ</label><input type="date" id="invDueDate"></div>
+      <div><label class="flabel">СТАТУС</label><div class="chip-row" id="invStatusChips"></div></div>
+      <div><label class="flabel">ССЫЛКА НА ФАЙЛ / PDF</label><input type="text" id="invFileUrl" placeholder="Google Drive / ссылка на счёт"></div>
+      <div><label class="flabel">КОММЕНТАРИЙ</label><textarea id="invNote" rows="2" placeholder="Что входит в счёт, условия оплаты..."></textarea></div>
+      <button class="btn-primary" onclick="saveInvoice()">СОХРАНИТЬ</button>
+      <button class="btn-danger" id="deleteInvoiceBtn" style="display:none" onclick="deleteCurrentInvoice()">УДАЛИТЬ СЧЁТ</button>
+    </div>
+  </div>
+</div>
+
 <!-- GOAL FORM -->
 <div class="modal-overlay" id="goalModal" onclick="if(event.target===this)closeModal('goalModal')">
   <div class="modal">
@@ -516,7 +557,7 @@ const googleProvider = new GoogleAuthProvider();
 // ═══════════════════════════════
 let currentUser = null;
 let currentUserData = null;
-let tasks = [], objects = [], team = [], counterparties = [], goals = [], allUsers = [];
+let tasks = [], objects = [], team = [], counterparties = [], invoices = [], goals = [], allUsers = [];
 let taskFilter = 'all';
 let objectFilter = 'all';
 let teamFilter = 'all';
@@ -529,6 +570,7 @@ let newTaskBlock = 'any';
 let editingObjId = null;
 let editingMasterId = null;
 let editingCPId = null;
+let editingInvoiceId = null;
 let editingGoalId = null;
 let selectedGoalPeriod = '1y';
 let selectedCPType = 'supplier';
@@ -536,6 +578,7 @@ let selectedCPStatus = 'active';
 let selectedCPRating = 0;
 let objStatusSel = 'active';
 let objFunnelSel = 'lead';
+let objTypeSel = 'roof';
 let mRoleSel = 'Кровельщик';
 let mStatusSel = 'active';
 let mSkillsSel = [];
@@ -606,6 +649,21 @@ const CP_STATUSES = [
   {id:'problem',label:'Проблемный',color:'#E07E7E'},
   {id:'paused',label:'Приостановлен',color:'#555'},
 ];
+
+const OBJECT_TYPES = [
+  {id:'roof',label:'Кровля'},
+  {id:'facade',label:'Фасад'},
+  {id:'terrace',label:'Терраса'},
+  {id:'maf',label:'МАФ'},
+  {id:'service',label:'Сервис'},
+];
+const INVOICE_STATUSES = [
+  {id:'draft',label:'Черновик',color:'#555'},
+  {id:'sent',label:'Выставлен',color:'#C8A96E'},
+  {id:'partial',label:'Частично',color:'#7EA8C8'},
+  {id:'paid',label:'Оплачен',color:'#7EB8A4'},
+  {id:'overdue',label:'Просрочен',color:'#E07E7E'},
+];
 const INVITE_CODES = {
   'RF2024FOUNDER': 'founder',
   'RF2024DIRECTOR': 'director',
@@ -625,6 +683,10 @@ function openModal(id){document.getElementById(id).classList.add('open')}
 function initials(name){return(name||'?').split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase()}
 function hasRole(roles){return currentUserData&&roles.includes(currentUserData.role)}
 function canEdit(){return hasRole(['founder','director'])}
+function canManageObjects(){return hasRole(['founder','director','manager'])}
+function canManageCounterparties(){return hasRole(['founder','director','manager'])}
+function canManageTeam(){return hasRole(['founder','director'])}
+function canManageInvoices(){return hasRole(['founder','director','manager'])}
 
 // Expose helpers used by inline handlers inside ES module
 window.closeModal = closeModal;
@@ -734,6 +796,33 @@ onAuthStateChanged(auth, async(user)=>{
   }
 });
 
+
+function applyRoleAccess(){
+  const role=currentUserData?.role||'master';
+  const allowedViews={
+    founder:['tasks','week','objects','team','counterparties','invoices','goals','admin','profile'],
+    director:['tasks','week','objects','team','counterparties','invoices','goals','profile'],
+    manager:['tasks','week','objects','team','counterparties','invoices','goals','profile'],
+    master:['tasks','week','objects','goals','profile']
+  };
+  const allowed=allowedViews[role]||allowedViews.master;
+  document.querySelectorAll('.nav-btn').forEach(btn=>{
+    const v=btn.dataset.view;
+    btn.classList.toggle('hidden', !allowed.includes(v));
+  });
+
+  document.querySelectorAll('.object-write').forEach(el=>el.classList.toggle('hidden', !canManageObjects()));
+  document.querySelectorAll('.cp-write').forEach(el=>el.classList.toggle('hidden', !canManageCounterparties()));
+  document.querySelectorAll('.team-write').forEach(el=>el.classList.toggle('hidden', !canManageTeam()));
+  document.querySelectorAll('.invoice-write').forEach(el=>el.classList.toggle('hidden', !canManageInvoices()));
+  document.querySelectorAll('.founder-only').forEach(el=>{
+    if(!el.classList.contains('director-only')) el.classList.toggle('hidden', !hasRole(['founder']));
+  });
+
+  const active=document.querySelector('.nav-btn.active');
+  if(active && active.classList.contains('hidden')) switchView('tasks');
+}
+
 // ═══════════════════════════════
 // APP INIT
 // ═══════════════════════════════
@@ -742,13 +831,8 @@ function initApp(){
   document.getElementById('userNameLabel').textContent=currentUserData.name;
   document.getElementById('userRoleLabel').textContent=ROLES[r]||r;
 
-  // Hide role-restricted nav
-  document.querySelectorAll('.founder-only').forEach(el=>{
-    if(!hasRole(['founder']))el.classList.add('hidden');
-  });
-  document.querySelectorAll('.founder-only.director-only').forEach(el=>{
-    if(!hasRole(['founder','director']))el.classList.add('hidden');
-  });
+  // Role hierarchy / access matrix
+  applyRoleAccess();
 
   // Render profile
   document.getElementById('profileCard').innerHTML=`
@@ -807,6 +891,7 @@ function subscribeToData(){
   unsubscribers.push(onSnapshot(objQ,snap=>{
     objects=snap.docs.map(d=>({id:d.id,...d.data()}));
     renderObjects();
+      renderInvoices();
   }));
 
   // Team
@@ -821,6 +906,17 @@ function subscribeToData(){
     unsubscribers.push(onSnapshot(query(collection(db,'counterparties'),orderBy('createdAt','desc')),snap=>{
       counterparties=snap.docs.map(d=>({id:d.id,...d.data()}));
       renderCounterparties();
+    }));
+  }
+
+
+
+  // Invoices
+  if(hasRole(['founder','director','manager'])){
+    unsubscribers.push(onSnapshot(collection(db,'invoices'),snap=>{
+      invoices=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>String(b.createdAt?.seconds||'').localeCompare(String(a.createdAt?.seconds||'')));
+      renderInvoices();
+      renderObjects();
     }));
   }
 
@@ -850,7 +946,7 @@ window.switchView = function(name){
   const btn=document.querySelector(`[data-view="${name}"]`);
   if(btn)btn.classList.add('active');
 
-  const titles={tasks:'Задачи',week:'Планировщик',objects:'Объекты',team:'Команда',counterparties:'Контрагенты',goals:'Цели',admin:'Доступ',profile:'Профиль','add-task':'Новая задача'};
+  const titles={tasks:'Задачи',week:'Планировщик',objects:'Объекты',team:'Команда',counterparties:'Контрагенты',invoices:'Счета',goals:'Цели',admin:'Доступ',profile:'Профиль','add-task':'Новая задача'};
   document.getElementById('appTitle').textContent=titles[name]||'ROOFFORMAT';
 };
 
@@ -1088,7 +1184,9 @@ function renderObjects(){
         <span class="badge" style="background:${st.color}22;color:${st.color};flex-shrink:0">${st.label}</span>
       </div>
       ${o.client?`<div style="font-size:12px;color:var(--muted);font-family:var(--mono);margin-bottom:4px">👤 ${esc(o.client)}</div>`:''}
+      ${OBJECT_TYPES.find(t=>t.id===o.type)?`<div style="font-size:10px;font-family:var(--mono);color:var(--purple);margin-bottom:4px">${OBJECT_TYPES.find(t=>t.id===o.type).label}</div>`:''}
       ${funnel?`<div style="font-size:10px;font-family:var(--mono);color:var(--blue);margin-bottom:6px">→ ${funnel.label}</div>`:''}
+      ${o.architect?`<div style="font-size:11px;color:var(--muted);margin-bottom:6px">✎ ${esc(o.architect)}</div>`:''}
       ${masterNames?`<div style="font-size:11px;color:var(--muted);margin-bottom:6px">🔧 ${esc(masterNames)}</div>`:''}
       ${total?`<div style="font-size:11px;color:var(--muted);font-family:var(--mono);margin-bottom:4px">${done}/${total} задач · ${pct}%</div><div class="obj-progress"><div class="obj-progress-bar" style="width:${pct}%"></div></div>`:''}
       ${urgent?`<span style="font-size:10px;font-family:var(--mono);background:#E07E7E22;color:#E07E7E;padding:3px 8px;border-radius:8px">⚡ ${urgent} срочных</span>`:''}
@@ -1102,23 +1200,30 @@ window.filterObjs=function(status){
 };
 
 window.openAddObject = function(id){
+  if(!canManageObjects()){alert('Создание и редактирование объектов доступно только основателю, директору или менеджеру.');return}
   editingObjId=id||null;
   const o=id?objects.find(x=>x.id===id):null;
   document.getElementById('addObjTitle').textContent=o?'РЕДАКТИРОВАТЬ':'НОВЫЙ ОБЪЕКТ';
   document.getElementById('objName').value=o?.name||'';
   document.getElementById('objAddress').value=o?.address||'';
   document.getElementById('objClient').value=o?.client||'';
+  document.getElementById('objArchitect').value=o?.architect||'';
   document.getElementById('objClientPhone').value=o?.clientPhone||'';
   document.getElementById('objBudget').value=o?.budget||'';
   document.getElementById('objNote').value=o?.note||'';
+  document.getElementById('objDriveLink').value=o?.driveLink||'';
   objStatusSel=o?.status||'active';
   objFunnelSel=o?.funnel||'lead';
+  objTypeSel=o?.type||'roof';
   document.getElementById('deleteObjBtn').style.display=o?'block':'none';
   renderObjFormChips(o);
   openModal('addObjModal');
 };
 
 function renderObjFormChips(o){
+  document.getElementById('objTypeChips').innerHTML=OBJECT_TYPES.map(t=>
+    `<button class="chip" style="${objTypeSel===t.id?'background:var(--purple);color:var(--bg);border-color:var(--purple)':''}" onclick="selObjType('${t.id}')">${t.label}</button>`
+  ).join('');
   document.getElementById('objStatusChips').innerHTML=OBJ_STATUSES.map(s=>
     `<button class="chip" style="${objStatusSel===s.id?`background:${s.color};color:var(--bg);border-color:${s.color}`:''}" onclick="selObjStatus('${s.id}')">${s.label}</button>`
   ).join('');
@@ -1136,10 +1241,12 @@ function renderObjFormChips(o){
   }).join('')||'<div style="font-size:13px;color:var(--muted)">Мастеров нет — добавь в раздел Команда</div>';
 }
 
+window.selObjType=function(v){objTypeSel=v;renderObjFormChips(editingObjId?objects.find(x=>x.id===editingObjId):null)};
 window.selObjStatus=function(v){objStatusSel=v;renderObjFormChips(editingObjId?objects.find(x=>x.id===editingObjId):null)};
 window.selObjFunnel=function(v){objFunnelSel=v;renderObjFormChips(editingObjId?objects.find(x=>x.id===editingObjId):null)};
 
 window.submitObject = async function(){
+  if(!canManageObjects()){alert('Недостаточно прав для сохранения объекта.');return}
   const name=document.getElementById('objName').value.trim();
   if(!name)return;
   const masterIds=[...document.querySelectorAll('#objMastersList input:checked')].map(cb=>cb.value);
@@ -1147,18 +1254,21 @@ window.submitObject = async function(){
     name,
     address:document.getElementById('objAddress').value.trim(),
     client:document.getElementById('objClient').value.trim(),
+    architect:document.getElementById('objArchitect').value.trim(),
     clientPhone:document.getElementById('objClientPhone').value.trim(),
     budget:document.getElementById('objBudget').value.trim(),
     note:document.getElementById('objNote').value.trim(),
+    driveLink:document.getElementById('objDriveLink').value.trim(),
     status:objStatusSel,
     funnel:objFunnelSel,
+    type:objTypeSel,
     masterIds,
     updatedAt:serverTimestamp()
   };
   if(editingObjId){
     await updateDoc(doc(db,'objects',editingObjId),data);
   }else{
-    await addDoc(collection(db,'objects'),{...data,decisions:[],supplies:[],createdAt:serverTimestamp(),ownerId:currentUser.uid});
+    await addDoc(collection(db,'objects'),{...data,decisions:[],supplies:[],history:[{text:'Объект создан',date:new Date().toISOString(),user:currentUserData.name}],createdAt:serverTimestamp(),ownerId:currentUser.uid});
   }
   closeModal('addObjModal');
 };
@@ -1183,7 +1293,9 @@ window.openObjDetail = function(id){
       ${o.budget?`<span class="badge" style="background:var(--green)22;color:var(--green)">₽ ${esc(o.budget)}</span>`:''}
     </div>
     ${o.client?`<div style="font-size:13px;color:var(--muted2);margin-bottom:6px">👤 ${esc(o.client)}${o.clientPhone?` · <a href="tel:${esc(o.clientPhone)}" style="color:var(--gold)">${esc(o.clientPhone)}</a>`:''}</div>`:''}
-    ${o.address?`<div style="font-size:12px;color:var(--muted);font-family:var(--mono);margin-bottom:12px">📍 ${esc(o.address)}</div>`:''}
+    ${o.address?`<div style="font-size:12px;color:var(--muted);font-family:var(--mono);margin-bottom:8px">📍 ${esc(o.address)}</div>`:''}
+    ${o.architect?`<div style="font-size:12px;color:var(--muted);font-family:var(--mono);margin-bottom:8px">✎ ${esc(o.architect)}</div>`:''}
+    ${o.driveLink?`<div style="margin-bottom:12px"><a href="${esc(o.driveLink)}" target="_blank" style="font-size:12px;color:var(--gold);font-family:var(--mono)">📷 Открыть папку фото</a></div>`:''}
 
     ${masters.length?`<div style="margin-bottom:14px">
       <div class="section-label">КОМАНДА НА ОБЪЕКТЕ</div>
@@ -1240,9 +1352,28 @@ window.openObjDetail = function(id){
       </div>
     </div>
 
+
+
+    ${canManageInvoices()?`<div style="margin-bottom:14px">
+      <div class="section-label">СЧЕТА ПО ОБЪЕКТУ</div>
+      ${invoices.filter(inv=>inv.objectId===id).map(inv=>{
+        const st=INVOICE_STATUSES.find(x=>x.id===inv.status)||INVOICE_STATUSES[0];
+        return `<div class="supply-item" onclick="openInvoiceForm('${inv.id}')" style="cursor:pointer">
+          <div><div style="font-size:13px">${esc(inv.number||'Без номера')} · ${esc(inv.amount||'0')} ₽</div><div style="font-size:10px;color:var(--muted);font-family:var(--mono)">${esc(inv.client||'')}</div></div>
+          <span class="badge" style="background:${st.color}22;color:${st.color}">${st.label}</span>
+        </div>`
+      }).join('')||'<div style="font-size:13px;color:var(--muted);font-style:italic;padding:6px 0">Счетов нет</div>'}
+      <button class="inline-btn" style="margin-top:8px" onclick="openInvoiceForm(null,'${id}')">+ счёт</button>
+    </div>`:''}
+
+    <div style="margin-bottom:14px">
+      <div class="section-label">ИСТОРИЯ ОБЪЕКТА</div>
+      ${(o.history||[]).slice().reverse().map(h=>`<div style="font-size:12px;color:var(--muted2);padding:6px 0;border-bottom:1px solid var(--border)">${esc(h.text)} <span style="font-family:var(--mono);color:var(--muted);font-size:9px">${h.date?new Date(h.date).toLocaleDateString('ru-RU'):''}</span></div>`).join('')||'<div style="font-size:13px;color:var(--muted);font-style:italic;padding:6px 0">Истории пока нет</div>'}
+    </div>
+
     ${o.note?`<div style="font-size:13px;color:var(--muted2);background:var(--bg3);border-radius:8px;padding:10px 12px;margin-bottom:14px">${esc(o.note)}</div>`:''}
 
-    ${canEdit()?`<div style="display:flex;gap:8px;margin-top:4px">
+    ${canManageObjects()?`<div style="display:flex;gap:8px;margin-top:4px">
       <button class="btn-primary" style="flex:1" onclick="closeModal('objDetailModal');openAddObject('${id}')">Редактировать</button>
     </div>`:''}`;
   openModal('objDetailModal');
@@ -1261,7 +1392,7 @@ window.addDecision = async function(objId){
   const urgency=document.getElementById('decUrg_'+objId).value;
   const o=objects.find(x=>x.id===objId);
   const decisions=[...(o.decisions||[]),{text,urgency}];
-  await updateDoc(doc(db,'objects',objId),{decisions});
+  await updateDoc(doc(db,'objects',objId),{decisions,history:[...((o.history)||[]),{text:'Добавлено решение: '+text,date:new Date().toISOString(),user:currentUserData.name}]});
   inp.value='';
 };
 
@@ -1276,7 +1407,7 @@ window.addSupply = async function(objId){
   const name=inp.value.trim();if(!name)return;
   const o=objects.find(x=>x.id===objId);
   const supplies=[...(o.supplies||[]),{name,status:'needed'}];
-  await updateDoc(doc(db,'objects',objId),{supplies});
+  await updateDoc(doc(db,'objects',objId),{supplies,history:[...((o.history)||[]),{text:'Добавлена поставка: '+name,date:new Date().toISOString(),user:currentUserData.name}]});
   inp.value='';
 };
 
@@ -1357,6 +1488,7 @@ window.viewMaster = function(id){
 };
 
 window.openMasterForm = function(id){
+  if(!canManageTeam()){alert('Управление командой доступно только основателю или директору.');return}
   editingMasterId=id;
   const m=id?team.find(x=>x.id===id):null;
   document.getElementById('masterModalTitle').textContent=m?'РЕДАКТИРОВАТЬ':'НОВЫЙ МАСТЕР';
@@ -1392,6 +1524,7 @@ window.selMStatus=function(v){mStatusSel=v;renderMasterFormChips()};
 window.toggleMSkill=function(s){const i=mSkillsSel.indexOf(s);if(i>=0)mSkillsSel.splice(i,1);else mSkillsSel.push(s);renderMasterFormChips()};
 
 window.saveMaster = async function(){
+  if(!canManageTeam()){alert('Недостаточно прав для сохранения мастера.');return}
   const name=document.getElementById('mName').value.trim();
   if(!name){document.getElementById('mName').focus();return}
   const data={
@@ -1433,7 +1566,7 @@ function renderCounterparties(){
     const type=CP_TYPES.find(t=>t.id===cp.type)||CP_TYPES[0];
     const status=CP_STATUSES.find(s=>s.id===cp.status)||CP_STATUSES[0];
     const stars='★'.repeat(cp.rating||0)+'☆'.repeat(5-(cp.rating||0));
-    return`<div class="card" onclick="${canEdit()?`openCPForm('${cp.id}')`:''}" style="${canEdit()?'cursor:pointer':''}">
+    return`<div class="card" onclick="${canManageCounterparties()?`openCPForm('${cp.id}')`:''}" style="${canManageCounterparties()?'cursor:pointer':''}">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
         <div style="font-size:17px">${esc(cp.name)}</div>
         <span class="badge" style="background:${status.color}22;color:${status.color}">${status.label}</span>
@@ -1448,6 +1581,7 @@ function renderCounterparties(){
 window.filterCP=function(type){cpFilter=type;renderCounterparties();};
 
 window.openCPForm = function(id){
+  if(!canManageCounterparties()){alert('Управление контрагентами доступно только основателю, директору или менеджеру.');return}
   editingCPId=id;
   const cp=id?counterparties.find(x=>x.id===id):null;
   document.getElementById('cpModalTitle').textContent=cp?'РЕДАКТИРОВАТЬ':'КОНТРАГЕНТ';
@@ -1484,6 +1618,7 @@ function updateStars(){
 }
 
 window.saveCP = async function(){
+  if(!canManageCounterparties()){alert('Недостаточно прав для сохранения контрагента.');return}
   const name=document.getElementById('cpName').value.trim();
   if(!name)return;
   const data={
@@ -1506,6 +1641,103 @@ window.deleteCurrentCP = async function(){
   if(!confirm('Удалить контрагента?'))return;
   await deleteDoc(doc(db,'counterparties',editingCPId));
   closeModal('cpModal');
+};
+
+
+
+// ═══════════════════════════════
+// INVOICES
+// ═══════════════════════════════
+let invoiceFilter='all';
+let invStatusSel='draft';
+
+function renderInvoices(){
+  const filters=document.getElementById('invoiceFilters');
+  if(filters)filters.innerHTML=[{id:'all',label:'Все'},...INVOICE_STATUSES].map(s=>
+    `<button class="fbtn${invoiceFilter===s.id?' active':''}" onclick="filterInvoices('${s.id}')">${s.label}</button>`
+  ).join('');
+  const list=(invoiceFilter==='all'?invoices:invoices.filter(i=>i.status===invoiceFilter));
+  if(!document.getElementById('invoiceList'))return;
+  if(!list.length){document.getElementById('invoiceList').innerHTML='<div class="empty">Счетов нет</div>';return}
+  document.getElementById('invoiceList').innerHTML=list.map(inv=>{
+    const st=INVOICE_STATUSES.find(s=>s.id===inv.status)||INVOICE_STATUSES[0];
+    const obj=objects.find(o=>o.id===inv.objectId);
+    return `<div class="card" onclick="openInvoiceForm('${inv.id}')" style="cursor:pointer">
+      <div style="display:flex;justify-content:space-between;gap:10px;margin-bottom:8px">
+        <div style="font-size:17px">${esc(inv.number||'Счёт без номера')}</div>
+        <span class="badge" style="background:${st.color}22;color:${st.color}">${st.label}</span>
+      </div>
+      <div style="font-size:20px;color:var(--gold);margin-bottom:6px">${esc(inv.amount||'0')} ₽</div>
+      ${obj?`<div style="font-size:12px;color:var(--muted);font-family:var(--mono);margin-bottom:4px">Объект: ${esc(obj.name)}</div>`:''}
+      ${inv.client?`<div style="font-size:12px;color:var(--muted);font-family:var(--mono);margin-bottom:4px">Клиент: ${esc(inv.client)}</div>`:''}
+      ${inv.dueDate?`<div style="font-size:11px;color:var(--muted);font-family:var(--mono)">Срок: ${fmtDate(inv.dueDate)}</div>`:''}
+    </div>`;
+  }).join('');
+}
+
+window.filterInvoices=function(status){invoiceFilter=status;renderInvoices()};
+
+window.openInvoiceForm=function(id,objectId=''){
+  if(!canManageInvoices()){alert('Счета доступны основателю, директору или менеджеру.');return}
+  editingInvoiceId=id||null;
+  const inv=id?invoices.find(x=>x.id===id):null;
+  document.getElementById('invoiceModalTitle').textContent=inv?'РЕДАКТИРОВАТЬ СЧЁТ':'НОВЫЙ СЧЁТ';
+  document.getElementById('invNumber').value=inv?.number||'';
+  document.getElementById('invClient').value=inv?.client||'';
+  document.getElementById('invAmount').value=inv?.amount||'';
+  document.getElementById('invDate').value=inv?.date||today();
+  document.getElementById('invDueDate').value=inv?.dueDate||'';
+  document.getElementById('invFileUrl').value=inv?.fileUrl||'';
+  document.getElementById('invNote').value=inv?.note||'';
+  invStatusSel=inv?.status||'draft';
+  const sel=document.getElementById('invObject');
+  sel.innerHTML='<option value="">Без объекта</option>'+objects.map(o=>`<option value="${o.id}">${esc(o.name)}</option>`).join('');
+  sel.value=inv?.objectId||objectId||'';
+  document.getElementById('deleteInvoiceBtn').style.display=inv?'block':'none';
+  renderInvoiceStatusChips();
+  openModal('invoiceModal');
+};
+
+function renderInvoiceStatusChips(){
+  document.getElementById('invStatusChips').innerHTML=INVOICE_STATUSES.map(s=>
+    `<button class="chip" style="${invStatusSel===s.id?`background:${s.color};color:var(--bg);border-color:${s.color}`:''}" onclick="selInvoiceStatus('${s.id}')">${s.label}</button>`
+  ).join('');
+}
+window.selInvoiceStatus=function(v){invStatusSel=v;renderInvoiceStatusChips()};
+
+window.saveInvoice=async function(){
+  if(!canManageInvoices()){alert('Недостаточно прав для сохранения счёта.');return}
+  const number=document.getElementById('invNumber').value.trim();
+  const objectId=document.getElementById('invObject').value;
+  const data={
+    number,
+    objectId,
+    client:document.getElementById('invClient').value.trim(),
+    amount:document.getElementById('invAmount').value.trim(),
+    date:document.getElementById('invDate').value,
+    dueDate:document.getElementById('invDueDate').value,
+    status:invStatusSel,
+    fileUrl:document.getElementById('invFileUrl').value.trim(),
+    note:document.getElementById('invNote').value.trim(),
+    updatedAt:serverTimestamp(),
+    updatedBy:currentUser.uid
+  };
+  if(editingInvoiceId){
+    await updateDoc(doc(db,'invoices',editingInvoiceId),data);
+  }else{
+    await addDoc(collection(db,'invoices'),{...data,createdAt:serverTimestamp(),createdBy:currentUser.uid});
+  }
+  if(objectId){
+    const o=objects.find(x=>x.id===objectId);
+    if(o) await updateDoc(doc(db,'objects',objectId),{history:[...(o.history||[]),{text:'Обновлён счёт: '+(number||'без номера'),date:new Date().toISOString(),user:currentUserData.name}]});
+  }
+  closeModal('invoiceModal');
+};
+
+window.deleteCurrentInvoice=async function(){
+  if(!confirm('Удалить счёт?'))return;
+  await deleteDoc(doc(db,'invoices',editingInvoiceId));
+  closeModal('invoiceModal');
 };
 
 // ═══════════════════════════════
