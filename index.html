@@ -191,28 +191,26 @@ textarea{resize:none}
     <input class="auth-input" id="authEmail" type="email" placeholder="Email" autocomplete="email">
     <input class="auth-input" id="authPassword" type="password" placeholder="Пароль" autocomplete="current-password">
     <div class="auth-error" id="authError"></div>
-    <button class="auth-btn" onclick="signIn()">ВОЙТИ</button>
+    <button class="auth-btn" id="loginBtn">ВОЙТИ</button>
     <div class="auth-divider">или</div>
-    <button class="auth-btn secondary" onclick="signInGoogle()">Войти через Google</button>
+    <button class="auth-btn secondary" id="googleBtn">Войти через Google</button>
     <div class="auth-switch">Нет аккаунта? <span id="showRegBtn" style="color:var(--gold);cursor:pointer">Зарегистрироваться</span></div>
   </div>
 </div>
 
-<!-- REGISTER MODAL -->
-<div class="modal-overlay" id="registerModal">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">РЕГИСТРАЦИЯ</div>
-      <button class="modal-close" onclick="closeModal('registerModal')">×</button>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:14px">
-      <div><label class="flabel">ИМЯ И ФАМИЛИЯ</label><input type="text" id="regName" placeholder="Даниил Титов"></div>
-      <div><label class="flabel">EMAIL</label><input type="email" id="regEmail" placeholder="email@example.com"></div>
-      <div><label class="flabel">ПАРОЛЬ</label><input type="password" id="regPassword" placeholder="Минимум 6 символов"></div>
-      <div><label class="flabel">ПРИГЛАСИТЕЛЬНЫЙ КОД</label><input type="text" id="regCode" placeholder="Код от администратора"></div>
-      <div class="auth-error" id="regError"></div>
-      <button class="btn-primary" onclick="register()">ЗАРЕГИСТРИРОВАТЬСЯ</button>
-    </div>
+<!-- REGISTER SCREEN -->
+<div class="auth-screen hidden" id="registerScreen">
+  <div class="auth-logo">ROOFFORMAT</div>
+  <div class="auth-title">Регистрация</div>
+  <div class="auth-sub">Создайте аккаунт</div>
+  <div class="auth-form">
+    <input class="auth-input" id="regName" type="text" placeholder="Имя и Фамилия">
+    <input class="auth-input" id="regEmail" type="email" placeholder="Email">
+    <input class="auth-input" id="regPassword" type="password" placeholder="Пароль (минимум 6 символов)">
+    <input class="auth-input" id="regCode" type="text" placeholder="Пригласительный код">
+    <div class="auth-error" id="regError"></div>
+    <button class="auth-btn" id="regBtn">ЗАРЕГИСТРИРОВАТЬСЯ</button>
+    <div class="auth-switch">Уже есть аккаунт? <span id="showLoginBtn" style="color:var(--gold);cursor:pointer">Войти</span></div>
   </div>
 </div>
 
@@ -655,8 +653,18 @@ window.signInGoogle = async function(){
   }
 };
 
-window.showRegister = function(){openModal('registerModal')};
-document.getElementById('showRegBtn').addEventListener('click', ()=>openModal('registerModal'));
+// Auth button handlers
+document.getElementById('showRegBtn').addEventListener('click', ()=>{
+  document.getElementById('authScreen').classList.add('hidden');
+  document.getElementById('registerScreen').classList.remove('hidden');
+});
+document.getElementById('showLoginBtn').addEventListener('click', ()=>{
+  document.getElementById('registerScreen').classList.add('hidden');
+  document.getElementById('authScreen').classList.remove('hidden');
+});
+document.getElementById('loginBtn').addEventListener('click', signIn);
+document.getElementById('googleBtn').addEventListener('click', signInGoogle);
+document.getElementById('regBtn').addEventListener('click', register);
 
 window.register = async function(){
   const name=document.getElementById('regName').value.trim();
@@ -672,7 +680,8 @@ window.register = async function(){
     await setDoc(doc(db,'users',cred.user.uid),{
       name,email,role,createdAt:serverTimestamp()
     });
-    closeModal('registerModal');
+    document.getElementById('registerScreen').classList.add('hidden');
+    document.getElementById('authScreen').classList.remove('hidden');
   }catch(e){
     document.getElementById('regError').textContent = e.code==='auth/email-already-in-use'?'Email уже используется':'Ошибка регистрации';
   }
@@ -704,6 +713,7 @@ onAuthStateChanged(auth, async(user)=>{
   }else{
     currentUser=null;currentUserData=null;
     document.getElementById('authScreen').classList.remove('hidden');
+    document.getElementById('registerScreen').classList.add('hidden');
     document.getElementById('app').style.display='none';
   }
 });
