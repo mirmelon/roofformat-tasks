@@ -653,18 +653,7 @@ window.signInGoogle = async function(){
   }
 };
 
-// Auth button handlers
-document.getElementById('showRegBtn').addEventListener('click', ()=>{
-  document.getElementById('authScreen').classList.add('hidden');
-  document.getElementById('registerScreen').classList.remove('hidden');
-});
-document.getElementById('showLoginBtn').addEventListener('click', ()=>{
-  document.getElementById('registerScreen').classList.add('hidden');
-  document.getElementById('authScreen').classList.remove('hidden');
-});
-document.getElementById('loginBtn').addEventListener('click', signIn);
-document.getElementById('googleBtn').addEventListener('click', signInGoogle);
-document.getElementById('regBtn').addEventListener('click', register);
+
 
 window.register = async function(){
   const name=document.getElementById('regName').value.trim();
@@ -1599,6 +1588,19 @@ window.switchView=function(name){
   origSwitch(name);
   if(name==='add-task'){renderAddTaskChips();populateAssignSelect();selectVisibility('personal')}
 };
+
+// Auth button handlers (attached after all functions defined)
+document.getElementById('showRegBtn').addEventListener('click', ()=>{
+  document.getElementById('authScreen').classList.add('hidden');
+  document.getElementById('registerScreen').classList.remove('hidden');
+});
+document.getElementById('showLoginBtn').addEventListener('click', ()=>{
+  document.getElementById('registerScreen').classList.add('hidden');
+  document.getElementById('authScreen').classList.remove('hidden');
+});
+document.getElementById('loginBtn').addEventListener('click', ()=>window.signIn());
+document.getElementById('googleBtn').addEventListener('click', ()=>window.signInGoogle());
+document.getElementById('regBtn').addEventListener('click', ()=>window.register());
 </script>
 </body>
 </html>
