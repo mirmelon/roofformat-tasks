@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Задачник">
+<meta name="apple-mobile-web-app-title" content="ROOFFORMAT">
 <meta name="theme-color" content="#0A0A0A">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
-<title>ROOFFORMAT — Задачник</title>
+<title>ROOFFORMAT</title>
 <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -17,7 +17,7 @@
   --bg:#0A0A0A;--bg2:#141414;--bg3:#1A1A1A;--bg4:#202020;
   --border:#222;--border2:#2A2A2A;
   --text:#E8E0D0;--muted:#555;--muted2:#888;
-  --gold:#C8A96E;--green:#7EB8A4;--purple:#A07EB8;--red:#E07E7E;--blue:#7EA8C8;
+  --gold:#C8A96E;--green:#7EB8A4;--red:#E07E7E;--blue:#7EA8C8;--purple:#A07EB8;
   --safe-top:env(safe-area-inset-top,0px);
   --safe-bottom:env(safe-area-inset-bottom,0px);
   --mono:'Space Mono',monospace;
@@ -25,289 +25,401 @@
 }
 body{background:var(--bg);color:var(--text);font-family:var(--serif);min-height:100vh;max-width:430px;margin:0 auto;display:flex;flex-direction:column;padding-top:var(--safe-top)}
 button{cursor:pointer;-webkit-tap-highlight-color:transparent}
+input,textarea,select{-webkit-appearance:none}
 
-.header{padding:18px 20px 12px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-end}
-.hbrand{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--gold);margin-bottom:3px}
-.htitle{font-size:22px;font-weight:300;letter-spacing:-.02em}
-.hstats{text-align:right;font-family:var(--mono);font-size:10px;color:var(--muted);line-height:1.9}
-.htoday{color:var(--gold)}
+/* AUTH SCREEN */
+.auth-screen{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 32px;z-index:1000}
+.auth-screen.hidden{display:none}
+.auth-logo{font-family:var(--mono);font-size:11px;letter-spacing:.25em;color:var(--gold);margin-bottom:8px}
+.auth-title{font-size:32px;font-weight:300;margin-bottom:4px;text-align:center}
+.auth-sub{font-size:14px;color:var(--muted);text-align:center;margin-bottom:48px;font-style:italic}
+.auth-form{width:100%;display:flex;flex-direction:column;gap:14px}
+.auth-input{width:100%;background:var(--bg2);border:1px solid var(--border2);border-radius:12px;color:var(--text);padding:14px 16px;font-size:16px;font-family:var(--serif);outline:none}
+.auth-input:focus{border-color:var(--gold)}
+.auth-btn{width:100%;background:var(--gold);border:none;border-radius:12px;padding:15px;color:var(--bg);font-size:14px;font-weight:700;font-family:var(--mono);letter-spacing:.06em}
+.auth-btn.secondary{background:var(--bg3);color:var(--text);border:1px solid var(--border2)}
+.auth-divider{text-align:center;font-family:var(--mono);font-size:10px;color:var(--muted);margin:4px 0}
+.auth-error{font-size:13px;color:var(--red);text-align:center;font-family:var(--mono);min-height:18px}
+.auth-switch{font-size:13px;color:var(--muted);text-align:center;margin-top:8px}
+.auth-switch span{color:var(--gold);cursor:pointer}
 
+/* LOADING */
+.loading-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:999}
+.loading-screen.hidden{display:none}
+.loading-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1)}}
+
+/* OFFLINE */
+.offline-banner{background:#2A1A0A;border-bottom:1px solid #4A3010;padding:7px 16px;font-size:10px;font-family:var(--mono);color:var(--gold);text-align:center;display:none}
+.offline-banner.show{display:block}
+
+/* HEADER */
+.header{padding:16px 20px 12px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-end}
+.hbrand{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--gold);margin-bottom:2px}
+.htitle{font-size:20px;font-weight:300;letter-spacing:-.02em}
+.hright{text-align:right}
+.hrole{font-family:var(--mono);font-size:9px;color:var(--gold);letter-spacing:.08em;margin-bottom:2px}
+.huser{font-family:var(--mono);font-size:9px;color:var(--muted)}
+
+/* NAV */
 .nav{display:flex;border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none}
 .nav::-webkit-scrollbar{display:none}
-.nav-btn{flex-shrink:0;padding:11px 13px;background:none;border:none;color:var(--muted);font-size:10px;letter-spacing:.07em;font-family:var(--mono);border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap}
+.nav-btn{flex-shrink:0;padding:10px 12px;background:none;border:none;color:var(--muted);font-size:10px;letter-spacing:.06em;font-family:var(--mono);border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap}
 .nav-btn.active{color:var(--gold);border-bottom-color:var(--gold)}
+.nav-btn.hidden{display:none}
 
+/* VIEWS */
 .view{display:none;flex:1;flex-direction:column;overflow:hidden}
 .view.active{display:flex}
 
-.filters{display:flex;gap:7px;padding:11px 16px;overflow-x:auto;scrollbar-width:none}
+/* COMMON */
+.empty{text-align:center;color:#2A2A2A;padding:60px 20px;font-size:15px;font-style:italic}
+.section-label{font-family:var(--mono);font-size:9px;color:var(--gold);letter-spacing:.12em;margin-bottom:8px}
+.card{background:var(--bg2);border:1px solid var(--border2);border-radius:12px;padding:14px;margin-bottom:10px;animation:fadeIn .2s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.badge{font-size:9px;font-family:var(--mono);padding:3px 8px;border-radius:8px;display:inline-block}
+.scrollable{flex:1;overflow-y:auto;padding:12px 16px 80px}
+
+/* FILTERS */
+.filters{display:flex;gap:7px;padding:10px 16px;overflow-x:auto;scrollbar-width:none}
 .filters::-webkit-scrollbar{display:none}
-.fbtn{white-space:nowrap;padding:5px 13px;border-radius:20px;background:var(--bg3);color:var(--muted);border:1px solid var(--border2);font-size:10px;font-family:var(--mono);transition:all .15s}
+.fbtn{white-space:nowrap;padding:5px 12px;border-radius:20px;background:var(--bg3);color:var(--muted);border:1px solid var(--border2);font-size:10px;font-family:var(--mono);transition:all .15s}
 .fbtn.active{background:var(--gold);color:var(--bg);border-color:var(--gold)}
 
-.task-list{flex:1;overflow-y:auto;padding:0 16px 80px}
-.empty{text-align:center;color:#2A2A2A;padding:60px 0;font-size:15px;font-style:italic}
-
-.task-item{padding:13px 0;border-bottom:1px solid #111;animation:fadeIn .2s ease}
-@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
-.task-row{display:flex;gap:11px;align-items:flex-start}
-
-.check{width:22px;height:22px;border-radius:50%;flex-shrink:0;margin-top:2px;border:1.5px solid var(--border2);background:none;display:flex;align-items:center;justify-content:center;transition:all .2s}
+/* TASKS */
+.task-item{padding:12px 0;border-bottom:1px solid #111;display:flex;gap:11px;align-items:flex-start}
+.check{width:22px;height:22px;border-radius:50%;flex-shrink:0;margin-top:1px;border:1.5px solid var(--border2);background:none;display:flex;align-items:center;justify-content:center;transition:all .2s}
 .check.done{background:var(--gold);border-color:var(--gold)}
 .check.done::after{content:'✓';color:var(--bg);font-size:11px;font-weight:700}
-
-.task-body{flex:1;min-width:0}
-.task-title{font-size:15px;line-height:1.4;color:var(--text)}
+.task-body{flex:1;min-width:0;cursor:pointer}
+.task-title{font-size:15px;line-height:1.4}
 .task-title.done{color:#333;text-decoration:line-through}
-.task-meta{display:flex;gap:8px;margin-top:5px;flex-wrap:wrap;align-items:center}
+.task-meta{display:flex;gap:7px;margin-top:5px;flex-wrap:wrap}
 .tag{font-size:10px;font-family:var(--mono)}
-.task-del{background:none;border:none;color:#2A2A2A;font-size:18px;padding:0 4px;flex-shrink:0;transition:color .15s}
+.task-del{background:none;border:none;color:#2A2A2A;font-size:18px;padding:0 4px;flex-shrink:0}
 
-.add-form{padding:20px;display:flex;flex-direction:column;gap:18px;overflow-y:auto;padding-bottom:calc(20px + var(--safe-bottom))}
+/* FORMS */
+.form-scroll{flex:1;overflow-y:auto;padding:20px 16px;display:flex;flex-direction:column;gap:16px;padding-bottom:calc(20px + var(--safe-bottom))}
 .flabel{font-family:var(--mono);font-size:10px;color:var(--gold);letter-spacing:.12em;display:block;margin-bottom:7px}
-textarea,input[type=date],input[type=text],input[type=tel]{width:100%;background:var(--bg2);border:1px solid var(--border2);border-radius:10px;color:var(--text);padding:11px 13px;font-size:15px;font-family:var(--serif);outline:none;transition:border-color .2s;-webkit-appearance:none}
-textarea:focus,input:focus{border-color:var(--gold)}
+input[type=text],input[type=email],input[type=password],input[type=tel],input[type=number],input[type=date],textarea,select{width:100%;background:var(--bg2);border:1px solid var(--border2);border-radius:10px;color:var(--text);padding:11px 13px;font-size:15px;font-family:var(--serif);outline:none;transition:border-color .2s}
+input:focus,textarea:focus,select:focus{border-color:var(--gold)}
 textarea{resize:none}
-select{width:100%;background:var(--bg2);border:1px solid var(--border2);border-radius:10px;color:var(--text);padding:11px 13px;font-size:15px;font-family:var(--serif);outline:none;-webkit-appearance:none;appearance:none}
-.chip-row{display:flex;gap:8px;flex-wrap:wrap}
-.chip{padding:7px 14px;border-radius:20px;background:var(--bg3);color:var(--muted);border:1px solid var(--border2);font-size:11px;font-family:var(--mono);transition:all .15s}
-.prio-row{display:flex;gap:8px}
+.chip-row{display:flex;gap:7px;flex-wrap:wrap}
+.chip{padding:7px 13px;border-radius:20px;background:var(--bg3);color:var(--muted);border:1px solid var(--border2);font-size:11px;font-family:var(--mono);transition:all .15s}
+.prio-row{display:flex;gap:7px}
 .prio-chip{flex:1;padding:8px 4px;border-radius:10px;background:var(--bg3);color:var(--muted);border:1px solid var(--border2);font-size:10px;font-family:var(--mono);text-align:center;transition:all .15s}
-.btn-add{background:var(--gold);border:none;border-radius:12px;padding:14px;color:var(--bg);font-size:13px;font-weight:700;font-family:var(--mono);letter-spacing:.06em;transition:opacity .15s}
-.btn-add:active{opacity:.8}
+.btn-primary{background:var(--gold);border:none;border-radius:12px;padding:14px;color:var(--bg);font-size:13px;font-weight:700;font-family:var(--mono);letter-spacing:.05em;width:100%;transition:opacity .15s}
+.btn-primary:active{opacity:.8}
+.btn-danger{background:var(--bg3);border:1px solid var(--red);border-radius:12px;padding:12px;color:var(--red);font-size:13px;font-family:var(--mono);width:100%}
+
+/* INLINE ADD */
+.inline-row{display:flex;gap:6px;margin-top:8px}
+.inline-input{flex:1;background:var(--bg2);border:1px solid var(--border2);border-radius:8px;color:var(--text);padding:8px 10px;font-size:13px;font-family:var(--serif);outline:none}
+.inline-input:focus{border-color:var(--gold)}
+.inline-btn{background:var(--gold);border:none;border-radius:8px;color:var(--bg);padding:8px 14px;font-size:13px;font-family:var(--mono)}
 
 /* OBJECTS */
-.obj-list{flex:1;overflow-y:auto;padding:12px 16px 80px}
-.obj-card{background:var(--bg2);border:1px solid var(--border2);border-radius:12px;padding:14px;margin-bottom:10px;animation:fadeIn .2s ease}
-.obj-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
-.obj-name{font-size:16px;font-weight:400}
-.obj-status{font-size:10px;font-family:var(--mono);padding:3px 9px;border-radius:10px}
-.obj-meta{font-size:12px;color:var(--muted);font-family:var(--mono);margin-bottom:8px}
-.obj-progress{height:3px;background:var(--border2);border-radius:2px;margin-bottom:10px}
+.obj-progress{height:3px;background:var(--border2);border-radius:2px;margin:8px 0 4px}
 .obj-progress-bar{height:100%;border-radius:2px;background:var(--gold);transition:width .3s}
-.obj-actions{display:flex;gap:8px}
-.obj-btn{flex:1;padding:7px;border-radius:8px;background:var(--bg3);border:1px solid var(--border2);color:var(--muted2);font-size:10px;font-family:var(--mono)}
-.add-obj-form{padding:16px;border-top:1px solid var(--border)}
 
-/* WEEK */
-.week-header{display:flex;padding:10px 16px;gap:4px;border-bottom:1px solid var(--border)}
-.week-day{flex:1;text-align:center;font-family:var(--mono);font-size:9px;color:var(--muted);padding:5px 2px;border-radius:8px;cursor:pointer;transition:all .15s}
-.week-day.today{color:var(--gold)}
-.week-day.selected{background:var(--gold);color:var(--bg)}
-.week-day .day-num{font-size:16px;font-weight:300;display:block;margin-bottom:1px}
-.week-day .day-dot{width:4px;height:4px;border-radius:50%;background:var(--gold);margin:2px auto 0;opacity:0}
-.week-day .day-dot.has{opacity:1}
-.time-blocks{flex:1;overflow-y:auto;padding:12px 16px 80px}
-.time-block{margin-bottom:16px}
-.block-label{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.1em;margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid var(--border)}
-.block-task{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px solid #111}
-.block-empty{font-size:13px;color:#2A2A2A;font-style:italic;padding:8px 0}
+/* OBJECT DETAIL */
+.decision-item{background:var(--bg3);border-radius:8px;padding:10px 12px;margin-bottom:6px;display:flex;gap:10px;align-items:flex-start}
+.supply-item{background:var(--bg3);border-radius:8px;padding:9px 12px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center}
 
 /* TEAM */
-.team-list{flex:1;overflow-y:auto;padding:12px 16px 80px}
-.team-search{padding:12px 16px 0;display:flex;gap:8px}
-.team-search input{flex:1;background:var(--bg2);border:1px solid var(--border2);border-radius:10px;color:var(--text);padding:9px 13px;font-size:14px;font-family:var(--serif);outline:none}
-.team-search input:focus{border-color:var(--gold)}
+.master-avatar{width:48px;height:48px;border-radius:50%;background:var(--bg3);border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:300;color:var(--gold);flex-shrink:0;font-family:var(--serif)}
+.master-avatar.active{border-color:var(--gold)}
+.skill-tag{font-size:10px;font-family:var(--mono);color:var(--muted2);border:1px solid var(--border2);border-radius:10px;padding:2px 8px;display:inline-block}
 
-.master-card{background:var(--bg2);border:1px solid var(--border2);border-radius:14px;padding:16px;margin-bottom:12px;animation:fadeIn .2s ease;cursor:pointer;transition:border-color .2s}
-.master-card:hover{border-color:var(--gold)}
-.master-card-header{display:flex;gap:12px;align-items:flex-start;margin-bottom:12px}
-.master-avatar{width:52px;height:52px;border-radius:50%;background:var(--bg3);border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;font-family:var(--mono);color:var(--gold)}
-.master-avatar.active-av{border-color:var(--gold)}
-.master-info{flex:1;min-width:0}
-.master-name{font-size:17px;font-weight:400;margin-bottom:3px}
-.master-role{font-size:11px;font-family:var(--mono);color:var(--gold);letter-spacing:.06em;margin-bottom:5px}
-.master-status-badge{display:inline-block;font-size:9px;font-family:var(--mono);padding:2px 8px;border-radius:10px}
-
-.master-bio{font-size:13px;color:var(--muted2);line-height:1.6;margin-bottom:12px;font-style:italic}
-
-.master-skills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
-.skill-tag{font-size:10px;font-family:var(--mono);color:var(--green);border:1px solid #1E3A30;border-radius:10px;padding:3px 9px;background:#0E1F1A}
-
-.master-section{margin-bottom:10px}
-.master-section-label{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:.12em;margin-bottom:5px}
-.master-section-text{font-size:13px;color:var(--text);line-height:1.5}
-
-.master-goal{background:var(--bg3);border-left:3px solid var(--gold);padding:10px 12px;border-radius:0 8px 8px 0;font-size:13px;font-style:italic;color:var(--text);line-height:1.5;margin-bottom:12px}
-
-.master-stats{display:flex;gap:8px;margin-bottom:12px}
-.master-stat{flex:1;background:var(--bg3);border-radius:8px;padding:8px;text-align:center}
-.master-stat-val{font-family:var(--mono);font-size:16px;color:var(--gold);display:block}
-.master-stat-label{font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:2px;display:block}
-
-.master-actions{display:flex;gap:8px}
-.master-btn{flex:1;padding:9px;border-radius:9px;background:var(--bg3);border:1px solid var(--border2);color:var(--muted2);font-size:10px;font-family:var(--mono);transition:all .15s}
-.master-btn.primary{background:var(--gold);color:var(--bg);border-color:var(--gold)}
-.master-btn:active{opacity:.8}
-
-.add-master-btn{position:fixed;bottom:calc(20px + var(--safe-bottom));right:20px;width:52px;height:52px;border-radius:50%;background:var(--gold);border:none;color:var(--bg);font-size:24px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(200,169,110,.4);z-index:50}
-
-/* AI CHAT */
-.chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
-.msg{max-width:86%;padding:11px 14px;font-size:14px;line-height:1.5;font-family:var(--serif);animation:fadeIn .2s ease}
-.msg.user{align-self:flex-end;background:var(--gold);color:var(--bg);border-radius:16px 16px 4px 16px}
-.msg.ai{align-self:flex-start;background:var(--bg3);color:var(--text);border-radius:16px 16px 16px 4px}
-.msg.typing{color:var(--gold);font-style:italic;font-size:13px;align-self:flex-start}
-.chat-input-row{padding:12px 16px;border-top:1px solid var(--border);display:flex;gap:8px;padding-bottom:calc(12px + var(--safe-bottom))}
-.chat-input{flex:1;background:var(--bg2);border:1px solid var(--border2);border-radius:10px;color:var(--text);padding:10px 13px;font-size:14px;font-family:var(--serif);outline:none;transition:border-color .2s}
+/* CHAT */
+.chat-messages{flex:1;overflow-y:auto;padding:12px 16px;display:flex;flex-direction:column;gap:8px}
+.chat-msg{max-width:80%;padding:10px 13px;border-radius:14px;font-size:14px;line-height:1.5;animation:fadeIn .2s ease}
+.chat-msg.me{align-self:flex-end;background:var(--gold);color:var(--bg);border-radius:14px 14px 4px 14px}
+.chat-msg.other{align-self:flex-start;background:var(--bg3);color:var(--text);border-radius:14px 14px 14px 4px}
+.chat-msg-name{font-size:10px;font-family:var(--mono);margin-bottom:3px;opacity:.7}
+.chat-msg-time{font-size:9px;font-family:var(--mono);opacity:.5;margin-top:3px;text-align:right}
+.chat-input-row{padding:10px 16px;border-top:1px solid var(--border);display:flex;gap:8px;padding-bottom:calc(10px + var(--safe-bottom))}
+.chat-input{flex:1;background:var(--bg2);border:1px solid var(--border2);border-radius:10px;color:var(--text);padding:10px 13px;font-size:14px;font-family:var(--serif);outline:none}
 .chat-input:focus{border-color:var(--gold)}
 .chat-send{background:var(--gold);border:none;border-radius:10px;padding:10px 16px;color:var(--bg);font-size:16px}
 
-.offline-banner{background:#2A1A0A;border-bottom:1px solid #4A3010;padding:7px 16px;font-size:10px;font-family:var(--mono);color:var(--gold);text-align:center;display:none}
-.offline-banner.show{display:block}
-.nav-safe{height:var(--safe-bottom);background:var(--bg)}
-
 /* MODAL */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:100;display:none;align-items:flex-end}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;display:none;align-items:flex-end}
 .modal-overlay.open{display:flex}
-.modal{background:var(--bg2);border-radius:20px 20px 0 0;padding:20px;width:100%;max-height:92vh;overflow-y:auto;padding-bottom:calc(20px + var(--safe-bottom))}
-.modal-title{font-family:var(--mono);font-size:11px;color:var(--gold);letter-spacing:.1em;margin-bottom:16px}
-.modal-close{float:right;background:none;border:none;color:var(--muted);font-size:22px;margin-top:-4px}
+.modal{background:var(--bg2);border-radius:20px 20px 0 0;padding:20px;width:100%;max-height:90vh;overflow-y:auto;padding-bottom:calc(20px + var(--safe-bottom))}
+.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.modal-title{font-family:var(--mono);font-size:11px;color:var(--gold);letter-spacing:.1em}
+.modal-close{background:none;border:none;color:var(--muted);font-size:22px;padding:0}
 
-.sub-input{flex:1;background:var(--bg3);border:1px solid var(--border2);border-radius:6px;color:var(--text);padding:6px 10px;font-size:13px;font-family:var(--serif);outline:none}
-.sub-add-btn{background:var(--border2);border:none;border-radius:6px;color:var(--gold);padding:6px 10px;font-size:13px}
-.add-sub-row{display:flex;gap:6px;margin-top:6px}
-.subtask-list{margin-bottom:8px}
-.subtask-item{display:flex;gap:8px;align-items:center;padding:5px 0;border-bottom:1px solid #1A1A1A}
-.sub-check{width:16px;height:16px;border-radius:50%;border:1.5px solid var(--border2);background:none;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s}
-.sub-check.done{background:var(--gold);border-color:var(--gold)}
-.sub-check.done::after{content:'✓';color:var(--bg);font-size:8px;font-weight:700}
-.sub-title{flex:1;font-size:13px;color:var(--muted2)}
-.sub-title.done{text-decoration:line-through;color:#333}
-.sub-del{background:none;border:none;color:#2A2A2A;font-size:14px;padding:0 3px}
-.task-note{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:6px;color:var(--text);padding:8px 10px;font-size:13px;font-family:var(--serif);outline:none;resize:none;margin-top:6px}
-.task-tag-chip{font-size:10px;font-family:var(--mono);color:var(--blue);border:1px solid var(--blue);border-radius:12px;padding:2px 8px;display:inline-flex;align-items:center;gap:4px}
-.task-tag-chip button{background:none;border:none;color:var(--blue);font-size:11px;padding:0}
-.tag-inp{background:var(--bg3);border:1px solid var(--border2);border-radius:6px;color:var(--text);padding:5px 9px;font-size:12px;font-family:var(--mono);outline:none;width:100px}
+/* WEEK CALENDAR */
+.week-header{display:flex;padding:10px 16px;gap:4px;border-bottom:1px solid var(--border)}
+.week-day{flex:1;text-align:center;font-family:var(--mono);font-size:9px;color:var(--muted);padding:5px 2px;border-radius:8px;cursor:pointer;transition:all .15s;position:relative}
+.week-day.today{color:var(--gold)}
+.week-day.selected{background:var(--gold);color:var(--bg)}
+.week-day .dn{font-size:15px;font-weight:300;display:block;margin-bottom:1px}
+.week-day .dot{width:4px;height:4px;border-radius:50%;background:var(--gold);margin:2px auto 0;opacity:0}
+.week-day .dot.has{opacity:1}
+.time-blocks{flex:1;overflow-y:auto;padding:12px 16px 80px}
+.time-block{margin-bottom:14px}
+.block-label{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:.1em;margin-bottom:7px;padding-bottom:4px;border-bottom:1px solid var(--border)}
+.block-task{display:flex;gap:9px;align-items:flex-start;padding:8px 0;border-bottom:1px solid #111}
+.block-empty{font-size:13px;color:#2A2A2A;font-style:italic;padding:6px 0}
+
+/* GOALS */
+.goal-progress-wrap{height:4px;background:var(--border2);border-radius:2px;margin:8px 0 4px}
+.goal-progress-bar{height:100%;border-radius:2px;background:var(--gold);transition:width .3s}
+
+/* NOTIFICATION DOT */
+.notif-dot{width:6px;height:6px;border-radius:50%;background:var(--red);display:inline-block;margin-left:4px;vertical-align:middle}
+
+.nav-safe{height:var(--safe-bottom);background:var(--bg)}
 </style>
 </head>
 <body>
-<div class="offline-banner" id="offlineBanner">⚡ Офлайн — данные сохранены</div>
+
+<!-- LOADING -->
+<div class="loading-screen" id="loadingScreen">
+  <div class="loading-dot"></div>
+</div>
+
+<!-- AUTH -->
+<div class="auth-screen hidden" id="authScreen">
+  <div class="auth-logo">ROOFFORMAT</div>
+  <div class="auth-title">Платформа</div>
+  <div class="auth-sub">Войдите в систему</div>
+  <div class="auth-form">
+    <input class="auth-input" id="authEmail" type="email" placeholder="Email" autocomplete="email">
+    <input class="auth-input" id="authPassword" type="password" placeholder="Пароль" autocomplete="current-password">
+    <div class="auth-error" id="authError"></div>
+    <button class="auth-btn" onclick="signIn()">ВОЙТИ</button>
+    <div class="auth-divider">или</div>
+    <button class="auth-btn secondary" onclick="signInGoogle()">Войти через Google</button>
+    <div class="auth-switch">Нет аккаунта? <span onclick="showRegister()">Зарегистрироваться</span></div>
+  </div>
+</div>
+
+<!-- REGISTER MODAL -->
+<div class="modal-overlay" id="registerModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">РЕГИСТРАЦИЯ</div>
+      <button class="modal-close" onclick="closeModal('registerModal')">×</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div><label class="flabel">ИМЯ И ФАМИЛИЯ</label><input type="text" id="regName" placeholder="Даниил Титов"></div>
+      <div><label class="flabel">EMAIL</label><input type="email" id="regEmail" placeholder="email@example.com"></div>
+      <div><label class="flabel">ПАРОЛЬ</label><input type="password" id="regPassword" placeholder="Минимум 6 символов"></div>
+      <div><label class="flabel">ПРИГЛАСИТЕЛЬНЫЙ КОД</label><input type="text" id="regCode" placeholder="Код от администратора"></div>
+      <div class="auth-error" id="regError"></div>
+      <button class="btn-primary" onclick="register()">ЗАРЕГИСТРИРОВАТЬСЯ</button>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app" style="display:none;flex:1;flex-direction:column;min-height:100vh">
+
+<div class="offline-banner" id="offlineBanner">⚡ Офлайн — данные синхронизируются при подключении</div>
 
 <div class="header">
   <div>
     <div class="hbrand">ROOFFORMAT</div>
-    <div class="htitle">Задачник</div>
+    <div class="htitle" id="appTitle">Задачник</div>
   </div>
-  <div class="hstats">
-    <div class="htoday" id="statToday"></div>
-    <div id="statActive"></div>
+  <div class="hright">
+    <div class="hrole" id="userRoleLabel"></div>
+    <div class="huser" id="userNameLabel"></div>
   </div>
 </div>
 
-<nav class="nav">
+<nav class="nav" id="mainNav">
   <button class="nav-btn active" data-view="tasks" onclick="switchView('tasks')">ЗАДАЧИ</button>
   <button class="nav-btn" data-view="week" onclick="switchView('week')">НЕДЕЛЯ</button>
   <button class="nav-btn" data-view="objects" onclick="switchView('objects')">ОБЪЕКТЫ</button>
-  <button class="nav-btn" onclick="window.location.href='masters.html'">КОМАНДА</button>
   <button class="nav-btn" data-view="team" onclick="switchView('team')">КОМАНДА</button>
-  <button class="nav-btn" data-view="add" onclick="switchView('add')">+ ЗАДАЧА</button>
-  <button class="nav-btn" data-view="ai" onclick="switchView('ai')">ИИ</button>
+  <button class="nav-btn" data-view="counterparties" onclick="switchView('counterparties')">КОНТРАГЕНТЫ</button>
+  <button class="nav-btn" data-view="goals" onclick="switchView('goals')">ЦЕЛИ</button>
+  <button class="nav-btn founder-only" data-view="admin" onclick="switchView('admin')">ДОСТУП</button>
+  <button class="nav-btn" data-view="profile" onclick="switchView('profile')">ПРОФИЛЬ</button>
 </nav>
 
-<!-- TASKS -->
+<!-- TASKS VIEW -->
 <div class="view active" id="view-tasks">
-  <div class="filters" id="filters"></div>
-  <div class="task-list" id="taskList"></div>
+  <div style="display:flex;gap:8px;padding:10px 16px 0;align-items:center">
+    <div class="filters" style="flex:1;padding:0">
+      <button class="fbtn active" id="tf-all" onclick="setTaskFilter('all')">Все</button>
+      <button class="fbtn" id="tf-personal" onclick="setTaskFilter('personal')">🔒 Личные</button>
+      <button class="fbtn" id="tf-team" onclick="setTaskFilter('team')">👥 Команда</button>
+      <button class="fbtn" id="tf-done" onclick="setTaskFilter('done')">Готово</button>
+    </div>
+    <button onclick="switchView('add-task')" style="background:var(--gold);border:none;border-radius:8px;color:var(--bg);padding:7px 12px;font-family:var(--mono);font-size:11px;flex-shrink:0">+ ЗАДАЧА</button>
+  </div>
+  <div class="scrollable" id="taskList"></div>
 </div>
 
-<!-- WEEK -->
+<!-- ADD TASK VIEW -->
+<div class="view" id="view-add-task">
+  <div class="form-scroll">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+      <button onclick="switchView('tasks')" style="background:none;border:none;color:var(--gold);font-family:var(--mono);font-size:11px;padding:0">← НАЗАД</button>
+    </div>
+    <div><label class="flabel">ЗАДАЧА *</label><textarea id="newTaskTitle" rows="3" placeholder="Что нужно сделать?"></textarea></div>
+    <div><label class="flabel">ЗАМЕТКА</label><textarea id="newTaskNote" rows="2" placeholder="Дополнительно..."></textarea></div>
+    <div>
+      <label class="flabel">ВИДИМОСТЬ</label>
+      <div class="chip-row">
+        <button class="chip active" id="vis-personal" onclick="selectVisibility('personal')" style="background:var(--gold);color:var(--bg);border-color:var(--gold)">🔒 Личная</button>
+        <button class="chip" id="vis-team" onclick="selectVisibility('team')">👥 Командная</button>
+      </div>
+    </div>
+    <div><label class="flabel">ПРОЕКТ</label><div class="chip-row" id="projectChips"></div></div>
+    <div><label class="flabel">ПРИОРИТЕТ</label><div class="prio-row" id="prioChips"></div></div>
+    <div><label class="flabel">БЛОК ДНЯ</label><div class="chip-row" id="blockChips"></div></div>
+    <div><label class="flabel">ДАТА</label><input type="date" id="newTaskDate"></div>
+    <div id="assignSection">
+      <label class="flabel">НАЗНАЧИТЬ МАСТЕРУ</label>
+      <select id="newTaskAssign"><option value="">Не назначено</option></select>
+    </div>
+    <button class="btn-primary" onclick="submitTask()">ДОБАВИТЬ ЗАДАЧУ</button>
+  </div>
+</div>
+
+<!-- WEEK VIEW -->
 <div class="view" id="view-week">
   <div class="week-header" id="weekHeader"></div>
   <div class="time-blocks" id="timeBlocks"></div>
 </div>
 
-<!-- OBJECTS -->
+<!-- OBJECTS VIEW -->
 <div class="view" id="view-objects">
-  <div class="obj-list" id="objList"></div>
-  <div class="add-obj-form">
-    <div style="display:flex;gap:8px">
-      <input type="text" id="newObjName" placeholder="Название объекта..." style="flex:1;font-size:14px;padding:10px 13px">
-      <button class="btn-add" style="padding:10px 16px;border-radius:10px;flex-shrink:0" onclick="addObject()">+</button>
-    </div>
+  <div style="display:flex;gap:8px;padding:10px 16px 0">
+    <div class="filters" style="flex:1;padding:0" id="objFilters"></div>
+    <button onclick="openAddObject()" class="founder-only director-only" style="background:var(--gold);border:none;border-radius:8px;color:var(--bg);padding:7px 12px;font-family:var(--mono);font-size:11px;flex-shrink:0">+ ОБЪЕКТ</button>
   </div>
+  <div class="scrollable" id="objList"></div>
 </div>
 
-<!-- TEAM -->
+<!-- TEAM VIEW -->
 <div class="view" id="view-team">
-  <div class="team-search">
-    <input type="text" id="teamSearch" placeholder="Поиск по имени или навыку..." oninput="renderTeam()">
+  <div style="padding:10px 16px 0;display:flex;gap:8px">
+    <input type="text" id="teamSearch" placeholder="Поиск мастера..." style="flex:1;font-size:14px;padding:9px 12px" oninput="renderTeam()">
+    <button onclick="openMasterForm(null)" class="founder-only director-only" style="background:var(--gold);border:none;border-radius:8px;color:var(--bg);padding:9px 12px;font-family:var(--mono);font-size:11px;flex-shrink:0">+</button>
   </div>
-  <div style="display:flex;gap:7px;padding:10px 16px;overflow-x:auto;scrollbar-width:none" id="teamFilters"></div>
-  <div class="team-list" id="teamList"></div>
-  <button class="add-master-btn" onclick="openMasterForm()">+</button>
+  <div style="display:flex;gap:7px;padding:8px 16px 0;overflow-x:auto;scrollbar-width:none" id="teamFilters"></div>
+  <div class="scrollable" id="teamList"></div>
 </div>
 
-<!-- ADD TASK -->
-<div class="view" id="view-add">
-  <div class="add-form">
-    <div>
-      <label class="flabel">ЗАДАЧА</label>
-      <textarea id="newTitle" rows="3" placeholder="Что нужно сделать?"></textarea>
-    </div>
-    <div>
-      <label class="flabel">ЗАМЕТКА</label>
-      <textarea id="newNote" rows="2" placeholder="Дополнительная информация..."></textarea>
-    </div>
-    <div>
-      <label class="flabel">ПРОЕКТ</label>
-      <div class="chip-row" id="projectChips"></div>
-    </div>
-    <div>
-      <label class="flabel">ПРИОРИТЕТ</label>
-      <div class="prio-row" id="prioChips"></div>
-    </div>
-    <div>
-      <label class="flabel">БЛОК ДНЯ</label>
-      <div class="chip-row" id="blockChips"></div>
-    </div>
-    <div>
-      <label class="flabel">ДАТА</label>
-      <input type="date" id="newDate">
-    </div>
-    <button class="btn-add" onclick="submitTask()">ДОБАВИТЬ ЗАДАЧУ</button>
+<!-- COUNTERPARTIES VIEW -->
+<div class="view" id="view-counterparties">
+  <div style="display:flex;gap:8px;padding:10px 16px 0">
+    <input type="text" id="cpSearch" placeholder="Поиск контрагента..." style="flex:1;font-size:14px;padding:9px 12px" oninput="renderCounterparties()">
+    <button onclick="openCPForm(null)" class="founder-only director-only" style="background:var(--gold);border:none;border-radius:8px;color:var(--bg);padding:9px 12px;font-family:var(--mono);font-size:11px;flex-shrink:0">+</button>
   </div>
+  <div style="display:flex;gap:7px;padding:8px 16px 0;overflow-x:auto;scrollbar-width:none" id="cpFilters"></div>
+  <div class="scrollable" id="cpList"></div>
 </div>
 
-<!-- AI -->
-<div class="view" id="view-ai">
-  <div class="chat-messages" id="chatMessages">
-    <div class="msg ai">Привет, Даниил. Пиши задачи или вопросы — помогу с планированием и приоритетами.</div>
+<!-- GOALS VIEW -->
+<div class="view" id="view-goals">
+  <div style="padding:10px 16px 0;display:flex;justify-content:flex-end">
+    <button onclick="openGoalForm(null)" style="background:var(--gold);border:none;border-radius:8px;color:var(--bg);padding:7px 12px;font-family:var(--mono);font-size:11px">+ ЦЕЛЬ</button>
   </div>
-  <div class="chat-input-row">
-    <input class="chat-input" id="chatInput" type="text" placeholder="Напиши задачу или вопрос..." onkeydown="if(event.key==='Enter')sendChat()">
-    <button class="chat-send" onclick="sendChat()">→</button>
+  <div class="scrollable" id="goalsList"></div>
+</div>
+
+<!-- ADMIN VIEW -->
+<div class="view" id="view-admin">
+  <div class="scrollable">
+    <div class="section-label" style="margin-bottom:12px">УПРАВЛЕНИЕ ДОСТУПОМ</div>
+    <div id="usersList"></div>
+    <div style="margin-top:20px">
+      <div class="section-label" style="margin-bottom:8px">ПРИГЛАСИТЕЛЬНЫЕ КОДЫ</div>
+      <div id="inviteCodes"></div>
+      <button class="btn-primary" style="margin-top:10px" onclick="generateInviteCode()">СОЗДАТЬ КОД ПРИГЛАШЕНИЯ</button>
+    </div>
   </div>
 </div>
 
-<div class="nav-safe"></div>
+<!-- PROFILE VIEW -->
+<div class="view" id="view-profile">
+  <div class="scrollable">
+    <div class="card" id="profileCard"></div>
+    <button class="btn-danger" style="margin-top:8px" onclick="signOut()">ВЫЙТИ ИЗ СИСТЕМЫ</button>
+  </div>
+</div>
 
-<!-- TASK MODAL -->
-<div class="modal-overlay" id="taskModal" onclick="if(event.target===this)closeModal('taskModal')">
+</div><!-- end #app -->
+
+<!-- MODALS -->
+
+<!-- OBJECT DETAIL -->
+<div class="modal-overlay" id="objDetailModal" onclick="if(event.target===this)closeModal('objDetailModal')">
+  <div class="modal" style="max-height:92vh">
+    <div class="modal-header">
+      <div class="modal-title" id="objDetailTitle">ОБЪЕКТ</div>
+      <button class="modal-close" onclick="closeModal('objDetailModal')">×</button>
+    </div>
+    <div id="objDetailContent"></div>
+  </div>
+</div>
+
+<!-- ADD OBJECT -->
+<div class="modal-overlay" id="addObjModal" onclick="if(event.target===this)closeModal('addObjModal')">
   <div class="modal">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-      <div class="modal-title">ЗАДАЧА</div>
-      <button class="modal-close" onclick="closeModal('taskModal')">×</button>
+    <div class="modal-header">
+      <div class="modal-title" id="addObjTitle">НОВЫЙ ОБЪЕКТ</div>
+      <button class="modal-close" onclick="closeModal('addObjModal')">×</button>
     </div>
-    <div id="modalContent"></div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div><label class="flabel">НАЗВАНИЕ *</label><input type="text" id="objName" placeholder="Название объекта"></div>
+      <div><label class="flabel">АДРЕС</label><input type="text" id="objAddress" placeholder="Адрес объекта"></div>
+      <div><label class="flabel">КЛИЕНТ</label><input type="text" id="objClient" placeholder="Имя заказчика"></div>
+      <div><label class="flabel">ТЕЛЕФОН КЛИЕНТА</label><input type="tel" id="objClientPhone" placeholder="+7 999 000 00 00"></div>
+      <div><label class="flabel">СУММА ДОГОВОРА</label><input type="text" id="objBudget" placeholder="₽"></div>
+      <div><label class="flabel">СТАТУС</label>
+        <div class="chip-row" id="objStatusChips"></div>
+      </div>
+      <div><label class="flabel">ВОРОНКА</label>
+        <div class="chip-row" id="objFunnelChips"></div>
+      </div>
+      <div><label class="flabel">МАСТЕРА НА ОБЪЕКТЕ</label>
+        <div id="objMastersList" style="display:flex;flex-direction:column;gap:8px;margin-top:4px"></div>
+      </div>
+      <div><label class="flabel">ЗАМЕТКИ</label><textarea id="objNote" rows="2" placeholder="Заметки..."></textarea></div>
+      <button class="btn-primary" onclick="submitObject()">СОХРАНИТЬ</button>
+      <button class="btn-danger" id="deleteObjBtn" style="display:none" onclick="deleteCurrentObj()">УДАЛИТЬ ОБЪЕКТ</button>
+    </div>
   </div>
 </div>
 
-<!-- MASTER FORM MODAL -->
+<!-- MASTER FORM -->
 <div class="modal-overlay" id="masterModal" onclick="if(event.target===this)closeModal('masterModal')">
   <div class="modal">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+    <div class="modal-header">
       <div class="modal-title" id="masterModalTitle">НОВЫЙ МАСТЕР</div>
       <button class="modal-close" onclick="closeModal('masterModal')">×</button>
     </div>
-    <div id="masterFormContent"></div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div><label class="flabel">ИМЯ И ФАМИЛИЯ *</label><input type="text" id="mName" placeholder="Иван Петров"></div>
+      <div><label class="flabel">РОЛЬ</label><div class="chip-row" id="mRoleChips"></div></div>
+      <div><label class="flabel">СТАТУС</label><div class="chip-row" id="mStatusChips"></div></div>
+      <div><label class="flabel">ТЕЛЕФОН</label><input type="tel" id="mPhone" placeholder="+7 999 000 00 00"></div>
+      <div><label class="flabel">ОПЫТ (лет)</label><input type="number" id="mExp" placeholder="0" min="0"></div>
+      <div><label class="flabel">О МАСТЕРЕ</label><textarea id="mBio" rows="2" placeholder="Описание..."></textarea></div>
+      <div><label class="flabel">НАВЫКИ</label><div class="chip-row" id="mSkillsChips"></div></div>
+      <div><label class="flabel">АМБИЦИИ</label><textarea id="mAmb" rows="2" placeholder="Куда хочет вырасти..."></textarea></div>
+      <div><label class="flabel">ЦЕЛЬ В ROOFFORMAT</label><textarea id="mGoal" rows="2" placeholder="Зачем пришёл в команду..."></textarea></div>
+      <div><label class="flabel">ЦЕЛЬ ВЗАИМОДЕЙСТВИЯ</label><textarea id="mInter" rows="2" placeholder="Какой результат хочет..."></textarea></div>
+      <button class="btn-primary" onclick="saveMaster()">СОХРАНИТЬ</button>
+      <button class="btn-danger" id="deleteMasterBtn" style="display:none" onclick="deleteCurrentMaster()">УДАЛИТЬ МАСТЕРА</button>
+    </div>
   </div>
 </div>
 
-<!-- MASTER VIEW MODAL -->
+<!-- MASTER VIEW -->
 <div class="modal-overlay" id="masterViewModal" onclick="if(event.target===this)closeModal('masterViewModal')">
   <div class="modal">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+    <div class="modal-header">
       <div class="modal-title">МАСТЕР</div>
       <button class="modal-close" onclick="closeModal('masterViewModal')">×</button>
     </div>
@@ -315,416 +427,1167 @@ select{width:100%;background:var(--bg2);border:1px solid var(--border2);border-r
   </div>
 </div>
 
-<script>
-const TASKS_KEY='rf_tasks';
-const OBJ_KEY='rf_objects';
-const TEAM_KEY='rf_team';
+<!-- COUNTERPARTY FORM -->
+<div class="modal-overlay" id="cpModal" onclick="if(event.target===this)closeModal('cpModal')">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="cpModalTitle">КОНТРАГЕНТ</div>
+      <button class="modal-close" onclick="closeModal('cpModal')">×</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div><label class="flabel">НАЗВАНИЕ *</label><input type="text" id="cpName" placeholder="Название компании или ФИО"></div>
+      <div><label class="flabel">ТИП</label><div class="chip-row" id="cpTypeChips"></div></div>
+      <div><label class="flabel">КОНТАКТНОЕ ЛИЦО</label><input type="text" id="cpContact" placeholder="Имя контакта"></div>
+      <div><label class="flabel">ТЕЛЕФОН</label><input type="tel" id="cpPhone" placeholder="+7 999 000 00 00"></div>
+      <div><label class="flabel">EMAIL</label><input type="email" id="cpEmail" placeholder="email@example.com"></div>
+      <div><label class="flabel">СТАТУС</label><div class="chip-row" id="cpStatusChips"></div></div>
+      <div><label class="flabel">РЕЙТИНГ НАДЁЖНОСТИ</label>
+        <div style="display:flex;gap:8px">
+          ${[1,2,3,4,5].map(n=>`<button onclick="setCPRating(${n})" id="cpStar${n}" style="background:none;border:none;font-size:22px;padding:4px;cursor:pointer">☆</button>`).join('')}
+        </div>
+      </div>
+      <div><label class="flabel">ЗАМЕТКИ</label><textarea id="cpNote" rows="2" placeholder="Условия работы, история..."></textarea></div>
+      <button class="btn-primary" onclick="saveCP()">СОХРАНИТЬ</button>
+      <button class="btn-danger" id="deleteCPBtn" style="display:none" onclick="deleteCurrentCP()">УДАЛИТЬ</button>
+    </div>
+  </div>
+</div>
 
-const PROJECTS=[
+<!-- TASK DETAIL -->
+<div class="modal-overlay" id="taskModal" onclick="if(event.target===this)closeModal('taskModal')">
+  <div class="modal" style="max-height:90vh">
+    <div class="modal-header">
+      <div class="modal-title">ЗАДАЧА</div>
+      <button class="modal-close" onclick="closeModal('taskModal')">×</button>
+    </div>
+    <div id="taskDetailContent"></div>
+  </div>
+</div>
+
+<!-- GOAL FORM -->
+<div class="modal-overlay" id="goalModal" onclick="if(event.target===this)closeModal('goalModal')">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">ЦЕЛЬ</div>
+      <button class="modal-close" onclick="closeModal('goalModal')">×</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div><label class="flabel">НАЗВАНИЕ *</label><input type="text" id="goalTitle" placeholder="Название цели"></div>
+      <div><label class="flabel">ПЕРИОД</label>
+        <div class="chip-row">
+          <button class="chip" id="gp-3m" onclick="selectGoalPeriod('3m')">3 мес</button>
+          <button class="chip" id="gp-6m" onclick="selectGoalPeriod('6m')">6 мес</button>
+          <button class="chip active" id="gp-1y" onclick="selectGoalPeriod('1y')" style="background:var(--gold);color:var(--bg);border-color:var(--gold)">1 год</button>
+          <button class="chip" id="gp-3y" onclick="selectGoalPeriod('3y')">3 года</button>
+        </div>
+      </div>
+      <div><label class="flabel">ПРОГРЕСС (%)</label><input type="number" id="goalProgress" placeholder="0" min="0" max="100"></div>
+      <div><label class="flabel">ЗАМЕТКА</label><textarea id="goalNote" rows="2" placeholder="Описание или шаги..."></textarea></div>
+      <button class="btn-primary" onclick="saveGoal()">СОХРАНИТЬ</button>
+      <button class="btn-danger" id="deleteGoalBtn" style="display:none" onclick="deleteCurrentGoal()">УДАЛИТЬ</button>
+    </div>
+  </div>
+</div>
+
+<div class="nav-safe"></div>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, signOut as fbSignOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, collection, doc, setDoc, getDoc, getDocs, addDoc, updateDoc, deleteDoc, onSnapshot, query, where, orderBy, serverTimestamp, arrayUnion, arrayRemove } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCaSkkeNjIHU-9RWks0yubq4myLFnxvHak",
+  authDomain: "roofformat.firebaseapp.com",
+  projectId: "roofformat",
+  storageBucket: "roofformat.firebasestorage.app",
+  messagingSenderId: "658573030268",
+  appId: "1:658573030268:web:bc1a11999ecd37fd58eaf9",
+  measurementId: "G-XBE9TX1C1N"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const googleProvider = new GoogleAuthProvider();
+
+// ═══════════════════════════════
+// STATE
+// ═══════════════════════════════
+let currentUser = null;
+let currentUserData = null;
+let tasks = [], objects = [], team = [], counterparties = [], goals = [], allUsers = [];
+let taskFilter = 'all';
+let selectedWeekDay = null;
+let newTaskVisibility = 'personal';
+let newTaskProject = 'roofformat';
+let newTaskPriority = 'medium';
+let newTaskBlock = 'any';
+let editingObjId = null;
+let editingMasterId = null;
+let editingCPId = null;
+let editingGoalId = null;
+let selectedGoalPeriod = '1y';
+let selectedCPType = 'supplier';
+let selectedCPStatus = 'active';
+let selectedCPRating = 0;
+let objStatusSel = 'active';
+let objFunnelSel = 'lead';
+let mRoleSel = 'Кровельщик';
+let mStatusSel = 'active';
+let mSkillsSel = [];
+let unsubscribers = [];
+
+const ROLES = {
+  founder: 'Основатель',
+  director: 'Директор',
+  manager: 'Менеджер',
+  master: 'Мастер'
+};
+const ROLE_COLORS = {
+  founder: '#C8A96E',
+  director: '#7EA8C8',
+  manager: '#7EB8A4',
+  master: '#A07EB8'
+};
+const PROJECTS = [
   {id:'roofformat',label:'ROOFFORMAT',color:'#C8A96E'},
   {id:'personal',label:'Личное',color:'#7EB8A4'},
   {id:'stroika',label:'Стройка',color:'#A07EB8'},
   {id:'content',label:'Контент',color:'#E07E7E'},
 ];
-const PRIORITIES=[
+const PRIORITIES = [
   {id:'high',label:'Важно',color:'#E07E7E'},
   {id:'medium',label:'Средне',color:'#C8A96E'},
   {id:'low',label:'Спокойно',color:'#7EB8A4'},
 ];
-const BLOCKS=[
+const BLOCKS = [
   {id:'morning',label:'☀️ Утро'},
   {id:'day',label:'🌤 День'},
   {id:'evening',label:'🌙 Вечер'},
   {id:'any',label:'📌 Любое'},
 ];
-const OBJ_STATUSES=[
+const OBJ_STATUSES = [
   {id:'active',label:'В работе',color:'#C8A96E'},
   {id:'design',label:'Проект',color:'#7EA8C8'},
   {id:'done',label:'Сдан',color:'#7EB8A4'},
   {id:'paused',label:'Пауза',color:'#555'},
 ];
-const MASTER_STATUSES=[
+const FUNNEL_STAGES = [
+  {id:'lead',label:'Лид'},
+  {id:'measure',label:'Замер'},
+  {id:'proposal',label:'КП'},
+  {id:'contract',label:'Договор'},
+  {id:'work',label:'Монтаж'},
+  {id:'done',label:'Сдача'},
+  {id:'warranty',label:'Гарантия'},
+];
+const MASTER_ROLES_LIST = ['Кровельщик','Старший мастер','Бригадир','Проектировщик','Монтажник фальца','Специалист по черепице','Плотник','Менеджер'];
+const MASTER_STATUSES_LIST = [
   {id:'active',label:'В команде',color:'#7EB8A4'},
   {id:'project',label:'На объекте',color:'#C8A96E'},
   {id:'free',label:'Свободен',color:'#7EA8C8'},
   {id:'inactive',label:'Не активен',color:'#555'},
 ];
-const MASTER_ROLES=[
-  'Кровельщик','Старший мастер','Бригадир','Проектировщик',
-  'Монтажник фальца','Специалист по черепице','Плотник','Производство','Менеджер'
+const SKILLS_LIST = ['Фальцевая кровля','Натуральная черепица','Мягкая кровля','Плоская кровля','SIP-технологии','3D-визуализация','Проектирование','Плотницкие работы','Металлообработка','Узлы и примыкания','Водосток','Утепление','Чертежи','Префаб','Производство'];
+const CP_TYPES = [
+  {id:'supplier',label:'Поставщик'},
+  {id:'contractor',label:'Подрядчик'},
+  {id:'client',label:'Клиент'},
+  {id:'partner',label:'Партнёр'},
+  {id:'service',label:'Сервис'},
 ];
-const SKILL_OPTIONS=[
-  'Фальцевая кровля','Натуральная черепица','Мягкая кровля','Плоская кровля',
-  'SIP-технологии','3D-визуализация','Проектирование','Плотницкие работы',
-  'Металлообработка','Узлы и примыкания','Водосток','Утепление',
-  'Работа с чертежами','Префаб','Производство элементов'
+const CP_STATUSES = [
+  {id:'active',label:'Активный',color:'#7EB8A4'},
+  {id:'single',label:'Разовый',color:'#C8A96E'},
+  {id:'problem',label:'Проблемный',color:'#E07E7E'},
+  {id:'paused',label:'Приостановлен',color:'#555'},
 ];
+const INVITE_CODES = {
+  'RF2024FOUNDER': 'founder',
+  'RF2024DIRECTOR': 'director',
+  'RF2024MANAGER': 'manager',
+  'RF2024MASTER': 'master',
+};
 
-const GOAL_PRESETS=[
-  'Стать мастером фальцевой кровли',
-  'Развить навыки проектирования',
-  'Вырасти до бригадира',
-  'Освоить 3D-визуализацию',
-  'Построить карьеру в ROOFFORMAT',
-  'Развить производственное направление',
-  'Стать специалистом по сложным объектам',
-];
-
-let tasks=[], objects=[], team=[];
-let currentFilter='all', selectedWeekDay=null;
-let newProject='roofformat', newPriority='medium', newBlock='any';
-let editingMasterId=null, teamFilterStatus='all';
-
-function loadData(){
-  try{tasks=JSON.parse(localStorage.getItem(TASKS_KEY)||'[]')}catch{tasks=[]}
-  try{objects=JSON.parse(localStorage.getItem(OBJ_KEY)||'[]')}catch{objects=[]}
-  try{team=JSON.parse(localStorage.getItem(TEAM_KEY)||'[]')}catch{team=[]}
-}
-function saveData(){
-  localStorage.setItem(TASKS_KEY,JSON.stringify(tasks));
-  localStorage.setItem(OBJ_KEY,JSON.stringify(objects));
-  localStorage.setItem(TEAM_KEY,JSON.stringify(team));
-}
-
-function fmtDate(s){if(!s)return'';const d=new Date(s+'T00:00:00');return d.toLocaleDateString('ru-RU',{day:'numeric',month:'short'})}
+// ═══════════════════════════════
+// HELPERS
+// ═══════════════════════════════
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function today(){return new Date().toISOString().split('T')[0]}
-function getWeekDays(){const d=new Date();d.setHours(0,0,0,0);const mon=new Date(d);mon.setDate(d.getDate()-((d.getDay()+6)%7));return Array.from({length:7},(_,i)=>{const x=new Date(mon);x.setDate(mon.getDate()+i);return x})}
-const DAY_NAMES=['ПН','ВТ','СР','ЧТ','ПТ','СБ','ВС'];
+function fmtDate(s){if(!s)return'';const d=new Date(s+'T00:00:00');return d.toLocaleDateString('ru-RU',{day:'numeric',month:'short'})}
+function fmtTime(ts){if(!ts)return'';const d=ts.toDate?ts.toDate():new Date(ts);return d.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'})}
+function closeModal(id){document.getElementById(id).classList.remove('open')}
+function openModal(id){document.getElementById(id).classList.add('open')}
+function initials(name){return(name||'?').split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase()}
+function hasRole(roles){return currentUserData&&roles.includes(currentUserData.role)}
+function canEdit(){return hasRole(['founder','director'])}
 
-// STATS
-function renderStats(){
-  const t=today();
-  const todayN=tasks.filter(x=>x.date===t&&!x.done).length;
-  const active=tasks.filter(x=>!x.done).length;
-  document.getElementById('statToday').textContent=todayN>0?todayN+' на сегодня':'';
-  document.getElementById('statActive').textContent=active+' активных';
-}
+// ═══════════════════════════════
+// AUTH
+// ═══════════════════════════════
+window.signIn = async function(){
+  const email=document.getElementById('authEmail').value.trim();
+  const pass=document.getElementById('authPassword').value;
+  document.getElementById('authError').textContent='';
+  try{
+    await signInWithEmailAndPassword(auth,email,pass);
+  }catch(e){
+    document.getElementById('authError').textContent='Неверный email или пароль';
+  }
+};
 
-// TASKS
-function renderFilters(){
-  const all=[{id:'all',label:'Все'},{id:'done',label:'Готово'},...PROJECTS.map(p=>({id:p.id,label:p.label}))];
-  document.getElementById('filters').innerHTML=all.map(f=>`<button class="fbtn${currentFilter===f.id?' active':''}" onclick="setFilter('${f.id}')">${f.label}</button>`).join('');
-}
-function renderTasks(){
-  const filtered=tasks.filter(t=>{
-    if(currentFilter==='all')return!t.done;
-    if(currentFilter==='done')return t.done;
-    return t.project===currentFilter&&!t.done;
+window.signInGoogle = async function(){
+  try{
+    const result = await signInWithPopup(auth,googleProvider);
+    const user = result.user;
+    const userDoc = await getDoc(doc(db,'users',user.uid));
+    if(!userDoc.exists()){
+      await setDoc(doc(db,'users',user.uid),{
+        name: user.displayName||'Пользователь',
+        email: user.email,
+        role: 'master',
+        createdAt: serverTimestamp()
+      });
+    }
+  }catch(e){
+    document.getElementById('authError').textContent='Ошибка входа через Google';
+  }
+};
+
+window.showRegister = function(){openModal('registerModal')};
+
+window.register = async function(){
+  const name=document.getElementById('regName').value.trim();
+  const email=document.getElementById('regEmail').value.trim();
+  const pass=document.getElementById('regPassword').value;
+  const code=document.getElementById('regCode').value.trim().toUpperCase();
+  document.getElementById('regError').textContent='';
+  if(!name||!email||!pass){document.getElementById('regError').textContent='Заполни все поля';return}
+  const role = INVITE_CODES[code];
+  if(!role){document.getElementById('regError').textContent='Неверный пригласительный код';return}
+  try{
+    const cred = await createUserWithEmailAndPassword(auth,email,pass);
+    await setDoc(doc(db,'users',cred.user.uid),{
+      name,email,role,createdAt:serverTimestamp()
+    });
+    closeModal('registerModal');
+  }catch(e){
+    document.getElementById('regError').textContent = e.code==='auth/email-already-in-use'?'Email уже используется':'Ошибка регистрации';
+  }
+};
+
+window.signOut = async function(){
+  unsubscribers.forEach(u=>u());
+  unsubscribers=[];
+  await fbSignOut(auth);
+};
+
+// ═══════════════════════════════
+// AUTH STATE
+// ═══════════════════════════════
+onAuthStateChanged(auth, async(user)=>{
+  document.getElementById('loadingScreen').classList.add('hidden');
+  if(user){
+    currentUser=user;
+    const snap = await getDoc(doc(db,'users',user.uid));
+    if(snap.exists()){
+      currentUserData={id:user.uid,...snap.data()};
+      document.getElementById('authScreen').classList.add('hidden');
+      document.getElementById('app').style.display='flex';
+      document.getElementById('app').style.flexDirection='column';
+      initApp();
+    }else{
+      document.getElementById('authScreen').classList.remove('hidden');
+    }
+  }else{
+    currentUser=null;currentUserData=null;
+    document.getElementById('authScreen').classList.remove('hidden');
+    document.getElementById('app').style.display='none';
+  }
+});
+
+// ═══════════════════════════════
+// APP INIT
+// ═══════════════════════════════
+function initApp(){
+  const r=currentUserData.role;
+  document.getElementById('userNameLabel').textContent=currentUserData.name;
+  document.getElementById('userRoleLabel').textContent=ROLES[r]||r;
+
+  // Hide role-restricted nav
+  document.querySelectorAll('.founder-only').forEach(el=>{
+    if(!hasRole(['founder']))el.classList.add('hidden');
   });
-  if(!filtered.length){document.getElementById('taskList').innerHTML=`<div class="empty">${currentFilter==='done'?'Ещё ничего не выполнено':'Задач нет — добавь первую'}</div>`;return}
+  document.querySelectorAll('.founder-only.director-only').forEach(el=>{
+    if(!hasRole(['founder','director']))el.classList.add('hidden');
+  });
+
+  // Render profile
+  document.getElementById('profileCard').innerHTML=`
+    <div style="display:flex;gap:14px;align-items:center;margin-bottom:16px">
+      <div class="master-avatar active" style="width:56px;height:56px;font-size:22px">${initials(currentUserData.name)}</div>
+      <div>
+        <div style="font-size:18px;margin-bottom:4px">${esc(currentUserData.name)}</div>
+        <div style="font-family:var(--mono);font-size:10px;color:${ROLE_COLORS[r]||'var(--gold)'}">${ROLES[r]||r}</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:2px">${esc(currentUserData.email)}</div>
+      </div>
+    </div>`;
+
+  subscribeToData();
+  renderWeek();
+}
+
+// ═══════════════════════════════
+// REALTIME SUBSCRIPTIONS
+// ═══════════════════════════════
+function subscribeToData(){
+  const uid=currentUser.uid;
+  const r=currentUserData.role;
+
+  // Personal tasks
+  const personalQ = query(collection(db,'tasks'),where('ownerId','==',uid),where('visibility','==','personal'),orderBy('createdAt','desc'));
+  unsubscribers.push(onSnapshot(personalQ,snap=>{
+    const personal=snap.docs.map(d=>({id:d.id,...d.data()}));
+    tasks=tasks.filter(t=>t.visibility!=='personal'||t.ownerId!==uid);
+    tasks=[...personal,...tasks];
+    renderTasks();renderWeek();
+  }));
+
+  // Team tasks
+  let teamTaskQ;
+  if(hasRole(['founder','director'])){
+    teamTaskQ=query(collection(db,'tasks'),where('visibility','==','team'),orderBy('createdAt','desc'));
+  }else if(hasRole(['manager'])){
+    teamTaskQ=query(collection(db,'tasks'),where('visibility','==','team'),orderBy('createdAt','desc'));
+  }else{
+    teamTaskQ=query(collection(db,'tasks'),where('visibility','==','team'),where('assignedTo','==',uid),orderBy('createdAt','desc'));
+  }
+  unsubscribers.push(onSnapshot(teamTaskQ,snap=>{
+    const teamT=snap.docs.map(d=>({id:d.id,...d.data()}));
+    tasks=tasks.filter(t=>t.visibility!=='team');
+    tasks=[...tasks,...teamT];
+    renderTasks();renderWeek();
+  }));
+
+  // Objects
+  let objQ;
+  if(hasRole(['founder','director','manager'])){
+    objQ=query(collection(db,'objects'),orderBy('createdAt','desc'));
+  }else{
+    objQ=query(collection(db,'objects'),where('masterIds','array-contains',uid),orderBy('createdAt','desc'));
+  }
+  unsubscribers.push(onSnapshot(objQ,snap=>{
+    objects=snap.docs.map(d=>({id:d.id,...d.data()}));
+    renderObjects();
+  }));
+
+  // Team
+  unsubscribers.push(onSnapshot(collection(db,'team'),snap=>{
+    team=snap.docs.map(d=>({id:d.id,...d.data()}));
+    renderTeam();
+    populateAssignSelect();
+  }));
+
+  // Counterparties
+  if(hasRole(['founder','director','manager'])){
+    unsubscribers.push(onSnapshot(query(collection(db,'counterparties'),orderBy('createdAt','desc')),snap=>{
+      counterparties=snap.docs.map(d=>({id:d.id,...d.data()}));
+      renderCounterparties();
+    }));
+  }
+
+  // Goals (personal)
+  unsubscribers.push(onSnapshot(query(collection(db,'goals'),where('ownerId','==',uid),orderBy('createdAt','desc')),snap=>{
+    goals=snap.docs.map(d=>({id:d.id,...d.data()}));
+    renderGoals();
+  }));
+
+  // All users (for admin)
+  if(hasRole(['founder'])){
+    unsubscribers.push(onSnapshot(collection(db,'users'),snap=>{
+      allUsers=snap.docs.map(d=>({id:d.id,...d.data()}));
+      renderAdmin();
+    }));
+  }
+}
+
+// ═══════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════
+window.switchView = function(name){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  const view=document.getElementById('view-'+name);
+  if(view)view.classList.add('active');
+  const btn=document.querySelector(`[data-view="${name}"]`);
+  if(btn)btn.classList.add('active');
+
+  const titles={tasks:'Задачи',week:'Планировщик',objects:'Объекты',team:'Команда',counterparties:'Контрагенты',goals:'Цели',admin:'Доступ',profile:'Профиль','add-task':'Новая задача'};
+  document.getElementById('appTitle').textContent=titles[name]||'ROOFFORMAT';
+};
+
+// ═══════════════════════════════
+// TASKS
+// ═══════════════════════════════
+window.setTaskFilter = function(f){
+  taskFilter=f;
+  ['all','personal','team','done'].forEach(x=>{
+    document.getElementById('tf-'+x).classList.toggle('active',x===f);
+  });
+  renderTasks();
+};
+
+function renderTasks(){
+  let filtered=tasks.filter(t=>{
+    if(taskFilter==='all')return!t.done;
+    if(taskFilter==='personal')return t.visibility==='personal'&&!t.done;
+    if(taskFilter==='team')return t.visibility==='team'&&!t.done;
+    if(taskFilter==='done')return t.done;
+    return true;
+  });
+  if(!filtered.length){document.getElementById('taskList').innerHTML='<div class="empty">Задач нет</div>';return}
   document.getElementById('taskList').innerHTML=filtered.map(t=>{
     const proj=PROJECTS.find(p=>p.id===t.project);
     const prio=PRIORITIES.find(p=>p.id===t.priority);
-    const subDone=(t.subtasks||[]).filter(s=>s.done).length;
-    const subTotal=(t.subtasks||[]).length;
-    const noteP=t.note?`<div style="font-size:12px;color:var(--muted);margin-top:4px;font-style:italic">${esc(t.note.substring(0,60))}${t.note.length>60?'…':''}</div>`:'';
+    const subs=(t.subtasks||[]);
+    const subDone=subs.filter(s=>s.done).length;
+    const assigned=t.assignedTo?team.find(m=>m.id===t.assignedTo):null;
+    const noteP=t.note?`<div style="font-size:12px;color:var(--muted);margin-top:3px;font-style:italic">${esc(t.note.substring(0,60))}${t.note.length>60?'…':''}</div>`:'';
     return`<div class="task-item">
-      <div class="task-row">
-        <button class="check${t.done?' done':''}" onclick="toggleDone(${t.id})"></button>
-        <div class="task-body" onclick="openTask(${t.id})" style="cursor:pointer">
-          <div class="task-title${t.done?' done':''}">${esc(t.title)}</div>
-          ${noteP}
-          <div class="task-meta">
-            ${proj?`<span class="tag" style="color:${proj.color}">${proj.label}</span>`:''}
-            ${prio?`<span class="tag" style="color:${prio.color}">${prio.label}</span>`:''}
-            ${t.date?`<span class="tag" style="color:var(--muted)">${fmtDate(t.date)}</span>`:''}
-            ${subTotal?`<span class="tag" style="color:var(--muted)">${subDone}/${subTotal}</span>`:''}
-          </div>
+      <button class="check${t.done?' done':''}" onclick="toggleTask('${t.id}',${!t.done})"></button>
+      <div class="task-body" onclick="openTask('${t.id}')">
+        <div class="task-title${t.done?' done':''}">${esc(t.title)}</div>
+        ${noteP}
+        <div class="task-meta">
+          <span style="font-size:10px;color:var(--muted)">${t.visibility==='personal'?'🔒':'👥'}</span>
+          ${proj?`<span class="tag" style="color:${proj.color}">${proj.label}</span>`:''}
+          ${prio?`<span class="tag" style="color:${prio.color}">${prio.label}</span>`:''}
+          ${t.date?`<span class="tag" style="color:var(--muted)">${fmtDate(t.date)}</span>`:''}
+          ${subs.length?`<span class="tag" style="color:var(--muted)">${subDone}/${subs.length}</span>`:''}
+          ${assigned?`<span class="tag" style="color:var(--blue)">${initials(assigned.name)}</span>`:''}
         </div>
-        <button class="task-del" onclick="deleteTask(${t.id})">×</button>
       </div>
+      ${t.ownerId===currentUser.uid||canEdit()?`<button class="task-del" onclick="deleteTask('${t.id}')">×</button>`:''}
     </div>`;
   }).join('');
 }
 
-function openTask(id){
+window.toggleTask = async function(id,done){
+  await updateDoc(doc(db,'tasks',id),{done,updatedAt:serverTimestamp()});
+};
+
+window.deleteTask = async function(id){
+  if(!confirm('Удалить задачу?'))return;
+  await deleteDoc(doc(db,'tasks',id));
+  tasks=tasks.filter(t=>t.id!==id);renderTasks();
+};
+
+window.openTask = function(id){
   const t=tasks.find(x=>x.id===id);if(!t)return;
-  document.getElementById('modalContent').innerHTML=`
+  const proj=PROJECTS.find(p=>p.id===t.project);
+  const prio=PRIORITIES.find(p=>p.id===t.priority);
+  const assigned=t.assignedTo?team.find(m=>m.id===t.assignedTo):null;
+  document.getElementById('taskDetailContent').innerHTML=`
     <div style="font-size:18px;margin-bottom:12px">${esc(t.title)}</div>
-    <div class="flabel">ЗАМЕТКА</div>
-    <textarea class="task-note" rows="3" id="modalNote" onchange="saveNote(${id})">${esc(t.note||'')}</textarea>
-    <div class="flabel" style="margin-top:14px">ПОДЗАДАЧИ</div>
-    <div class="subtask-list" id="subtaskList">${renderSubs(t)}</div>
-    <div class="add-sub-row">
-      <input class="sub-input" id="subInput" placeholder="Новая подзадача..." onkeydown="if(event.key==='Enter')addSub(${id})">
-      <button class="sub-add-btn" onclick="addSub(${id})">+</button>
+    <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px">
+      <span style="font-size:10px;color:var(--muted);font-family:var(--mono)">${t.visibility==='personal'?'🔒 Личная':'👥 Командная'}</span>
+      ${proj?`<span class="badge" style="background:${proj.color}22;color:${proj.color}">${proj.label}</span>`:''}
+      ${prio?`<span class="badge" style="background:${prio.color}22;color:${prio.color}">${prio.label}</span>`:''}
+      ${t.date?`<span class="badge" style="background:var(--bg3);color:var(--muted)">${fmtDate(t.date)}</span>`:''}
+      ${assigned?`<span class="badge" style="background:var(--blue)22;color:var(--blue)">→ ${esc(assigned.name)}</span>`:''}
+    </div>
+    ${t.note?`<div style="font-size:14px;color:var(--muted2);margin-bottom:14px;line-height:1.5">${esc(t.note)}</div>`:''}
+    <div class="section-label">ПОДЗАДАЧИ</div>
+    <div id="subList_${t.id}">${renderSubs(t)}</div>
+    <div class="inline-row">
+      <input class="inline-input" id="subInput_${t.id}" placeholder="Новая подзадача..." onkeydown="if(event.key==='Enter')addSub('${t.id}')">
+      <button class="inline-btn" onclick="addSub('${t.id}')">+</button>
     </div>`;
-  document.getElementById('taskModal').classList.add('open');
+  openModal('taskModal');
+};
+
+function renderSubs(t){
+  return(t.subtasks||[]).map((s,i)=>`
+    <div style="display:flex;gap:8px;align-items:center;padding:7px 0;border-bottom:1px solid var(--border)">
+      <button class="check${s.done?' done':''}" onclick="toggleSub('${t.id}',${i})" style="width:18px;height:18px;flex-shrink:0"></button>
+      <span style="flex:1;font-size:13px${s.done?';color:#333;text-decoration:line-through':''}">${esc(s.title)}</span>
+      <button onclick="deleteSub('${t.id}',${i})" style="background:none;border:none;color:var(--muted);font-size:14px">×</button>
+    </div>`).join('')||'<div style="font-size:13px;color:#2A2A2A;font-style:italic;padding:6px 0">Подзадач нет</div>';
 }
-function renderSubs(t){return(t.subtasks||[]).map((s,i)=>`<div class="subtask-item"><button class="sub-check${s.done?' done':''}" onclick="toggleSub(${t.id},${i})"></button><span class="sub-title${s.done?' done':''}">${esc(s.title)}</span><button class="sub-del" onclick="deleteSub(${t.id},${i})">×</button></div>`).join('')||'<div style="font-size:12px;color:#333;font-style:italic;padding:4px 0">Нет подзадач</div>'}
-function saveNote(id){tasks=tasks.map(t=>t.id===id?{...t,note:document.getElementById('modalNote').value}:t);saveData();renderTasks()}
-function addSub(id){const inp=document.getElementById('subInput');const title=inp.value.trim();if(!title)return;tasks=tasks.map(t=>t.id!==id?t:{...t,subtasks:[...(t.subtasks||[]),{title,done:false}]});inp.value='';saveData();const t=tasks.find(x=>x.id===id);document.getElementById('subtaskList').innerHTML=renderSubs(t);renderTasks()}
-function toggleSub(tid,i){tasks=tasks.map(t=>{if(t.id!==tid)return t;const s=[...(t.subtasks||[])];s[i]={...s[i],done:!s[i].done};return{...t,subtasks:s}});saveData();const t=tasks.find(x=>x.id===tid);document.getElementById('subtaskList').innerHTML=renderSubs(t);renderTasks()}
-function deleteSub(tid,i){tasks=tasks.map(t=>{if(t.id!==tid)return t;const s=[...(t.subtasks||[])];s.splice(i,1);return{...t,subtasks:s}});saveData();const t=tasks.find(x=>x.id===tid);document.getElementById('subtaskList').innerHTML=renderSubs(t);renderTasks()}
 
-function toggleDone(id){tasks=tasks.map(t=>t.id===id?{...t,done:!t.done}:t);saveData();renderAll()}
-function deleteTask(id){tasks=tasks.filter(t=>t.id!==id);saveData();renderAll()}
-function setFilter(f){currentFilter=f;renderFilters();renderTasks()}
+window.addSub = async function(taskId){
+  const inp=document.getElementById('subInput_'+taskId);
+  const title=inp.value.trim();if(!title)return;
+  const t=tasks.find(x=>x.id===taskId);if(!t)return;
+  const subs=[...(t.subtasks||[]),{title,done:false}];
+  await updateDoc(doc(db,'tasks',taskId),{subtasks:subs});
+  inp.value='';
+  t.subtasks=subs;
+  document.getElementById('subList_'+taskId).innerHTML=renderSubs(t);
+};
 
+window.toggleSub = async function(taskId,idx){
+  const t=tasks.find(x=>x.id===taskId);if(!t)return;
+  const subs=[...(t.subtasks||[])];subs[idx]={...subs[idx],done:!subs[idx].done};
+  await updateDoc(doc(db,'tasks',taskId),{subtasks:subs});
+  t.subtasks=subs;
+  document.getElementById('subList_'+taskId).innerHTML=renderSubs(t);
+  renderTasks();
+};
+
+window.deleteSub = async function(taskId,idx){
+  const t=tasks.find(x=>x.id===taskId);if(!t)return;
+  const subs=[...(t.subtasks||[])];subs.splice(idx,1);
+  await updateDoc(doc(db,'tasks',taskId),{subtasks:subs});
+  t.subtasks=subs;
+  document.getElementById('subList_'+taskId).innerHTML=renderSubs(t);
+};
+
+// ADD TASK FORM
+window.selectVisibility = function(v){
+  newTaskVisibility=v;
+  ['personal','team'].forEach(x=>{
+    const b=document.getElementById('vis-'+x);
+    if(x===v){b.style.background='var(--gold)';b.style.color='var(--bg)';b.style.borderColor='var(--gold)'}
+    else{b.style.background='';b.style.color='';b.style.borderColor=''}
+  });
+  document.getElementById('assignSection').style.display=v==='team'?'block':'none';
+};
+
+function renderAddTaskChips(){
+  document.getElementById('projectChips').innerHTML=PROJECTS.map(p=>
+    `<button class="chip${newTaskProject===p.id?' active':''}" style="${newTaskProject===p.id?`background:${p.color};color:var(--bg);border-color:${p.color}`:''}" onclick="selectTP('${p.id}')">${p.label}</button>`
+  ).join('');
+  document.getElementById('prioChips').innerHTML=PRIORITIES.map(p=>
+    `<button class="prio-chip${newTaskPriority===p.id?' active':''}" style="${newTaskPriority===p.id?`background:${p.color};color:var(--bg);border-color:${p.color}`:''}" onclick="selectTPrio('${p.id}')">${p.label}</button>`
+  ).join('');
+  document.getElementById('blockChips').innerHTML=BLOCKS.map(b=>
+    `<button class="chip${newTaskBlock===b.id?' active':''}" style="${newTaskBlock===b.id?'background:var(--gold);color:var(--bg);border-color:var(--gold)':''}" onclick="selectTBlock('${b.id}')">${b.label}</button>`
+  ).join('');
+}
+window.selectTP=function(v){newTaskProject=v;renderAddTaskChips()};
+window.selectTPrio=function(v){newTaskPriority=v;renderAddTaskChips()};
+window.selectTBlock=function(v){newTaskBlock=v;renderAddTaskChips()};
+
+function populateAssignSelect(){
+  const sel=document.getElementById('newTaskAssign');
+  if(!sel)return;
+  const cur=sel.value;
+  sel.innerHTML='<option value="">Не назначено</option>'+team.map(m=>`<option value="${m.id}"${m.id===cur?' selected':''}>${esc(m.name)}</option>`).join('');
+}
+
+window.submitTask = async function(){
+  const title=document.getElementById('newTaskTitle').value.trim();
+  if(!title){document.getElementById('newTaskTitle').focus();return}
+  const note=document.getElementById('newTaskNote').value.trim();
+  const date=document.getElementById('newTaskDate').value;
+  const assignedTo=newTaskVisibility==='team'?document.getElementById('newTaskAssign').value:'';
+  await addDoc(collection(db,'tasks'),{
+    title,note,date,
+    visibility:newTaskVisibility,
+    project:newTaskProject,
+    priority:newTaskPriority,
+    block:newTaskBlock,
+    assignedTo,
+    ownerId:currentUser.uid,
+    ownerName:currentUserData.name,
+    done:false,subtasks:[],
+    createdAt:serverTimestamp()
+  });
+  document.getElementById('newTaskTitle').value='';
+  document.getElementById('newTaskNote').value='';
+  document.getElementById('newTaskDate').value='';
+  switchView('tasks');
+};
+
+// ═══════════════════════════════
 // WEEK
-function renderWeek(){
-  const days=getWeekDays();const sel=selectedWeekDay||today();
+// ═══════════════════════════════
+const DAY_NAMES=['ПН','ВТ','СР','ЧТ','ПТ','СБ','ВС'];
+function getWeekDays(){const d=new Date();d.setHours(0,0,0,0);const mon=new Date(d);mon.setDate(d.getDate()-((d.getDay()+6)%7));return Array.from({length:7},(_,i)=>{const x=new Date(mon);x.setDate(mon.getDate()+i);return x})}
+
+window.renderWeek = function(){
+  const days=getWeekDays();
+  const sel=selectedWeekDay||today();
   document.getElementById('weekHeader').innerHTML=days.map((d,i)=>{
     const ds=d.toISOString().split('T')[0];
     const has=tasks.some(t=>t.date===ds&&!t.done);
-    return`<div class="week-day${ds===today()?' today':''}${ds===sel?' selected':''}" onclick="selectDay('${ds}')"><span style="font-size:9px">${DAY_NAMES[i]}</span><span class="day-num">${d.getDate()}</span><div class="day-dot${has?' has':''}"></div></div>`;
+    return`<div class="week-day${ds===today()?' today':''}${ds===sel?' selected':''}" onclick="selectDay('${ds}')">
+      <span style="font-size:9px">${DAY_NAMES[i]}</span>
+      <span class="dn">${d.getDate()}</span>
+      <div class="dot${has?' has':''}"></div>
+    </div>`;
   }).join('');
   const dayT=tasks.filter(t=>t.date===sel&&!t.done);
   const noDate=tasks.filter(t=>!t.date&&!t.done);
-  document.getElementById('timeBlocks').innerHTML=['morning','day','evening','any'].map(bid=>{
-    const bl=BLOCKS.find(b=>b.id===bid);
-    const bt=bid==='any'?[...dayT.filter(t=>!t.block||t.block==='any'),...(sel===today()?noDate:[])] :dayT.filter(t=>t.block===bid);
-    return`<div class="time-block"><div class="block-label">${bl.label}</div>${bt.length?bt.map(t=>`<div class="block-task"><button class="check${t.done?' done':''}" onclick="toggleDone(${t.id});renderWeek()" style="width:18px;height:18px;flex-shrink:0;margin-top:2px"></button><div style="flex:1;font-size:14px;cursor:pointer" onclick="openTask(${t.id})">${esc(t.title)}</div></div>`).join(''):`<div class="block-empty">Нет задач</div>`}</div>`;
+  document.getElementById('timeBlocks').innerHTML=BLOCKS.map(b=>{
+    const bt=b.id==='any'?[...dayT.filter(t=>!t.block||t.block==='any'),...(sel===today()?noDate:[])]
+                        :dayT.filter(t=>t.block===b.id);
+    return`<div class="time-block">
+      <div class="block-label">${b.label}</div>
+      ${bt.length?bt.map(t=>`<div class="block-task">
+        <button class="check${t.done?' done':''}" onclick="toggleTask('${t.id}',true);renderWeek()" style="width:18px;height:18px;flex-shrink:0;margin-top:2px"></button>
+        <div style="flex:1;font-size:14px;cursor:pointer" onclick="openTask('${t.id}')">${esc(t.title)}</div>
+      </div>`).join(''):`<div class="block-empty">Нет задач</div>`}
+    </div>`;
   }).join('');
-}
-function selectDay(ds){selectedWeekDay=ds;renderWeek()}
+};
+window.selectDay=function(ds){selectedWeekDay=ds;renderWeek()};
 
+// ═══════════════════════════════
 // OBJECTS
+// ═══════════════════════════════
 function renderObjects(){
+  const objFilters=document.getElementById('objFilters');
+  if(objFilters)objFilters.innerHTML=[{id:'all',label:'Все'},...OBJ_STATUSES].map(s=>
+    `<button class="fbtn" onclick="filterObjs('${s.id}')">${s.label}</button>`
+  ).join('');
+
   if(!objects.length){document.getElementById('objList').innerHTML='<div class="empty">Объектов нет</div>';return}
   document.getElementById('objList').innerHTML=objects.map(o=>{
     const st=OBJ_STATUSES.find(s=>s.id===o.status)||OBJ_STATUSES[0];
-    const ot=tasks.filter(t=>t.objId===o.id);
-    const done=ot.filter(t=>t.done).length;const total=ot.length;
+    const funnel=FUNNEL_STAGES.find(f=>f.id===o.funnel);
+    const objTasks=tasks.filter(t=>t.objId===o.id);
+    const done=objTasks.filter(t=>t.done).length;
+    const total=objTasks.length;
     const pct=total?Math.round(done/total*100):0;
-    return`<div class="obj-card">
-      <div class="obj-header"><div class="obj-name">${esc(o.name)}</div><span class="obj-status" style="background:${st.color}22;color:${st.color}">${st.label}</span></div>
-      ${total?`<div style="font-size:11px;color:var(--muted);font-family:var(--mono);margin-bottom:6px">${done}/${total} задач</div><div class="obj-progress"><div class="obj-progress-bar" style="width:${pct}%"></div></div>`:''}
-      <div class="obj-actions">
-        <select class="obj-btn" onchange="changeObjStatus(${o.id},this.value)" style="font-family:var(--mono);font-size:10px;background:var(--bg3)">${OBJ_STATUSES.map(s=>`<option value="${s.id}"${o.status===s.id?' selected':''}>${s.label}</option>`).join('')}</select>
-        <button class="obj-btn" onclick="addObjTask(${o.id})">+ задача</button>
-        <button class="obj-btn" onclick="deleteObj(${o.id})" style="color:var(--red);flex:0;padding:7px 10px">×</button>
+    const urgent=(o.decisions||[]).filter(d=>d.urgency==='urgent').length;
+    const masterNames=(o.masterIds||[]).map(id=>team.find(m=>m.id===id)).filter(Boolean).map(m=>m.name.split(' ')[0]).join(', ');
+    return`<div class="card" onclick="openObjDetail('${o.id}')" style="cursor:pointer">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+        <div style="font-size:17px;font-weight:400;flex:1">${esc(o.name)}</div>
+        <span class="badge" style="background:${st.color}22;color:${st.color};flex-shrink:0">${st.label}</span>
       </div>
+      ${o.client?`<div style="font-size:12px;color:var(--muted);font-family:var(--mono);margin-bottom:4px">👤 ${esc(o.client)}</div>`:''}
+      ${funnel?`<div style="font-size:10px;font-family:var(--mono);color:var(--blue);margin-bottom:6px">→ ${funnel.label}</div>`:''}
+      ${masterNames?`<div style="font-size:11px;color:var(--muted);margin-bottom:6px">🔧 ${esc(masterNames)}</div>`:''}
+      ${total?`<div style="font-size:11px;color:var(--muted);font-family:var(--mono);margin-bottom:4px">${done}/${total} задач · ${pct}%</div><div class="obj-progress"><div class="obj-progress-bar" style="width:${pct}%"></div></div>`:''}
+      ${urgent?`<span style="font-size:10px;font-family:var(--mono);background:#E07E7E22;color:#E07E7E;padding:3px 8px;border-radius:8px">⚡ ${urgent} срочных</span>`:''}
     </div>`;
   }).join('');
 }
-function addObject(){const inp=document.getElementById('newObjName');const name=inp.value.trim();if(!name)return;objects.push({id:Date.now(),name,status:'active'});inp.value='';saveData();renderObjects()}
-function changeObjStatus(id,s){objects=objects.map(o=>o.id===id?{...o,status:s}:o);saveData();renderObjects()}
-function deleteObj(id){if(!confirm('Удалить объект?'))return;objects=objects.filter(o=>o.id!==id);saveData();renderObjects()}
-function addObjTask(objId){const obj=objects.find(o=>o.id===objId);if(!obj)return;const title=prompt(`Задача для «${obj.name}»:`);if(!title||!title.trim())return;tasks.unshift({id:Date.now(),title:title.trim(),project:'roofformat',priority:'medium',block:'any',date:'',note:'',tags:[],subtasks:[],done:false,objId});saveData();renderObjects();renderTasks()}
+
+window.filterObjs=function(status){
+  document.querySelectorAll('#objFilters .fbtn').forEach(b=>b.classList.remove('active'));
+  event.target.classList.add('active');
+  const filtered=status==='all'?objects:objects.filter(o=>o.status===status);
+  // re-render filtered
+};
+
+window.openAddObject = function(id){
+  editingObjId=id||null;
+  const o=id?objects.find(x=>x.id===id):null;
+  document.getElementById('addObjTitle').textContent=o?'РЕДАКТИРОВАТЬ':'НОВЫЙ ОБЪЕКТ';
+  document.getElementById('objName').value=o?.name||'';
+  document.getElementById('objAddress').value=o?.address||'';
+  document.getElementById('objClient').value=o?.client||'';
+  document.getElementById('objClientPhone').value=o?.clientPhone||'';
+  document.getElementById('objBudget').value=o?.budget||'';
+  document.getElementById('objNote').value=o?.note||'';
+  objStatusSel=o?.status||'active';
+  objFunnelSel=o?.funnel||'lead';
+  document.getElementById('deleteObjBtn').style.display=o?'block':'none';
+  renderObjFormChips(o);
+  openModal('addObjModal');
+};
+
+function renderObjFormChips(o){
+  document.getElementById('objStatusChips').innerHTML=OBJ_STATUSES.map(s=>
+    `<button class="chip" style="${objStatusSel===s.id?`background:${s.color};color:var(--bg);border-color:${s.color}`:''}" onclick="selObjStatus('${s.id}')">${s.label}</button>`
+  ).join('');
+  document.getElementById('objFunnelChips').innerHTML=FUNNEL_STAGES.map(f=>
+    `<button class="chip" style="${objFunnelSel===f.id?'background:var(--blue);color:var(--bg);border-color:var(--blue)':''}" onclick="selObjFunnel('${f.id}')">${f.label}</button>`
+  ).join('');
+  const selIds=o?.masterIds||[];
+  document.getElementById('objMastersList').innerHTML=team.map(m=>{
+    const sel=selIds.includes(m.id);
+    return`<label style="display:flex;gap:10px;align-items:center;padding:8px;background:var(--bg3);border-radius:8px;cursor:pointer">
+      <input type="checkbox" ${sel?'checked':''} value="${m.id}" style="accent-color:var(--gold)">
+      <span style="font-size:14px">${esc(m.name)}</span>
+      <span style="font-size:11px;color:var(--muted);font-family:var(--mono)">${esc(m.role||'')}</span>
+    </label>`;
+  }).join('')||'<div style="font-size:13px;color:var(--muted)">Мастеров нет — добавь в раздел Команда</div>';
+}
+
+window.selObjStatus=function(v){objStatusSel=v;renderObjFormChips(editingObjId?objects.find(x=>x.id===editingObjId):null)};
+window.selObjFunnel=function(v){objFunnelSel=v;renderObjFormChips(editingObjId?objects.find(x=>x.id===editingObjId):null)};
+
+window.submitObject = async function(){
+  const name=document.getElementById('objName').value.trim();
+  if(!name)return;
+  const masterIds=[...document.querySelectorAll('#objMastersList input:checked')].map(cb=>cb.value);
+  const data={
+    name,
+    address:document.getElementById('objAddress').value.trim(),
+    client:document.getElementById('objClient').value.trim(),
+    clientPhone:document.getElementById('objClientPhone').value.trim(),
+    budget:document.getElementById('objBudget').value.trim(),
+    note:document.getElementById('objNote').value.trim(),
+    status:objStatusSel,
+    funnel:objFunnelSel,
+    masterIds,
+    updatedAt:serverTimestamp()
+  };
+  if(editingObjId){
+    await updateDoc(doc(db,'objects',editingObjId),data);
+  }else{
+    await addDoc(collection(db,'objects'),{...data,decisions:[],supplies:[],createdAt:serverTimestamp(),ownerId:currentUser.uid});
+  }
+  closeModal('addObjModal');
+};
+
+window.deleteCurrentObj = async function(){
+  if(!confirm('Удалить объект?'))return;
+  await deleteDoc(doc(db,'objects',editingObjId));
+  closeModal('addObjModal');
+};
+
+window.openObjDetail = function(id){
+  const o=objects.find(x=>x.id===id);if(!o)return;
+  const st=OBJ_STATUSES.find(s=>s.id===o.status)||OBJ_STATUSES[0];
+  const funnel=FUNNEL_STAGES.find(f=>f.id===o.funnel);
+  const objTasks=tasks.filter(t=>t.objId===id);
+  const masters=(o.masterIds||[]).map(mid=>team.find(m=>m.id===mid)).filter(Boolean);
+  document.getElementById('objDetailTitle').textContent=o.name.toUpperCase();
+  document.getElementById('objDetailContent').innerHTML=`
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+      <span class="badge" style="background:${st.color}22;color:${st.color}">${st.label}</span>
+      ${funnel?`<span class="badge" style="background:var(--blue)22;color:var(--blue)">${funnel.label}</span>`:''}
+      ${o.budget?`<span class="badge" style="background:var(--green)22;color:var(--green)">₽ ${esc(o.budget)}</span>`:''}
+    </div>
+    ${o.client?`<div style="font-size:13px;color:var(--muted2);margin-bottom:6px">👤 ${esc(o.client)}${o.clientPhone?` · <a href="tel:${esc(o.clientPhone)}" style="color:var(--gold)">${esc(o.clientPhone)}</a>`:''}</div>`:''}
+    ${o.address?`<div style="font-size:12px;color:var(--muted);font-family:var(--mono);margin-bottom:12px">📍 ${esc(o.address)}</div>`:''}
+
+    ${masters.length?`<div style="margin-bottom:14px">
+      <div class="section-label">КОМАНДА НА ОБЪЕКТЕ</div>
+      ${masters.map(m=>`<div style="display:flex;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">
+        <div class="master-avatar" style="width:36px;height:36px;font-size:14px">${initials(m.name)}</div>
+        <div><div style="font-size:14px">${esc(m.name)}</div><div style="font-size:11px;color:var(--muted);font-family:var(--mono)">${esc(m.role||'')}</div></div>
+        ${m.phone?`<a href="tel:${esc(m.phone)}" style="margin-left:auto;color:var(--gold);font-size:18px;text-decoration:none">📞</a>`:''}
+      </div>`).join('')}
+    </div>`:''}
+
+    <div style="margin-bottom:14px">
+      <div class="section-label">ЗАДАЧИ (${objTasks.filter(t=>!t.done).length} активных)</div>
+      ${objTasks.map(t=>`<div style="display:flex;gap:8px;align-items:center;padding:7px 0;border-bottom:1px solid var(--border)">
+        <button class="check${t.done?' done':''}" onclick="toggleTask('${t.id}',${!t.done});openObjDetail('${id}')" style="width:18px;height:18px;flex-shrink:0"></button>
+        <div style="flex:1;font-size:13px${t.done?';color:#333;text-decoration:line-through':''}">${esc(t.title)}</div>
+        <span style="font-size:9px;font-family:var(--mono);color:${PRIORITIES.find(p=>p.id===t.priority)?.color||'var(--muted)'}">${PRIORITIES.find(p=>p.id===t.priority)?.label||''}</span>
+      </div>`).join('')||'<div style="font-size:13px;color:var(--muted);font-style:italic;padding:6px 0">Задач нет</div>'}
+      <div class="inline-row">
+        <input class="inline-input" id="objTaskInp_${id}" placeholder="Новая задача по объекту...">
+        <button class="inline-btn" onclick="addObjTask('${id}')">+</button>
+      </div>
+    </div>
+
+    <div style="margin-bottom:14px">
+      <div class="section-label">РЕШЕНИЯ</div>
+      ${(o.decisions||[]).map((d,i)=>`<div class="decision-item">
+        <span class="badge" style="background:${d.urgency==='urgent'?'#E07E7E22':d.urgency==='medium'?'#C8A96E22':'#7EB8A422'};color:${d.urgency==='urgent'?'#E07E7E':d.urgency==='medium'?'#C8A96E':'#7EB8A4'};flex-shrink:0">${d.urgency==='urgent'?'СРОЧНО':d.urgency==='medium'?'СКОРО':'НЕ СРОЧНО'}</span>
+        <div style="flex:1;font-size:13px">${esc(d.text)}</div>
+        <button onclick="removeDecision('${id}',${i})" style="background:none;border:none;color:var(--muted);font-size:16px">×</button>
+      </div>`).join('')||'<div style="font-size:13px;color:var(--muted);font-style:italic;padding:6px 0">Решений нет</div>'}
+      <div class="inline-row" style="flex-wrap:wrap;gap:6px">
+        <input class="inline-input" id="decInp_${id}" placeholder="Решение...">
+        <select id="decUrg_${id}" style="background:var(--bg2);border:1px solid var(--border2);border-radius:8px;color:var(--text);padding:8px 10px;font-size:12px;font-family:var(--mono)">
+          <option value="urgent">Срочно</option>
+          <option value="medium">Скоро</option>
+          <option value="low">Не срочно</option>
+        </select>
+        <button class="inline-btn" onclick="addDecision('${id}')">+</button>
+      </div>
+    </div>
+
+    <div style="margin-bottom:14px">
+      <div class="section-label">ПОСТАВКИ</div>
+      ${(o.supplies||[]).map((s,i)=>`<div class="supply-item">
+        <div style="font-size:13px">${esc(s.name)}</div>
+        <div style="display:flex;align-items:center;gap:6px">
+          <span class="badge" style="background:${s.status==='done'?'#7EB8A422':s.status==='ordered'?'#C8A96E22':'#7EA8C822'};color:${s.status==='done'?'#7EB8A4':s.status==='ordered'?'#C8A96E':'#7EA8C8'};cursor:pointer" onclick="cycleSupply('${id}',${i})">${s.status==='done'?'Получено':s.status==='ordered'?'Заказано':'Нужно'}</span>
+          <button onclick="removeSupply('${id}',${i})" style="background:none;border:none;color:var(--muted);font-size:14px">×</button>
+        </div>
+      </div>`).join('')||'<div style="font-size:13px;color:var(--muted);font-style:italic;padding:6px 0">Поставок нет</div>'}
+      <div class="inline-row">
+        <input class="inline-input" id="supInp_${id}" placeholder="Материал или позиция...">
+        <button class="inline-btn" onclick="addSupply('${id}')">+</button>
+      </div>
+    </div>
+
+    ${o.note?`<div style="font-size:13px;color:var(--muted2);background:var(--bg3);border-radius:8px;padding:10px 12px;margin-bottom:14px">${esc(o.note)}</div>`:''}
+
+    ${canEdit()?`<div style="display:flex;gap:8px;margin-top:4px">
+      <button class="btn-primary" style="flex:1" onclick="closeModal('objDetailModal');openAddObject('${id}')">Редактировать</button>
+    </div>`:''}`;
+  openModal('objDetailModal');
+};
+
+window.addObjTask = async function(objId){
+  const inp=document.getElementById('objTaskInp_'+objId);
+  const title=inp.value.trim();if(!title)return;
+  await addDoc(collection(db,'tasks'),{title,visibility:'team',project:'roofformat',priority:'medium',block:'any',date:'',note:'',subtasks:[],done:false,objId,ownerId:currentUser.uid,ownerName:currentUserData.name,createdAt:serverTimestamp()});
+  inp.value='';openObjDetail(objId);
+};
+
+window.addDecision = async function(objId){
+  const inp=document.getElementById('decInp_'+objId);
+  const text=inp.value.trim();if(!text)return;
+  const urgency=document.getElementById('decUrg_'+objId).value;
+  const o=objects.find(x=>x.id===objId);
+  const decisions=[...(o.decisions||[]),{text,urgency}];
+  await updateDoc(doc(db,'objects',objId),{decisions});
+  inp.value='';
+};
+
+window.removeDecision = async function(objId,idx){
+  const o=objects.find(x=>x.id===objId);
+  const decisions=[...(o.decisions||[])];decisions.splice(idx,1);
+  await updateDoc(doc(db,'objects',objId),{decisions});
+};
+
+window.addSupply = async function(objId){
+  const inp=document.getElementById('supInp_'+objId);
+  const name=inp.value.trim();if(!name)return;
+  const o=objects.find(x=>x.id===objId);
+  const supplies=[...(o.supplies||[]),{name,status:'needed'}];
+  await updateDoc(doc(db,'objects',objId),{supplies});
+  inp.value='';
+};
+
+window.cycleSupply = async function(objId,idx){
+  const cycle={needed:'ordered',ordered:'done',done:'needed'};
+  const o=objects.find(x=>x.id===objId);
+  const supplies=[...(o.supplies||[])];supplies[idx]={...supplies[idx],status:cycle[supplies[idx].status]||'needed'};
+  await updateDoc(doc(db,'objects',objId),{supplies});
+};
+
+window.removeSupply = async function(objId,idx){
+  const o=objects.find(x=>x.id===objId);
+  const supplies=[...(o.supplies||[])];supplies.splice(idx,1);
+  await updateDoc(doc(db,'objects',objId),{supplies});
+};
 
 // ═══════════════════════════════
 // TEAM
 // ═══════════════════════════════
-function renderTeamFilters(){
-  const statuses=[{id:'all',label:'Все'},...MASTER_STATUSES];
-  document.getElementById('teamFilters').innerHTML=statuses.map(s=>
-    `<button class="fbtn${teamFilterStatus===s.id?' active':''}" onclick="setTeamFilter('${s.id}')">${s.label}</button>`
-  ).join('');
-}
-function setTeamFilter(s){teamFilterStatus=s;renderTeam()}
-
 function renderTeam(){
-  renderTeamFilters();
+  const statuses=[{id:'all',label:'Все'},...MASTER_STATUSES_LIST];
+  document.getElementById('teamFilters').innerHTML=statuses.map(s=>
+    `<button class="fbtn" onclick="filterTeam('${s.id}')">${s.label}</button>`
+  ).join('');
   const q=(document.getElementById('teamSearch')?.value||'').toLowerCase();
-  let filtered=team.filter(m=>{
-    if(teamFilterStatus!=='all'&&m.status!==teamFilterStatus)return false;
-    if(q){return m.name.toLowerCase().includes(q)||(m.skills||[]).some(s=>s.toLowerCase().includes(q))||(m.role||'').toLowerCase().includes(q)}
-    return true;
-  });
-  if(!filtered.length){
-    document.getElementById('teamList').innerHTML='<div class="empty">Мастеров нет — добавь первого</div>';
-    return;
-  }
-  document.getElementById('teamList').innerHTML=filtered.map(m=>masterCardHTML(m)).join('');
-}
-
-function masterCardHTML(m){
-  const st=MASTER_STATUSES.find(s=>s.id===m.status)||MASTER_STATUSES[0];
-  const initials=(m.name||'?').split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
-  const skills=(m.skills||[]).slice(0,4).map(s=>`<span class="skill-tag">${esc(s)}</span>`).join('');
-  const moreSkills=(m.skills||[]).length>4?`<span class="skill-tag" style="color:var(--muted)">+${(m.skills||[]).length-4}</span>`:'';
-  const exp=m.experience?`<span style="font-family:var(--mono);font-size:10px;color:var(--muted)">${esc(m.experience)} лет опыта</span>`:'';
-  return`<div class="master-card" onclick="viewMaster(${m.id})">
-    <div class="master-card-header">
-      <div class="master-avatar${m.status==='active'?' active-av':''}">${initials}</div>
-      <div class="master-info">
-        <div class="master-name">${esc(m.name)}</div>
-        <div class="master-role">${esc(m.role||'Мастер')}</div>
-        <div style="display:flex;align-items:center;gap:8px">
-          <span class="master-status-badge" style="background:${st.color}22;color:${st.color}">${st.label}</span>
-          ${exp}
+  const filtered=team.filter(m=>!q||m.name.toLowerCase().includes(q)||(m.role||'').toLowerCase().includes(q));
+  if(!filtered.length){document.getElementById('teamList').innerHTML='<div class="empty">Мастеров нет</div>';return}
+  document.getElementById('teamList').innerHTML=filtered.map(m=>{
+    const st=MASTER_STATUSES_LIST.find(s=>s.id===m.status)||MASTER_STATUSES_LIST[0];
+    const skills=(m.skills||[]).slice(0,4).map(s=>`<span class="skill-tag">${esc(s)}</span>`).join('');
+    return`<div class="card" onclick="viewMaster('${m.id}')" style="cursor:pointer">
+      <div style="display:flex;gap:12px;align-items:flex-start">
+        <div class="master-avatar${m.status==='active'?' active':''}">${initials(m.name)}</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:17px;margin-bottom:3px">${esc(m.name)}</div>
+          <div style="font-family:var(--mono);font-size:10px;color:var(--gold);margin-bottom:5px">${esc(m.role||'Мастер')}</div>
+          <span class="badge" style="background:${st.color}22;color:${st.color}">${st.label}</span>
+          ${m.experience?`<span style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-left:8px">${m.experience} лет</span>`:''}
         </div>
       </div>
-    </div>
-    ${m.bio?`<div class="master-bio">${esc(m.bio.substring(0,120))}${m.bio.length>120?'…':''}</div>`:''}
-    ${skills||moreSkills?`<div class="master-skills">${skills}${moreSkills}</div>`:''}
-    ${m.goal?`<div class="master-goal">«${esc(m.goal.substring(0,100))}${m.goal.length>100?'…':''}»</div>`:''}
-    <div class="master-actions" onclick="event.stopPropagation()">
-      <button class="master-btn" onclick="editMaster(${m.id})">Редактировать</button>
-      ${m.phone?`<button class="master-btn primary" onclick="window.location='tel:${esc(m.phone)}'">Позвонить</button>`:''}
-    </div>
-  </div>`;
+      ${m.bio?`<div style="font-size:13px;color:var(--muted2);margin-top:8px;font-style:italic">${esc(m.bio.substring(0,100))}${m.bio.length>100?'…':''}</div>`:''}
+      ${skills?`<div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:8px">${skills}</div>`:''}
+      ${m.goal?`<div style="font-size:13px;color:var(--muted);margin-top:8px;border-left:2px solid var(--gold);padding-left:8px;font-style:italic">«${esc(m.goal.substring(0,80))}»</div>`:''}
+    </div>`;
+  }).join('');
 }
 
-function viewMaster(id){
+window.filterTeam=function(status){
+  document.querySelectorAll('#teamFilters .fbtn').forEach(b=>b.classList.remove('active'));
+  event.target.classList.add('active');
+};
+
+window.viewMaster = function(id){
   const m=team.find(x=>x.id===id);if(!m)return;
-  const st=MASTER_STATUSES.find(s=>s.id===m.status)||MASTER_STATUSES[0];
-  const initials=(m.name||'?').split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
-  const objCount=objects.filter(o=>o.masterId===id).length;
-  const taskCount=tasks.filter(t=>t.masterId===id&&!t.done).length;
+  const st=MASTER_STATUSES_LIST.find(s=>s.id===m.status)||MASTER_STATUSES_LIST[0];
+  const objsOnMaster=objects.filter(o=>(o.masterIds||[]).includes(id));
   document.getElementById('masterViewContent').innerHTML=`
     <div style="display:flex;gap:14px;align-items:center;margin-bottom:20px">
-      <div class="master-avatar active-av" style="width:64px;height:64px;font-size:24px">${initials}</div>
+      <div class="master-avatar active" style="width:60px;height:60px;font-size:24px">${initials(m.name)}</div>
       <div>
         <div style="font-size:20px;margin-bottom:4px">${esc(m.name)}</div>
-        <div style="font-family:var(--mono);font-size:11px;color:var(--gold);margin-bottom:6px">${esc(m.role||'Мастер')}</div>
-        <span class="master-status-badge" style="background:${st.color}22;color:${st.color}">${st.label}</span>
+        <div style="font-family:var(--mono);font-size:10px;color:var(--gold);margin-bottom:5px">${esc(m.role||'Мастер')}</div>
+        <span class="badge" style="background:${st.color}22;color:${st.color}">${st.label}</span>
       </div>
     </div>
-    ${m.bio?`<div class="master-section"><div class="master-section-label">О МАСТЕРЕ</div><div class="master-section-text">${esc(m.bio)}</div></div>`:''}
-    ${(m.skills||[]).length?`<div class="master-section"><div class="master-section-label">НАВЫКИ</div><div class="master-skills" style="margin-top:6px">${m.skills.map(s=>`<span class="skill-tag">${esc(s)}</span>`).join('')}</div></div>`:''}
-    ${m.experience?`<div class="master-section"><div class="master-section-label">ОПЫТ</div><div class="master-section-text">${esc(m.experience)} лет в профессии</div></div>`:''}
-    ${m.ambitions?`<div class="master-section"><div class="master-section-label">АМБИЦИИ</div><div class="master-section-text">${esc(m.ambitions)}</div></div>`:''}
-    ${m.goal?`<div class="master-section"><div class="master-section-label">ЦЕЛЬ В ROOFFORMAT</div><div class="master-goal">${esc(m.goal)}</div></div>`:''}
-    ${m.interaction?`<div class="master-section"><div class="master-section-label">ЦЕЛЬ ВЗАИМОДЕЙСТВИЯ</div><div class="master-section-text">${esc(m.interaction)}</div></div>`:''}
-    <div class="master-stats" style="margin-top:16px">
-      <div class="master-stat"><span class="master-stat-val">${m.experience||'—'}</span><span class="master-stat-label">лет опыта</span></div>
-      <div class="master-stat"><span class="master-stat-val">${m.objects||0}</span><span class="master-stat-label">объектов</span></div>
-      <div class="master-stat"><span class="master-stat-val">${(m.skills||[]).length}</span><span class="master-stat-label">навыков</span></div>
-    </div>
-    <div class="master-actions" style="margin-top:4px">
-      <button class="master-btn" onclick="closeModal('masterViewModal');editMaster(${m.id})">Редактировать</button>
-      ${m.phone?`<button class="master-btn primary" onclick="window.location='tel:${esc(m.phone)}'">Позвонить</button>`:''}
+    ${m.bio?`<div style="margin-bottom:12px"><div class="section-label">О МАСТЕРЕ</div><div style="font-size:14px;line-height:1.5;color:var(--muted2)">${esc(m.bio)}</div></div>`:''}
+    ${(m.skills||[]).length?`<div style="margin-bottom:12px"><div class="section-label">НАВЫКИ</div><div style="display:flex;gap:5px;flex-wrap:wrap">${m.skills.map(s=>`<span class="skill-tag">${esc(s)}</span>`).join('')}</div></div>`:''}
+    ${m.experience?`<div style="margin-bottom:12px"><div class="section-label">ОПЫТ</div><div style="font-size:14px">${m.experience} лет в профессии</div></div>`:''}
+    ${m.ambitions?`<div style="margin-bottom:12px"><div class="section-label">АМБИЦИИ</div><div style="font-size:14px;color:var(--muted2)">${esc(m.ambitions)}</div></div>`:''}
+    ${m.goal?`<div style="margin-bottom:12px"><div class="section-label">ЦЕЛЬ В ROOFFORMAT</div><div style="font-size:14px;border-left:2px solid var(--gold);padding-left:10px;color:var(--muted2)">${esc(m.goal)}</div></div>`:''}
+    ${m.interaction?`<div style="margin-bottom:12px"><div class="section-label">ЦЕЛЬ ВЗАИМОДЕЙСТВИЯ</div><div style="font-size:14px;color:var(--muted2)">${esc(m.interaction)}</div></div>`:''}
+    ${objsOnMaster.length?`<div style="margin-bottom:12px"><div class="section-label">ОБЪЕКТЫ</div>${objsOnMaster.map(o=>`<div style="font-size:14px;padding:6px 0;border-bottom:1px solid var(--border)">${esc(o.name)}</div>`).join('')}</div>`:''}
+    <div style="display:flex;gap:8px;margin-top:8px">
+      ${m.phone?`<a href="tel:${esc(m.phone)}" class="btn-primary" style="text-align:center;text-decoration:none;flex:1">📞 Позвонить</a>`:''}
+      ${canEdit()?`<button class="btn-primary" style="${m.phone?'flex:1':'width:100%'}" onclick="closeModal('masterViewModal');openMasterForm('${id}')">Редактировать</button>`:''}
     </div>`;
-  document.getElementById('masterViewModal').classList.add('open');
+  openModal('masterViewModal');
+};
+
+window.openMasterForm = function(id){
+  editingMasterId=id;
+  const m=id?team.find(x=>x.id===id):null;
+  document.getElementById('masterModalTitle').textContent=m?'РЕДАКТИРОВАТЬ':'НОВЫЙ МАСТЕР';
+  document.getElementById('mName').value=m?.name||'';
+  document.getElementById('mPhone').value=m?.phone||'';
+  document.getElementById('mExp').value=m?.experience||'';
+  document.getElementById('mBio').value=m?.bio||'';
+  document.getElementById('mAmb').value=m?.ambitions||'';
+  document.getElementById('mGoal').value=m?.goal||'';
+  document.getElementById('mInter').value=m?.interaction||'';
+  document.getElementById('deleteMasterBtn').style.display=m?'block':'none';
+  mRoleSel=m?.role||'Кровельщик';
+  mStatusSel=m?.status||'active';
+  mSkillsSel=[...(m?.skills||[])];
+  renderMasterFormChips();
+  openModal('masterModal');
+};
+
+function renderMasterFormChips(){
+  document.getElementById('mRoleChips').innerHTML=MASTER_ROLES_LIST.map(r=>
+    `<button class="chip" style="${mRoleSel===r?'background:var(--gold);color:var(--bg);border-color:var(--gold)':''}" onclick="selMRole('${r}')">${r}</button>`
+  ).join('');
+  document.getElementById('mStatusChips').innerHTML=MASTER_STATUSES_LIST.map(s=>
+    `<button class="chip" style="${mStatusSel===s.id?`background:${s.color};color:var(--bg);border-color:${s.color}`:''}" onclick="selMStatus('${s.id}')">${s.label}</button>`
+  ).join('');
+  document.getElementById('mSkillsChips').innerHTML=SKILLS_LIST.map(s=>
+    `<button class="chip" style="${mSkillsSel.includes(s)?'background:var(--blue);color:var(--bg);border-color:var(--blue)':''}" onclick="toggleMSkill('${s}')">${s}</button>`
+  ).join('');
 }
 
-function openMasterForm(master){
-  editingMasterId=master?master.id:null;
-  document.getElementById('masterModalTitle').textContent=master?'РЕДАКТИРОВАТЬ':'НОВЫЙ МАСТЕР';
-  const m=master||{name:'',role:'Кровельщик',status:'active',bio:'',skills:[],experience:'',ambitions:'',goal:'',interaction:'',phone:'',objects:0};
-  document.getElementById('masterFormContent').innerHTML=`
-    <div style="display:flex;flex-direction:column;gap:16px">
-      <div><label class="flabel">ИМЯ И ФАМИЛИЯ</label><input type="text" id="mName" value="${esc(m.name)}" placeholder="Иван Петров"></div>
-      <div><label class="flabel">РОЛЬ</label>
-        <div class="chip-row" id="roleChips">${MASTER_ROLES.map(r=>`<button class="chip" style="${(m.role||'Кровельщик')===r?'background:var(--gold);color:#0A0A0A;border-color:var(--gold)':''}" onclick="selectRole('${r}',this)">${r}</button>`).join('')}</div>
-      </div>
-      <div><label class="flabel">СТАТУС</label>
-        <div class="chip-row">${MASTER_STATUSES.map(s=>`<button class="chip" id="mst_${s.id}" style="${m.status===s.id?`background:${s.color};color:#0A0A0A;border-color:${s.color}`:''}" onclick="selectMasterStatus('${s.id}')">${s.label}</button>`).join('')}</div>
-      </div>
-      <div><label class="flabel">ТЕЛЕФОН</label><input type="tel" id="mPhone" value="${esc(m.phone||'')}" placeholder="+7 900 000 00 00"></div>
-      <div><label class="flabel">ОПЫТ (лет)</label><input type="text" id="mExp" value="${esc(m.experience||'')}" placeholder="5"></div>
-      <div><label class="flabel">КОЛИЧЕСТВО ОБЪЕКТОВ</label><input type="text" id="mObjs" value="${esc(m.objects||'')}" placeholder="42"></div>
-      <div><label class="flabel">О МАСТЕРЕ</label><textarea id="mBio" rows="3" placeholder="Краткое описание — кто он, как работает, что отличает...">${esc(m.bio||'')}</textarea></div>
-      <div><label class="flabel">НАВЫКИ</label>
-        <div class="chip-row" id="skillChips" style="margin-bottom:8px">${SKILL_OPTIONS.map(s=>`<button class="chip" style="${(m.skills||[]).includes(s)?'background:var(--green);color:#0A0A0A;border-color:var(--green)':''}" onclick="toggleSkill('${s}',this)">${s}</button>`).join('')}</div>
-      </div>
-      <div><label class="flabel">АМБИЦИИ</label><textarea id="mAmb" rows="2" placeholder="Что хочет достичь в профессии...">${esc(m.ambitions||'')}</textarea></div>
-      <div><label class="flabel">ЦЕЛЬ В ROOFFORMAT</label>
-        <div class="chip-row" style="margin-bottom:8px">${GOAL_PRESETS.map(g=>`<button class="chip" style="font-size:10px" onclick="setGoalPreset('${g}')">${g}</button>`).join('')}</div>
-        <textarea id="mGoal" rows="2" placeholder="Чего хочет достичь работая в ROOFFORMAT...">${esc(m.goal||'')}</textarea>
-      </div>
-      <div><label class="flabel">ЦЕЛЬ ВЗАИМОДЕЙСТВИЯ</label><textarea id="mInter" rows="2" placeholder="Зачем сотрудничество — рост, деньги, опыт, развитие...">${esc(m.interaction||'')}</textarea></div>
-      <button class="btn-add" onclick="saveMaster()" style="margin-top:4px">${master?'СОХРАНИТЬ':'ДОБАВИТЬ МАСТЕРА'}</button>
-      ${master?`<button onclick="deleteMaster(${master.id})" style="background:none;border:1px solid var(--red);color:var(--red);border-radius:10px;padding:12px;font-family:var(--mono);font-size:12px">УДАЛИТЬ</button>`:''}
-    </div>`;
-  // store selected role/status/skills
-  window._mRole=m.role||'Кровельщик';
-  window._mStatus=m.status||'active';
-  window._mSkills=[...(m.skills||[])];
-  document.getElementById('masterModal').classList.add('open');
-}
+window.selMRole=function(v){mRoleSel=v;renderMasterFormChips()};
+window.selMStatus=function(v){mStatusSel=v;renderMasterFormChips()};
+window.toggleMSkill=function(s){const i=mSkillsSel.indexOf(s);if(i>=0)mSkillsSel.splice(i,1);else mSkillsSel.push(s);renderMasterFormChips()};
 
-function selectRole(role,btn){
-  window._mRole=role;
-  document.querySelectorAll('#roleChips .chip').forEach(b=>{b.style.background='';b.style.color='';b.style.borderColor=''});
-  btn.style.background='var(--gold)';btn.style.color='#0A0A0A';btn.style.borderColor='var(--gold)';
-}
-function selectMasterStatus(id){
-  window._mStatus=id;
-  MASTER_STATUSES.forEach(s=>{
-    const b=document.getElementById('mst_'+s.id);if(!b)return;
-    if(s.id===id){b.style.background=s.color;b.style.color='#0A0A0A';b.style.borderColor=s.color}
-    else{b.style.background='';b.style.color='';b.style.borderColor=''}
-  });
-}
-function toggleSkill(skill,btn){
-  const idx=window._mSkills.indexOf(skill);
-  if(idx>=0){window._mSkills.splice(idx,1);btn.style.background='';btn.style.color='';btn.style.borderColor=''}
-  else{window._mSkills.push(skill);btn.style.background='var(--green)';btn.style.color='#0A0A0A';btn.style.borderColor='var(--green)'}
-}
-function setGoalPreset(g){document.getElementById('mGoal').value=g}
-
-function saveMaster(){
+window.saveMaster = async function(){
   const name=document.getElementById('mName').value.trim();
   if(!name){document.getElementById('mName').focus();return}
-  const master={
-    id:editingMasterId||Date.now(),
-    name,
-    role:window._mRole||'Кровельщик',
-    status:window._mStatus||'active',
+  const data={
+    name,role:mRoleSel,status:mStatusSel,
     phone:document.getElementById('mPhone').value.trim(),
     experience:document.getElementById('mExp').value.trim(),
-    objects:document.getElementById('mObjs').value.trim(),
     bio:document.getElementById('mBio').value.trim(),
-    skills:[...(window._mSkills||[])],
+    skills:mSkillsSel,
     ambitions:document.getElementById('mAmb').value.trim(),
     goal:document.getElementById('mGoal').value.trim(),
     interaction:document.getElementById('mInter').value.trim(),
+    updatedAt:serverTimestamp()
   };
-  if(editingMasterId){team=team.map(m=>m.id===editingMasterId?master:m)}
-  else{team.unshift(master)}
-  saveData();closeModal('masterModal');renderTeam();
+  if(editingMasterId){
+    await updateDoc(doc(db,'team',editingMasterId),data);
+  }else{
+    await addDoc(collection(db,'team'),{...data,createdAt:serverTimestamp(),addedBy:currentUser.uid});
+  }
+  closeModal('masterModal');
+};
+
+window.deleteCurrentMaster = async function(){
+  if(!confirm('Удалить мастера?'))return;
+  await deleteDoc(doc(db,'team',editingMasterId));
+  closeModal('masterModal');
+};
+
+// ═══════════════════════════════
+// COUNTERPARTIES
+// ═══════════════════════════════
+function renderCounterparties(){
+  const q=(document.getElementById('cpSearch')?.value||'').toLowerCase();
+  document.getElementById('cpFilters').innerHTML=[{id:'all',label:'Все'},...CP_TYPES].map(t=>
+    `<button class="fbtn" onclick="filterCP('${t.id}')">${t.label}</button>`
+  ).join('');
+  const filtered=counterparties.filter(cp=>!q||cp.name.toLowerCase().includes(q)||(cp.contact||'').toLowerCase().includes(q));
+  if(!filtered.length){document.getElementById('cpList').innerHTML='<div class="empty">Контрагентов нет</div>';return}
+  document.getElementById('cpList').innerHTML=filtered.map(cp=>{
+    const type=CP_TYPES.find(t=>t.id===cp.type)||CP_TYPES[0];
+    const status=CP_STATUSES.find(s=>s.id===cp.status)||CP_STATUSES[0];
+    const stars='★'.repeat(cp.rating||0)+'☆'.repeat(5-(cp.rating||0));
+    return`<div class="card" onclick="${canEdit()?`openCPForm('${cp.id}')`:''}" style="${canEdit()?'cursor:pointer':''}">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+        <div style="font-size:17px">${esc(cp.name)}</div>
+        <span class="badge" style="background:${status.color}22;color:${status.color}">${status.label}</span>
+      </div>
+      <div style="font-family:var(--mono);font-size:10px;color:var(--gold);margin-bottom:6px">${type.label}</div>
+      ${cp.contact?`<div style="font-size:13px;color:var(--muted2)">👤 ${esc(cp.contact)}</div>`:''}
+      ${cp.phone?`<div style="font-size:13px;color:var(--muted2)"><a href="tel:${esc(cp.phone)}" style="color:var(--blue)">${esc(cp.phone)}</a></div>`:''}
+      ${cp.rating?`<div style="color:var(--gold);font-size:14px;margin-top:6px">${stars}</div>`:''}
+    </div>`;
+  }).join('');
 }
-function editMaster(id){const m=team.find(x=>x.id===id);if(m)openMasterForm(m)}
-function deleteMaster(id){if(!confirm('Удалить мастера?'))return;team=team.filter(m=>m.id!==id);saveData();closeModal('masterModal');renderTeam()}
+window.filterCP=function(){};
 
-// ADD TASK FORM
-function renderProjectChips(){document.getElementById('projectChips').innerHTML=PROJECTS.map(p=>`<button class="chip" style="${newProject===p.id?`background:${p.color};color:#0A0A0A;border-color:${p.color}`:''}" onclick="selectProject('${p.id}')">${p.label}</button>`).join('')}
-function renderPrioChips(){document.getElementById('prioChips').innerHTML=PRIORITIES.map(p=>`<button class="prio-chip" style="${newPriority===p.id?`background:${p.color};color:#0A0A0A;border-color:${p.color}`:''}" onclick="selectPrio('${p.id}')">${p.label}</button>`).join('')}
-function renderBlockChips(){document.getElementById('blockChips').innerHTML=BLOCKS.map(b=>`<button class="chip" style="${newBlock===b.id?'background:var(--gold);color:#0A0A0A;border-color:var(--gold)':''}" onclick="selectBlock('${b.id}')">${b.label}</button>`).join('')}
-function selectProject(id){newProject=id;renderProjectChips()}
-function selectPrio(id){newPriority=id;renderPrioChips()}
-function selectBlock(id){newBlock=id;renderBlockChips()}
+window.openCPForm = function(id){
+  editingCPId=id;
+  const cp=id?counterparties.find(x=>x.id===id):null;
+  document.getElementById('cpModalTitle').textContent=cp?'РЕДАКТИРОВАТЬ':'КОНТРАГЕНТ';
+  document.getElementById('cpName').value=cp?.name||'';
+  document.getElementById('cpContact').value=cp?.contact||'';
+  document.getElementById('cpPhone').value=cp?.phone||'';
+  document.getElementById('cpEmail').value=cp?.email||'';
+  document.getElementById('cpNote').value=cp?.note||'';
+  document.getElementById('deleteCPBtn').style.display=cp?'block':'none';
+  selectedCPType=cp?.type||'supplier';
+  selectedCPStatus=cp?.status||'active';
+  selectedCPRating=cp?.rating||0;
+  renderCPFormChips();
+  updateStars();
+  openModal('cpModal');
+};
 
-function submitTask(){
-  const title=document.getElementById('newTitle').value.trim();if(!title){document.getElementById('newTitle').focus();return}
-  const note=document.getElementById('newNote').value.trim();
-  const date=document.getElementById('newDate').value;
-  tasks.unshift({id:Date.now(),title,note,project:newProject,priority:newPriority,block:newBlock,date,subtasks:[],done:false});
-  saveData();
-  document.getElementById('newTitle').value='';document.getElementById('newNote').value='';document.getElementById('newDate').value='';
-  switchView('tasks');renderAll();
+function renderCPFormChips(){
+  document.getElementById('cpTypeChips').innerHTML=CP_TYPES.map(t=>
+    `<button class="chip" style="${selectedCPType===t.id?'background:var(--gold);color:var(--bg);border-color:var(--gold)':''}" onclick="selCPType('${t.id}')">${t.label}</button>`
+  ).join('');
+  document.getElementById('cpStatusChips').innerHTML=CP_STATUSES.map(s=>
+    `<button class="chip" style="${selectedCPStatus===s.id?`background:${s.color};color:var(--bg);border-color:${s.color}`:''}" onclick="selCPStatus('${s.id}')">${s.label}</button>`
+  ).join('');
+}
+window.selCPType=function(v){selectedCPType=v;renderCPFormChips()};
+window.selCPStatus=function(v){selectedCPStatus=v;renderCPFormChips()};
+window.setCPRating=function(n){selectedCPRating=n;updateStars()};
+function updateStars(){
+  [1,2,3,4,5].forEach(n=>{
+    const s=document.getElementById('cpStar'+n);
+    if(s)s.textContent=n<=selectedCPRating?'★':'☆';
+  });
 }
 
-// VIEWS
-function switchView(name){
-  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('view-'+name).classList.add('active');
-  document.querySelector(`[data-view="${name}"]`).classList.add('active');
-  if(name==='week')renderWeek();
-  if(name==='objects')renderObjects();
-  if(name==='team'){renderTeamFilters();renderTeam()}
-  if(name==='add'){renderProjectChips();renderPrioChips();renderBlockChips()}
-}
-function closeModal(id){document.getElementById(id).classList.remove('open')}
-function renderAll(){renderStats();renderFilters();renderTasks()}
+window.saveCP = async function(){
+  const name=document.getElementById('cpName').value.trim();
+  if(!name)return;
+  const data={
+    name,type:selectedCPType,status:selectedCPStatus,rating:selectedCPRating,
+    contact:document.getElementById('cpContact').value.trim(),
+    phone:document.getElementById('cpPhone').value.trim(),
+    email:document.getElementById('cpEmail').value.trim(),
+    note:document.getElementById('cpNote').value.trim(),
+    updatedAt:serverTimestamp()
+  };
+  if(editingCPId){
+    await updateDoc(doc(db,'counterparties',editingCPId),data);
+  }else{
+    await addDoc(collection(db,'counterparties'),{...data,createdAt:serverTimestamp(),ownerId:currentUser.uid});
+  }
+  closeModal('cpModal');
+};
 
-// AI
-async function sendChat(){
-  const input=document.getElementById('chatInput');const text=input.value.trim();if(!text)return;
-  input.value='';appendMsg('user',text);const typing=appendMsg('typing','думаю...');
-  const ts=tasks.slice(0,15).map(t=>`• ${t.title} (${t.priority}${t.done?', ✓':''})`).join('\n');
-  try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,system:`Ты ИИ-ассистент Даниила Титова, основателя ROOFFORMAT. Кровельная компания с философией продуманных решений. Помогаешь с задачами. Говори коротко. Если нужно добавить задачу — ТОЛЬКО JSON: {"action":"add","title":"...","project":"roofformat|personal|stroika|content","priority":"high|medium|low","block":"morning|day|evening|any","date":"YYYY-MM-DD или пусто"}. Иначе текст. Задачи:\n${ts}`,messages:[{role:'user',content:text}]})});
-    const data=await res.json();const reply=(data.content||[]).map(b=>b.text||'').join('');
-    typing.remove();
-    try{const j=JSON.parse(reply);if(j.action==='add'){tasks.unshift({id:Date.now(),title:j.title,project:j.project||'roofformat',priority:j.priority||'medium',block:j.block||'any',date:j.date||'',note:'',subtasks:[],done:false});saveData();renderAll();appendMsg('ai',`✓ Добавил: «${j.title}»`)}}
-    catch{appendMsg('ai',reply)}
-  }catch{typing.remove();appendMsg('ai','Нет соединения.')}
-}
-function appendMsg(type,text){const div=document.createElement('div');div.className='msg '+type;div.textContent=text;const c=document.getElementById('chatMessages');c.appendChild(div);c.scrollTop=c.scrollHeight;return div}
+window.deleteCurrentCP = async function(){
+  if(!confirm('Удалить контрагента?'))return;
+  await deleteDoc(doc(db,'counterparties',editingCPId));
+  closeModal('cpModal');
+};
 
+// ═══════════════════════════════
+// GOALS
+// ═══════════════════════════════
+const GOAL_PERIODS={'3m':'3 месяца','6m':'6 месяцев','1y':'1 год','3y':'3 года'};
+
+function renderGoals(){
+  if(!goals.length){document.getElementById('goalsList').innerHTML='<div class="empty">Целей нет — добавь первую</div>';return}
+  document.getElementById('goalsList').innerHTML=goals.map(g=>{
+    const pct=Math.min(100,Math.max(0,parseInt(g.progress)||0));
+    return`<div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div style="flex:1">
+          <div style="font-size:17px;margin-bottom:4px">${esc(g.title)}</div>
+          <div style="font-family:var(--mono);font-size:10px;color:var(--gold);margin-bottom:8px">${GOAL_PERIODS[g.period]||g.period}</div>
+          ${g.note?`<div style="font-size:13px;color:var(--muted2);margin-bottom:8px">${esc(g.note)}</div>`:''}
+          <div class="goal-progress-wrap"><div class="goal-progress-bar" style="width:${pct}%"></div></div>
+          <div style="font-family:var(--mono);font-size:10px;color:var(--muted)">${pct}% выполнено</div>
+        </div>
+        <div style="display:flex;gap:4px;margin-left:10px">
+          <button onclick="openGoalForm('${g.id}')" style="background:none;border:none;color:var(--muted);font-size:16px;padding:4px">✎</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+window.selectGoalPeriod=function(p){
+  selectedGoalPeriod=p;
+  Object.keys(GOAL_PERIODS).forEach(k=>{
+    const b=document.getElementById('gp-'+k);
+    if(b){b.style.background=k===p?'var(--gold)':'';b.style.color=k===p?'var(--bg)':'';b.style.borderColor=k===p?'var(--gold)':''}
+  });
+};
+
+window.openGoalForm=function(id){
+  editingGoalId=id;
+  const g=id?goals.find(x=>x.id===id):null;
+  document.getElementById('goalTitle').value=g?.title||'';
+  document.getElementById('goalProgress').value=g?.progress||0;
+  document.getElementById('goalNote').value=g?.note||'';
+  document.getElementById('deleteGoalBtn').style.display=g?'block':'none';
+  selectedGoalPeriod=g?.period||'1y';
+  selectGoalPeriod(selectedGoalPeriod);
+  openModal('goalModal');
+};
+
+window.saveGoal=async function(){
+  const title=document.getElementById('goalTitle').value.trim();if(!title)return;
+  const data={title,period:selectedGoalPeriod,progress:parseInt(document.getElementById('goalProgress').value)||0,note:document.getElementById('goalNote').value.trim(),ownerId:currentUser.uid,updatedAt:serverTimestamp()};
+  if(editingGoalId){await updateDoc(doc(db,'goals',editingGoalId),data)}
+  else{await addDoc(collection(db,'goals'),{...data,createdAt:serverTimestamp()})}
+  closeModal('goalModal');
+};
+
+window.deleteCurrentGoal=async function(){
+  if(!confirm('Удалить цель?'))return;
+  await deleteDoc(doc(db,'goals',editingGoalId));
+  closeModal('goalModal');
+};
+
+// ═══════════════════════════════
+// ADMIN
+// ═══════════════════════════════
+function renderAdmin(){
+  if(!document.getElementById('usersList'))return;
+  document.getElementById('usersList').innerHTML=allUsers.map(u=>`
+    <div class="card" style="display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <div style="font-size:15px">${esc(u.name)}</div>
+        <div style="font-size:12px;color:var(--muted)">${esc(u.email)}</div>
+      </div>
+      <select style="background:var(--bg3);border:1px solid var(--border2);border-radius:8px;color:var(--text);padding:6px 8px;font-size:11px;font-family:var(--mono)" onchange="changeUserRole('${u.id}',this.value)">
+        ${Object.entries(ROLES).map(([k,v])=>`<option value="${k}"${u.role===k?' selected':''}>${v}</option>`).join('')}
+      </select>
+    </div>`).join('');
+  document.getElementById('inviteCodes').innerHTML=Object.entries(INVITE_CODES).map(([code,role])=>
+    `<div style="display:flex;justify-content:space-between;padding:8px;background:var(--bg3);border-radius:8px;margin-bottom:6px">
+      <span style="font-family:var(--mono);font-size:12px;color:var(--gold)">${code}</span>
+      <span style="font-family:var(--mono);font-size:11px;color:var(--muted)">${ROLES[role]}</span>
+    </div>`).join('');
+}
+
+window.changeUserRole=async function(uid,role){
+  await updateDoc(doc(db,'users',uid),{role});
+};
+
+window.generateInviteCode=function(){
+  alert('Коды для приглашения:\n\nRF2024FOUNDER — Основатель\nRF2024DIRECTOR — Директор\nRF2024MANAGER — Менеджер\nRF2024MASTER — Мастер\n\nПередай нужный код новому участнику.');
+};
+
+// ═══════════════════════════════
 // OFFLINE
+// ═══════════════════════════════
 window.addEventListener('online',()=>document.getElementById('offlineBanner').classList.remove('show'));
 window.addEventListener('offline',()=>document.getElementById('offlineBanner').classList.add('show'));
 if(!navigator.onLine)document.getElementById('offlineBanner').classList.add('show');
+
+// PWA
 if('serviceWorker' in navigator)navigator.serviceWorker.register('/sw.js').catch(()=>{});
 
-loadData();renderAll();
+// Init add task form on view switch
+const origSwitch=window.switchView;
+window.switchView=function(name){
+  origSwitch(name);
+  if(name==='add-task'){renderAddTaskChips();populateAssignSelect();selectVisibility('personal')}
+};
 </script>
 </body>
 </html>
