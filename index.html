@@ -191,26 +191,28 @@ textarea{resize:none}
     <input class="auth-input" id="authEmail" type="email" placeholder="Email" autocomplete="email">
     <input class="auth-input" id="authPassword" type="password" placeholder="Пароль" autocomplete="current-password">
     <div class="auth-error" id="authError"></div>
-    <button class="auth-btn" id="loginBtn">ВОЙТИ</button>
+    <button class="auth-btn" onclick="signIn()">ВОЙТИ</button>
     <div class="auth-divider">или</div>
-    <button class="auth-btn secondary" id="googleBtn">Войти через Google</button>
-    <div class="auth-switch">Нет аккаунта? <span id="showRegBtn" style="color:var(--gold);cursor:pointer">Зарегистрироваться</span></div>
+    <button class="auth-btn secondary" onclick="signInGoogle()">Войти через Google</button>
+    <div class="auth-switch">Нет аккаунта? <span onclick="showRegister()">Зарегистрироваться</span></div>
   </div>
 </div>
 
-<!-- REGISTER SCREEN -->
-<div class="auth-screen hidden" id="registerScreen">
-  <div class="auth-logo">ROOFFORMAT</div>
-  <div class="auth-title">Регистрация</div>
-  <div class="auth-sub">Создайте аккаунт</div>
-  <div class="auth-form">
-    <input class="auth-input" id="regName" type="text" placeholder="Имя и Фамилия">
-    <input class="auth-input" id="regEmail" type="email" placeholder="Email">
-    <input class="auth-input" id="regPassword" type="password" placeholder="Пароль (минимум 6 символов)">
-    <input class="auth-input" id="regCode" type="text" placeholder="Пригласительный код">
-    <div class="auth-error" id="regError"></div>
-    <button class="auth-btn" id="regBtn">ЗАРЕГИСТРИРОВАТЬСЯ</button>
-    <div class="auth-switch">Уже есть аккаунт? <span id="showLoginBtn" style="color:var(--gold);cursor:pointer">Войти</span></div>
+<!-- REGISTER MODAL -->
+<div class="modal-overlay" id="registerModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">РЕГИСТРАЦИЯ</div>
+      <button class="modal-close" onclick="closeModal('registerModal')">×</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div><label class="flabel">ИМЯ И ФАМИЛИЯ</label><input type="text" id="regName" placeholder="Даниил Титов"></div>
+      <div><label class="flabel">EMAIL</label><input type="email" id="regEmail" placeholder="email@example.com"></div>
+      <div><label class="flabel">ПАРОЛЬ</label><input type="password" id="regPassword" placeholder="Минимум 6 символов"></div>
+      <div><label class="flabel">ПРИГЛАСИТЕЛЬНЫЙ КОД</label><input type="text" id="regCode" placeholder="Код от администратора"></div>
+      <div class="auth-error" id="regError"></div>
+      <button class="btn-primary" onclick="register()">ЗАРЕГИСТРИРОВАТЬСЯ</button>
+    </div>
   </div>
 </div>
 
@@ -516,6 +518,9 @@ let currentUser = null;
 let currentUserData = null;
 let tasks = [], objects = [], team = [], counterparties = [], goals = [], allUsers = [];
 let taskFilter = 'all';
+let objectFilter = 'all';
+let teamFilter = 'all';
+let cpFilter = 'all';
 let selectedWeekDay = null;
 let newTaskVisibility = 'personal';
 let newTaskProject = 'roofformat';
@@ -621,6 +626,10 @@ function initials(name){return(name||'?').split(' ').map(w=>w[0]).join('').subst
 function hasRole(roles){return currentUserData&&roles.includes(currentUserData.role)}
 function canEdit(){return hasRole(['founder','director'])}
 
+// Expose helpers used by inline handlers inside ES module
+window.closeModal = closeModal;
+window.openModal = openModal;
+
 // ═══════════════════════════════
 // AUTH
 // ═══════════════════════════════
@@ -636,24 +645,30 @@ window.signIn = async function(){
 };
 
 window.signInGoogle = async function(){
+  document.getElementById('authError').textContent='';
   try{
     const result = await signInWithPopup(auth,googleProvider);
     const user = result.user;
-    const userDoc = await getDoc(doc(db,'users',user.uid));
+    const userDocRef = doc(db,'users',user.uid);
+    const userDoc = await getDoc(userDocRef);
     if(!userDoc.exists()){
-      await setDoc(doc(db,'users',user.uid),{
+      await setDoc(userDocRef,{
         name: user.displayName||'Пользователь',
         email: user.email,
         role: 'master',
-        createdAt: serverTimestamp()
-      });
+        createdAt: serverTimestamp(),
+        lastLoginAt: serverTimestamp()
+      },{merge:true});
+    }else{
+      await setDoc(userDocRef,{lastLoginAt:serverTimestamp()},{merge:true});
     }
   }catch(e){
-    document.getElementById('authError').textContent='Ошибка входа через Google';
+    console.error('Google auth error:', e);
+    document.getElementById('authError').textContent='Ошибка входа через Google: '+(e.code||e.message||'проверь Authorized domains');
   }
 };
 
-
+window.showRegister = function(){openModal('registerModal')};
 
 window.register = async function(){
   const name=document.getElementById('regName').value.trim();
@@ -669,8 +684,7 @@ window.register = async function(){
     await setDoc(doc(db,'users',cred.user.uid),{
       name,email,role,createdAt:serverTimestamp()
     });
-    document.getElementById('registerScreen').classList.add('hidden');
-    document.getElementById('authScreen').classList.remove('hidden');
+    closeModal('registerModal');
   }catch(e){
     document.getElementById('regError').textContent = e.code==='auth/email-already-in-use'?'Email уже используется':'Ошибка регистрации';
   }
@@ -689,20 +703,33 @@ onAuthStateChanged(auth, async(user)=>{
   document.getElementById('loadingScreen').classList.add('hidden');
   if(user){
     currentUser=user;
-    const snap = await getDoc(doc(db,'users',user.uid));
-    if(snap.exists()){
+    try{
+      const userRef = doc(db,'users',user.uid);
+      let snap = await getDoc(userRef);
+      if(!snap.exists()){
+        await setDoc(userRef,{
+          name:user.displayName||user.email?.split('@')[0]||'Пользователь',
+          email:user.email||'',
+          role:'master',
+          createdAt:serverTimestamp(),
+          lastLoginAt:serverTimestamp()
+        },{merge:true});
+        snap = await getDoc(userRef);
+      }
       currentUserData={id:user.uid,...snap.data()};
       document.getElementById('authScreen').classList.add('hidden');
       document.getElementById('app').style.display='flex';
       document.getElementById('app').style.flexDirection='column';
       initApp();
-    }else{
+    }catch(e){
+      console.error('Profile load error:', e);
       document.getElementById('authScreen').classList.remove('hidden');
+      document.getElementById('app').style.display='none';
+      document.getElementById('authError').textContent='Ошибка доступа к Firestore: '+(e.code||e.message||'проверь Rules');
     }
   }else{
     currentUser=null;currentUserData=null;
     document.getElementById('authScreen').classList.remove('hidden');
-    document.getElementById('registerScreen').classList.add('hidden');
     document.getElementById('app').style.display='none';
   }
 });
@@ -1041,11 +1068,12 @@ window.selectDay=function(ds){selectedWeekDay=ds;renderWeek()};
 function renderObjects(){
   const objFilters=document.getElementById('objFilters');
   if(objFilters)objFilters.innerHTML=[{id:'all',label:'Все'},...OBJ_STATUSES].map(s=>
-    `<button class="fbtn" onclick="filterObjs('${s.id}')">${s.label}</button>`
+    `<button class="fbtn${objectFilter===s.id?' active':''}" onclick="filterObjs('${s.id}')">${s.label}</button>`
   ).join('');
 
-  if(!objects.length){document.getElementById('objList').innerHTML='<div class="empty">Объектов нет</div>';return}
-  document.getElementById('objList').innerHTML=objects.map(o=>{
+  const list = objectFilter==='all'?objects:objects.filter(o=>o.status===objectFilter);
+  if(!list.length){document.getElementById('objList').innerHTML='<div class="empty">Объектов нет</div>';return}
+  document.getElementById('objList').innerHTML=list.map(o=>{
     const st=OBJ_STATUSES.find(s=>s.id===o.status)||OBJ_STATUSES[0];
     const funnel=FUNNEL_STAGES.find(f=>f.id===o.funnel);
     const objTasks=tasks.filter(t=>t.objId===o.id);
@@ -1069,10 +1097,8 @@ function renderObjects(){
 }
 
 window.filterObjs=function(status){
-  document.querySelectorAll('#objFilters .fbtn').forEach(b=>b.classList.remove('active'));
-  event.target.classList.add('active');
-  const filtered=status==='all'?objects:objects.filter(o=>o.status===status);
-  // re-render filtered
+  objectFilter=status;
+  renderObjects();
 };
 
 window.openAddObject = function(id){
@@ -1273,10 +1299,10 @@ window.removeSupply = async function(objId,idx){
 function renderTeam(){
   const statuses=[{id:'all',label:'Все'},...MASTER_STATUSES_LIST];
   document.getElementById('teamFilters').innerHTML=statuses.map(s=>
-    `<button class="fbtn" onclick="filterTeam('${s.id}')">${s.label}</button>`
+    `<button class="fbtn${teamFilter===s.id?' active':''}" onclick="filterTeam('${s.id}')">${s.label}</button>`
   ).join('');
   const q=(document.getElementById('teamSearch')?.value||'').toLowerCase();
-  const filtered=team.filter(m=>!q||m.name.toLowerCase().includes(q)||(m.role||'').toLowerCase().includes(q));
+  const filtered=team.filter(m=>(teamFilter==='all'||m.status===teamFilter)&&(!q||m.name.toLowerCase().includes(q)||(m.role||'').toLowerCase().includes(q)));
   if(!filtered.length){document.getElementById('teamList').innerHTML='<div class="empty">Мастеров нет</div>';return}
   document.getElementById('teamList').innerHTML=filtered.map(m=>{
     const st=MASTER_STATUSES_LIST.find(s=>s.id===m.status)||MASTER_STATUSES_LIST[0];
@@ -1299,8 +1325,8 @@ function renderTeam(){
 }
 
 window.filterTeam=function(status){
-  document.querySelectorAll('#teamFilters .fbtn').forEach(b=>b.classList.remove('active'));
-  event.target.classList.add('active');
+  teamFilter=status;
+  renderTeam();
 };
 
 window.viewMaster = function(id){
@@ -1399,9 +1425,9 @@ window.deleteCurrentMaster = async function(){
 function renderCounterparties(){
   const q=(document.getElementById('cpSearch')?.value||'').toLowerCase();
   document.getElementById('cpFilters').innerHTML=[{id:'all',label:'Все'},...CP_TYPES].map(t=>
-    `<button class="fbtn" onclick="filterCP('${t.id}')">${t.label}</button>`
+    `<button class="fbtn${cpFilter===t.id?' active':''}" onclick="filterCP('${t.id}')">${t.label}</button>`
   ).join('');
-  const filtered=counterparties.filter(cp=>!q||cp.name.toLowerCase().includes(q)||(cp.contact||'').toLowerCase().includes(q));
+  const filtered=counterparties.filter(cp=>(cpFilter==='all'||cp.type===cpFilter)&&(!q||cp.name.toLowerCase().includes(q)||(cp.contact||'').toLowerCase().includes(q)));
   if(!filtered.length){document.getElementById('cpList').innerHTML='<div class="empty">Контрагентов нет</div>';return}
   document.getElementById('cpList').innerHTML=filtered.map(cp=>{
     const type=CP_TYPES.find(t=>t.id===cp.type)||CP_TYPES[0];
@@ -1419,7 +1445,7 @@ function renderCounterparties(){
     </div>`;
   }).join('');
 }
-window.filterCP=function(){};
+window.filterCP=function(type){cpFilter=type;renderCounterparties();};
 
 window.openCPForm = function(id){
   editingCPId=id;
@@ -1577,6 +1603,10 @@ window.generateInviteCode=function(){
 // ═══════════════════════════════
 window.addEventListener('online',()=>document.getElementById('offlineBanner').classList.remove('show'));
 window.addEventListener('offline',()=>document.getElementById('offlineBanner').classList.add('show'));
+
+// Live search inputs
+document.getElementById('teamSearch')?.addEventListener('input', renderTeam);
+document.getElementById('cpSearch')?.addEventListener('input', renderCounterparties);
 if(!navigator.onLine)document.getElementById('offlineBanner').classList.add('show');
 
 // PWA
@@ -1588,19 +1618,6 @@ window.switchView=function(name){
   origSwitch(name);
   if(name==='add-task'){renderAddTaskChips();populateAssignSelect();selectVisibility('personal')}
 };
-
-// Auth button handlers (attached after all functions defined)
-document.getElementById('showRegBtn').addEventListener('click', ()=>{
-  document.getElementById('authScreen').classList.add('hidden');
-  document.getElementById('registerScreen').classList.remove('hidden');
-});
-document.getElementById('showLoginBtn').addEventListener('click', ()=>{
-  document.getElementById('registerScreen').classList.add('hidden');
-  document.getElementById('authScreen').classList.remove('hidden');
-});
-document.getElementById('loginBtn').addEventListener('click', ()=>window.signIn());
-document.getElementById('googleBtn').addEventListener('click', ()=>window.signInGoogle());
-document.getElementById('regBtn').addEventListener('click', ()=>window.register());
 </script>
 </body>
 </html>
