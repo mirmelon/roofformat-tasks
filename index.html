@@ -194,7 +194,7 @@ textarea{resize:none}
     <button class="auth-btn" onclick="signIn()">ВОЙТИ</button>
     <div class="auth-divider">или</div>
     <button class="auth-btn secondary" onclick="signInGoogle()">Войти через Google</button>
-    <div class="auth-switch">Нет аккаунта? <span onclick="showRegister()">Зарегистрироваться</span></div>
+    <div class="auth-switch">Нет аккаунта? <span id="showRegBtn" style="color:var(--gold);cursor:pointer">Зарегистрироваться</span></div>
   </div>
 </div>
 
@@ -656,6 +656,7 @@ window.signInGoogle = async function(){
 };
 
 window.showRegister = function(){openModal('registerModal')};
+document.getElementById('showRegBtn').addEventListener('click', ()=>openModal('registerModal'));
 
 window.register = async function(){
   const name=document.getElementById('regName').value.trim();
