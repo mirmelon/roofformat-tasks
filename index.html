@@ -458,8 +458,12 @@ textarea{resize:none}
       <div><label class="flabel">EMAIL</label><input type="email" id="cpEmail" placeholder="email@example.com"></div>
       <div><label class="flabel">СТАТУС</label><div class="chip-row" id="cpStatusChips"></div></div>
       <div><label class="flabel">РЕЙТИНГ НАДЁЖНОСТИ</label>
-        <div style="display:flex;gap:8px">
-          ${[1,2,3,4,5].map(n=>`<button onclick="setCPRating(${n})" id="cpStar${n}" style="background:none;border:none;font-size:22px;padding:4px;cursor:pointer">☆</button>`).join('')}
+        <div style="display:flex;gap:8px;align-items:center">
+          <button type="button" onclick="setCPRating(1)" id="cpStar1" style="background:none;border:none;font-size:24px;padding:4px;cursor:pointer;color:var(--gold)">☆</button>
+          <button type="button" onclick="setCPRating(2)" id="cpStar2" style="background:none;border:none;font-size:24px;padding:4px;cursor:pointer;color:var(--gold)">☆</button>
+          <button type="button" onclick="setCPRating(3)" id="cpStar3" style="background:none;border:none;font-size:24px;padding:4px;cursor:pointer;color:var(--gold)">☆</button>
+          <button type="button" onclick="setCPRating(4)" id="cpStar4" style="background:none;border:none;font-size:24px;padding:4px;cursor:pointer;color:var(--gold)">☆</button>
+          <button type="button" onclick="setCPRating(5)" id="cpStar5" style="background:none;border:none;font-size:24px;padding:4px;cursor:pointer;color:var(--gold)">☆</button>
         </div>
       </div>
       <div><label class="flabel">ЗАМЕТКИ</label><textarea id="cpNote" rows="2" placeholder="Условия работы, история..."></textarea></div>
